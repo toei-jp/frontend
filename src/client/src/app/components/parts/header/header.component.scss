@@ -1,0 +1,23 @@
+$tablet: 1024px;
+$mobile: 767px;
+.header {
+    padding: 25px 40px;
+    border-bottom: 1px solid #E2E1E0;
+    border-radius: 4px 4px 0 0;
+    background-color: #FFF;
+    @media screen and (max-width: $mobile){
+        padding: 10px 15px;
+    }
+    .inner {
+        position: relative;
+    }
+    .logo {
+        width: 70px;
+        @media screen and (max-width: $mobile){
+            width: 60px;
+        }
+        img {
+            width: 100%;
+        }
+    }
+}

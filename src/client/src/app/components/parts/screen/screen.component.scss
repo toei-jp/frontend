@@ -1,0 +1,143 @@
+$tablet: 1024px;
+$mobile: 767px;
+.screen {
+    visibility: hidden;
+    position: relative;
+    overflow: hidden;
+    .screen-scroll {
+        height: 500px;        
+    }
+    .screen-inner {
+        position: relative;
+        width: 1600px;
+        height: 1400px;
+    }
+    .seat {
+        position: absolute;
+        text-align: center;
+        a {
+            font-weight: bold;
+            display: block;
+            color: #9a9a9b;
+            padding-top: 20px;
+            background-image: url(/assets/images/theater/seat/normal.svg);
+            background-size: 40px 50px;
+            background-repeat: no-repeat;
+            &.active {
+                color: #FFF;
+                background-image: url(/assets/images/theater/seat/normal_active.svg);
+            }
+            &.disabled {
+                color: #FFF;
+                background-image: url(/assets/images/theater/seat/normal_disabled.svg);
+                cursor: default;
+            }
+        }
+    }
+    .seat-hc {
+        a {
+            background-image: url(/assets/images/theater/seat/hc_disabled.svg) !important;
+            background-size: 40px 50px;
+            span {
+                display: none !important;
+            }
+        }
+    }
+    .object {
+        position: absolute;
+        background-repeat: no-repeat;
+    }
+    .label-object {
+        text-align: center;
+        line-height: 50px;
+        font-size: 24px;
+        color: #9a9a9b;
+        font-weight: bold;
+    }   
+}
+.seat-info {
+    .seat {
+        margin: 0 10px;
+        position: relative;
+        padding-left: 24px;
+        @media screen and (max-width: $mobile) {
+            margin: 0 5px;
+            font-size: 12px;
+        }
+        &:before {
+            width: 16px;
+            height: 20px;
+            content: '';
+            display: block;
+            background-image: url(/assets/images/theater/seat/normal.svg);
+            background-size: 16px 20px;
+            position: absolute;
+            top: 50%;
+            left: 0;
+            margin-top: -10px;
+        } 
+    }
+    .active {
+        &:before {
+            background-image: url(/assets/images/theater/seat/normal_active.svg);
+        }
+    }
+    .disabled {
+        &:before {
+            background-image: url(/assets/images/theater/seat/normal_disabled.svg);
+        }
+    } 
+} 
+.screen-4dx {
+    .seat {
+        a {
+            background-image: url(/assets/images/theater/seat/4dx.svg);
+            background-size: 50px 50px;
+            &.active {
+                color: #FFF;
+                background-image: url(/assets/images/theater/seat/4dx_active.svg);
+            }
+            &.disabled {
+                color: #FFF;
+                background-image: url(/assets/images/theater/seat/4dx_disabled.svg);
+                cursor: default;
+            }
+        }
+    }
+}
+
+.zoom {
+    .screen-scroll {
+        overflow: auto;
+        transition: transform 0.2s;
+        -webkit-overflow-scrolling: touch;
+    }
+    .seat {
+        a {
+            span {
+                display: block;
+            }
+        }
+    }
+}
+
+.zoom-btn {
+    display: none;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+    width: 50px;
+    height: 50px;
+    color: #FFF;
+    background-color: #3e3a39;
+    border-radius: 3px;
+    padding-top: 5px;
+    &.active {
+        display: block;
+    }
+    &.scroll {
+        position: fixed;
+    }
+}

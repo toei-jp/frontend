@@ -1,0 +1,82 @@
+<div class="contents">
+    <h1 class="page-ttl">座席選択</h1>
+    <p class="read">ご希望の座席を選択して「次へ」ボタンを押してください。
+        <br>選択できる座席数は最大
+        <span class="seat-limit-text">{{ purchase.data.individualScreeningEvent?.coaInfo.availableNum }}</span>席までとなります。
+        <br>
+        <span class="sp-text">画面をタッチすると画面がズームしますので座席を選択してください。
+            <br>
+        </span>
+        <span class="small-x-text">※車椅子席をご希望の方は、お手数ですが通常のお席をご購入の上、対象の劇場にご連絡ください。</span>
+    </p>
+    <div class="mb-middle">
+        <app-screen [inputData]="screenData" [test]="false" (select)="seatSelect($event)" (alert)="seatSelectionAlert()" (load)="loadScreen($event)">
+            <app-seat-info type="{{ purchase.data.individualScreeningEvent?.superEvent.coaInfo.kbnJoueihousiki?.kubunCode }}"></app-seat-info>
+        </app-screen>
+    </div>
+
+    <div class="film-info radius mb-large">
+        <p class="mb-small">現在、選択されているチケットは下記のとおりです。</p>
+        <dl>
+            <dt>劇場 / スクリーン</dt>
+            <dd class="border-bottom-dot">
+                {{ purchase.getTheaterName() }} / {{ purchase.getScreenName() }}
+            </dd>
+            <dt>鑑賞日時</dt>
+            <dd class="border-bottom-dot">
+                {{ purchase.getAppreciationDate() }} {{ purchase.getStartDate() }} - {{ purchase.getEndDate() }}
+            </dd>
+            <dt>作品名</dt>
+            <dd>{{ purchase.getTitle() }}</dd>
+        </dl>
+    </div>
+
+    <h2 class="section-ttl">利用規約</h2>
+    <p class="mb-small">利用規約に同意した上で「次へ」ボタンを押してください。</p>
+
+    <app-purchase-term class="mb-middle" [theaterCode]="purchase.data.individualScreeningEvent?.superEvent.location.branchCode.slice(-2)"></app-purchase-term>
+
+    <form [formGroup]="seatForm" (ngSubmit)="onSubmit()">
+        <div class="mb-x-large text-center">
+            <input type="checkbox" formControlName="terms" id="terms">
+            <label for="terms" class="agree-label">
+                <strong>利用規約に同意する</strong>
+            </label>
+            <div *ngIf="seatForm.controls['terms'].invalid && (seatForm.controls['terms'].dirty || seatForm.controls['terms'].touched)"
+                class="validation-text">利用規約に同意してください</div>
+        </div>
+
+        <div class="button-area">
+            <div class="button next-button blue-button">
+                <button type="submit">
+                    <app-icon iconName="next-white" width="15" height="15"></app-icon>次へ</button>
+            </div>
+            <div class="prev-link ticket-app-hide">
+                <a href="{{ purchase.data.movieTheaterOrganization?.url }}">
+                    <app-icon iconName="prev-black" width="15" height="15"></app-icon>戻る</a>
+            </div>
+            <div class="prev-link ticket-app-show">
+                <a href="{{ environment.APP_SITE_URL }}/#/purchase">
+                    <app-icon iconName="prev-black" width="15" height="15"></app-icon>戻る</a>
+            </div>
+        </div>
+    </form>
+    <app-site-seal></app-site-seal>
+</div>
+
+<app-modal [open]="notSelectSeatModal" [layout]="true" (close)="notSelectSeatModal = false">
+    <div class="modal-title large-text text-center mb-middle">
+        <strong>座席が未選択です</strong>
+    </div>
+    <p class="text-center">ご希望の空席を選択して「次へ」ボタンを押してください。</p>
+</app-modal>
+
+<app-modal [open]="upperLimitModal" [layout]="true" (close)="upperLimitModal = false">
+    <div class="modal-title large-text text-center mb-middle">
+        <strong>予約座席数が上限です</strong>
+    </div>
+    <p class="text-center">予約座席数は最大
+        <span class="seat-limit-text">{{ purchase.data.individualScreeningEvent?.coaInfo.availableNum }}</span>席までとなります。</p>
+</app-modal>
+
+<app-loading [show]="isLoading"></app-loading>

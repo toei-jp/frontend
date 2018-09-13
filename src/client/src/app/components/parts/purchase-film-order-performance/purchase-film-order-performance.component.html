@@ -1,0 +1,19 @@
+<li class="button white-button {{ availability.className }}" (click)="start()">
+    <dl>
+        <dt>
+            <div class="text-left">
+                <div class="large-text mb-x-small">
+                    <strong>{{ data.startDate | timeFormat: data.coaInfo.dateJouei }}</strong>
+                </div>
+                <div>～{{ data.endDate | timeFormat: data.coaInfo.dateJouei }}</div>
+            </div>
+            <div class="text-center small-x-text status">
+                <div class="mb-x-small text">{{ availability.text }}</div>
+                <div class="image"></div>
+            </div>
+        </dt>
+        <dd class="small-text text-center">
+            <div class="screen-name">{{ data.location.name.ja }}</div>
+        </dd>
+    </dl>
+</li>

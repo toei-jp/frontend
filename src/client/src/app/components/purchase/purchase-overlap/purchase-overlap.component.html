@@ -1,0 +1,67 @@
+<div class="contents">
+    <h1 class="page-ttl red-text">仮予約の座席があります</h1>
+    <p class="read">現在、仮予約の座席があります。
+        <br>仮予約の座席の購入を進めるか、新しく選択した内容で購入を進めるか選択してください。
+        <br>仮予約の内容は下記になります。</p>
+
+    <div class="form-layout mb-x-large">
+        <h2 class="section-ttl">仮予約の上映スケジュール</h2>
+        <ul class="box radius bg-light-gray mb-large">
+            <li>
+                <dl>
+                    <dt>劇場 / スクリーン</dt>
+                    <dd>{{ purchase.getTheaterName() }} / {{ purchase.getScreenName() }}</dd>
+                </dl>
+            </li>
+            <li>
+                <dl>
+                    <dt>作品名</dt>
+                    <dd>{{ purchase.getTitle() }}</dd>
+                </dl>
+            </li>
+            <li>
+                <dl>
+                    <dt>鑑賞日時</dt>
+                    <dd>
+                        {{ purchase.getAppreciationDate() }} {{ purchase.getStartDate() }} - {{ purchase.getEndDate() }}
+                    </dd>
+                </dl>
+            </li>
+        </ul>
+        <p class="text-center mb-x-small">上記の仮予約内容で購入手続きへ戻ります。</p>
+        <form (ngSubmit)="returnTransaction()">
+            <app-next-button>仮予約の購入手続きへ戻る</app-next-button>
+        </form>
+    </div>
+
+    <div class="form-layout">
+        <h2 class="section-ttl">新しく選択した上映スケジュール</h2>
+        <ul class="box radius bg-light-gray mb-large">
+            <li>
+                <dl>
+                    <dt>劇場 / スクリーン</dt>
+                    <dd>{{ getTheaterName() }} / {{ getScreenName() }}</dd>
+                </dl>
+            </li>
+            <li>
+                <dl>
+                    <dt>作品名</dt>
+                    <dd>{{ getTitle() }}</dd>
+                </dl>
+            </li>
+            <li>
+                <dl>
+                    <dt>鑑賞日時</dt>
+                    <dd>
+                        {{ getAppreciationDate() }} {{ getStartDate() }} - {{ getEndDate() }}
+                    </dd>
+                </dl>
+            </li>
+        </ul>
+        <p class="text-center  mb-x-small">仮予約を削除し、新しく選択した上映スケジュールの購入手続きを進めます。</p>
+        <form (ngSubmit)="newTransaction()">
+            <app-next-button>仮予約を削除して次へ進む</app-next-button>
+        </form>
+    </div>
+    <app-site-seal></app-site-seal>
+</div>

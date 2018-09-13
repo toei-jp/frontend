@@ -1,0 +1,69 @@
+<div class="radius bg-light-gray">
+    <div class="screen" [class.zoom]="zoomState" style="visibility: visible;" (window:resize)="resize()">
+        <div [class.active]="zoomState" class="zoom-btn text-center" (click)="scaleDown()">
+            <app-icon iconName="zoom-out" width="15" height="15"></app-icon>
+            <div class="small-x-text" href="#">ズーム
+                <br>解除</div>
+        </div>
+        <div *ngIf="data" class="screen-scroll" 
+        [ngStyle]="{ 
+            'height.px': height,
+            'transform-origin': origin,
+            'transform': 'scale(' + scale + ')'
+        }">
+            <div class="screen-inner {{ data.screenType }} screen-{{ theaterCode }}-{{ screenCode }}" 
+            [ngStyle]="{ 'width.px': data.screen.size.w, 'height.px': data.screen.size.h }"
+            (click)="scaleUp($event)">
+                
+                <div *ngFor="let object of data.objects" 
+                class="object" 
+                [ngStyle]="{
+                    'width.px': object.w, 
+                    'height.px': object.h, 
+                    'top.px': object.y, 
+                    'left.px': object.x, 
+                    'background-image': 'url(' + object.image + ')',
+                    'background-size': object.w + 'px ' +object.h + 'px'
+                }" ></div>
+                
+                <div *ngFor="let columnLabel of data.columnLabels" 
+                class="object label-object column-object column-object-{{ columnLabel.id }}" 
+                [ngStyle]="{
+                    'width.px': columnLabel.w,
+                    'height.px': columnLabel.h, 
+                    'top.px': columnLabel.y, 
+                    'left.px': columnLabel.x
+                }">{{ columnLabel.label }}</div>
+
+                <div *ngFor="let lineLabel of data.lineLabels" 
+                class="object label-object line-object line-object-{{ lineLabel.id }}" 
+                [ngStyle]="{
+                    'width.px': lineLabel.w,
+                    'height.px': lineLabel.h, 
+                    'top.px': lineLabel.y, 
+                    'left.px': lineLabel.x
+                }">{{ lineLabel.label }}</div>
+                
+                
+                <div *ngFor="let seat of data.seats" 
+                class="seat {{ seat.className }}" 
+                [ngStyle]="{
+                    'top.px': seat.y, 
+                    'left.px': seat.x
+                }">
+                    <a class="{{ seat.status }}" 
+                    [ngStyle]="{
+                        'width.px': seat.w,
+                        'height.px': seat.h
+                    }" (click)="seatSelect(seat)"><span>{{ seat.label }}</span></a>
+                </div>
+            </div>
+        </div>
+        <div class="device-type-pc"></div>
+        <div class="device-type-sp"></div>
+        <div class="screen-style"></div>
+    </div>
+    <div *ngIf="data" class="{{ data.screenType }}">
+        <ng-content></ng-content>
+    </div>
+</div>

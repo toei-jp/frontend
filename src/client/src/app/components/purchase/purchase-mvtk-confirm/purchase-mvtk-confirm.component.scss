@@ -1,0 +1,17 @@
+$tablet: 1024px;
+$mobile: 767px;
+.mvtk-lists {
+    li {
+        dt {
+            @media screen and (max-width: $mobile){
+                display: block;
+            }
+        }
+        dd {
+            @media screen and (max-width: $mobile){
+                display: block;
+                width: 100%;
+            }
+        }
+    }
+}

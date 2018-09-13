@@ -1,0 +1,20 @@
+$tablet: 1024px;
+$mobile: 767px;
+
+.button-area {
+    margin: 30px auto 0;
+    @media screen and (max-width: $mobile){
+        width: auto;
+    }
+}
+.prev-link {
+    text-align: center;
+    a, button {
+        font-size: 16px;
+        font-weight: bold;
+        color: #333;
+        position: relative;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+}

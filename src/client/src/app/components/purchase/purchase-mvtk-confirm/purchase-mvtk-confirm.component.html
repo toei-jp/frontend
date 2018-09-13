@@ -1,0 +1,25 @@
+<div class="contents">
+    <h1 class="page-ttl">ムビチケ券適用内容確認</h1>
+    <p class="read">内容に問題なければ「券種選択へ戻る」ボタンを押してください。
+        <br>
+        <span class="small-text">※券種選択よりムビチケ券を選択してください。</span>
+    </p>
+    <ul class="box radius bg-light-gray mb-middle mvtk-lists">
+
+        <li *ngFor="let mvtkTicket of purchase.data.mvtkTickets">
+            <dl class="d-table">
+                <dt class="d-td">ムビチケ購入番号 {{ mvtkTicket.input.knyknrNo }}</dt>
+                <dd class="d-td width-medium">
+                    <strong>{{ mvtkTicket.mvtkTicketcodeResult.ticketName }} × {{ mvtkTicket.ykknInfo.ykknKnshbtsmiNum }}</strong>
+                </dd>
+            </dl>
+        </li>
+
+    </ul>
+
+
+    <form (ngSubmit)="onSubmit()">
+        <app-buttons nextLabel="券種選択へ戻る" prevLabel="戻る" prevLink="/purchase/mvtk/input"></app-buttons>
+    </form>
+    <app-site-seal></app-site-seal>
+</div>

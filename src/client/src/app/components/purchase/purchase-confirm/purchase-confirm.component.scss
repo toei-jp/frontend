@@ -1,0 +1,38 @@
+$tablet: 1024px;
+$mobile: 767px;
+.form-layout {
+    dl {
+        position: relative;
+        dd {
+            position: relative;
+            @media screen and (max-width: $mobile){
+                position: static; 
+            }
+            .right {
+                right: 0;
+                @media screen and (max-width: $mobile){
+                    top: -5px;
+                    margin-top: 0;
+                } 
+            }              
+        }
+    }
+}
+.right {
+    position: absolute;
+    top: 50%;
+    margin-top: -11px;
+    right: 0;
+}
+.change-button, .confirm-button {
+    display: inline-block;
+    margin-left: 10px;
+    a {
+        width: 70px;
+        padding: 5px 0;
+        font-size: 12px;
+        box-shadow: 0 0 0 transparent;
+        font-weight: 500;
+        
+    }
+}

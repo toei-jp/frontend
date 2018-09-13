@@ -1,0 +1,51 @@
+<div class="contents">
+    <h1 class="page-ttl">ポイント使用</h1>
+    <p class="read">
+        貯まったポイントの使用方法を選択してください。
+    </p>
+    <div class="mb-middle point text-center">
+        <div class="inner bg-gray">現在
+            <strong class="large-text">{{ user.data.account?.availableBalance }}</strong> ポイント</div>
+    </div>
+
+    <ul *ngIf="!isLoading" class="box radius bg-light-gray mb-middle tickets">
+        <li *ngFor="let pointTicket of pointTickets">
+            <dl>
+                <dt>
+                    <div class="small-x-text mb-x-small">{{ pointTicket.usePoint }}ポイントで引き換え</div>
+                    <div>
+                        <strong>{{ pointTicket.ticketName }}</strong>
+                    </div>
+                </dt>
+                <dd>
+                    <select [(ngModel)]="selectTickets[pointTicket.ticketCode]">
+                        <option *ngFor="let value of ticketValueList" value="{{ value }}">{{ value }}枚</option>
+                    </select>
+                </dd>
+            </dl>
+        </li>
+    </ul>
+
+    <form (ngSubmit)="onSubmit()">
+        <app-buttons nextLabel="券種に追加する" prevLabel="戻る" prevLink="/purchase/ticket"></app-buttons>
+    </form>
+    <app-site-seal></app-site-seal>
+</div>
+
+<app-modal [open]="pointAhortageAlertModal" [layout]="true" (close)="pointAhortageAlertModal = false">
+    <div class="modal-title large-text text-center mb-middle">
+        <strong>ポイントが不足しています</strong>
+    </div>
+    <p class="text-center">選択した券種の合計ポイントが所持ポイントを超えています。
+    </p>
+</app-modal>
+
+<app-modal [open]="notSelectAlertModal" [layout]="true" (close)="notSelectAlertModal = false">
+    <div class="modal-title large-text text-center mb-middle">
+        <strong>券種が選択されていません</strong>
+    </div>
+    <p class="text-center">券種を選択してください。
+    </p>
+</app-modal>
+
+<app-loading [show]="isLoading"></app-loading>

@@ -1,0 +1,69 @@
+$tablet: 1024px;
+$mobile: 767px;
+.seat-info {
+    padding: 0 20px 20px;
+    @media screen and (max-width: $mobile) {
+        padding: 0 20px 10px;
+    }
+    .box {
+        display: flex;
+        justify-content: center;
+    }
+    .seat {
+        margin: 0 10px;
+        position: relative;
+        padding-left: 24px;
+        @media screen and (max-width: $mobile) {
+            margin: 0 5px;
+            font-size: 12px;
+        }
+        &:before {
+            width: 16px;
+            height: 20px;
+            content: '';
+            display: block;
+            background-image: url(/assets/images/theater/seat/normal.svg);
+            background-size: 16px 20px;
+            position: absolute;
+            top: 50%;
+            left: 0;
+            margin-top: -10px;
+        } 
+    }
+    .active {
+        &:before {
+            background-image: url(/assets/images/theater/seat/normal_active.svg);
+        }
+    }
+    .disabled {
+        &:before {
+            background-image: url(/assets/images/theater/seat/normal_disabled.svg);
+        }
+    } 
+} 
+.screen-4dx {
+    .seat {
+        &:before {
+            width: 20px;
+            height: 20px;
+            content: '';
+            display: block;
+            background-image: url(/assets/images/theater/seat/4dx.svg);
+            background-size: 20px 20px;
+            position: absolute;
+            top: 50%;
+            left: 0;
+            margin-top: -10px;
+        } 
+    }
+    .active {
+        &:before {
+            background-image: url(/assets/images/theater/seat/4dx_active.svg);
+        }
+    }
+    .disabled {
+        &:before {
+            background-image: url(/assets/images/theater/seat/4dx_disabled.svg);
+        }
+    } 
+}

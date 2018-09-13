@@ -1,0 +1,36 @@
+$tablet: 1024px;
+$mobile: 767px;
+
+.footer {
+    background-color: #212121;
+    padding: 25px 40px;
+    font-size: 10px;
+    border-radius: 0 0 4px 4px;
+    @media screen and (max-width: $mobile){
+        padding: 20px 15px;
+    }
+    .inner {
+        position: relative;
+    }
+    ul {
+       text-align: center;
+        margin-bottom: 10px;
+        li {
+            display: inline-block;
+            padding: 0 5px;
+            border-right: 1px solid #FFF;
+            line-height: 1.5;
+            &:last-child {
+                border: none;
+                padding-right: 0;
+            }
+            a {
+                color: #FFF;
+            }
+        }
+    }
+    .copyright {
+        text-align: center;
+        color: #FFF;
+    }
+}

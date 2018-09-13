@@ -1,0 +1,27 @@
+$tablet: 1024px;
+$mobile: 767px;
+li {
+    border-radius: 5px;
+    color: #333;
+    overflow: hidden;
+    dl {
+        dt {
+            color: #FFF;
+            background-color: #515151;
+            padding: 20px 25px;
+        }
+        dd {
+            color: #FFF;
+            background-color: #2d2d2d;
+            padding: 20px 20px 0;
+            @media screen and (max-width: $mobile){
+                padding: 10px 10px 0;
+            }
+            ul {
+                display: flex;
+                flex-wrap:wrap;
+                margin: 0 0 0 -10px;
+            }
+        }
+    }
+}

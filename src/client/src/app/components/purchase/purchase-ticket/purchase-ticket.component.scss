@@ -1,0 +1,79 @@
+$tablet: 1024px;
+$mobile: 767px;
+
+.validation {
+    .ghost-button {
+        button {
+            border-color: #C30D23;
+            color: #C30D23;
+            background-color: #ffe8eb;
+        } 
+    }
+}
+
+.mvtk {
+    dt {
+        @media screen and (max-width: $mobile){
+            display: block;
+        }
+    }
+    dd {
+        @media screen and (max-width: $mobile){
+            display: block;
+            width: 100%;
+        }
+    }
+    .mvtk-button {
+        label, a {
+            border: 1px solid #d82918;
+            background-color: #FFF;
+            color: #333;
+            &:before {
+                left: 15px;
+            }
+            &:after {
+                left: 15px;
+            }
+        }
+        img {
+            width: 100px;
+            height: 22px;
+            vertical-align: bottom;
+        }
+    }
+}
+
+.point {
+    dt {
+        @media screen and (max-width: $mobile){
+            display: block;
+        }
+    }
+    dd {
+        @media screen and (max-width: $mobile){
+            display: block;
+            width: 100%;
+        }
+    }
+    .point-button {
+        label, a {
+            border: 1px solid #d82918;
+            background-color: #FFF;
+            color: #333;
+            &:before {
+                left: 15px;
+            }
+            &:after {
+                left: 15px;
+            }
+            strong {
+                line-height: 22px;
+                vertical-align: middle;
+            }
+        }
+    }
+}
+
+.disabled {
+    display: none;
+}

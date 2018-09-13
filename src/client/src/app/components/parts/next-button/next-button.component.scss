@@ -1,0 +1,25 @@
+$tablet: 1024px;
+$mobile: 767px;
+.next-button {
+    width: 320px;
+    margin: 0 auto 40px;
+    @media screen and (max-width: $mobile){
+        width: auto;
+        margin: 0 0 40px;
+    }
+    a, button {
+        font-size: 18px;
+        font-weight: bold;
+        width: 320px;
+        padding: 22px 0;
+        @media screen and (max-width: $mobile){
+            width: 100%;
+        }
+        app-icon {
+            position: absolute;
+            top: 50%;
+            right: 20px;
+            margin-top: -7.5px;
+        }
+    }
+}

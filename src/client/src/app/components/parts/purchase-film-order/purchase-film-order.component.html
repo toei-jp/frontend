@@ -1,0 +1,15 @@
+<li class="performance mb-x-small">
+    <dl>
+        <dt>
+            <div class="mb-x-small">
+                <strong>{{ title }}</strong>
+            </div>
+            <div class="small-text">{{ duration | duration: 'minutes' }}分</div>
+        </dt>
+        <dd>
+            <ul>
+                <app-purchase-film-order-performance *ngFor="let film of data.films" [data]="film"></app-purchase-film-order-performance>
+            </ul>
+        </dd>
+    </dl>
+</li>

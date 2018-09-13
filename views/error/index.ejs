@@ -1,0 +1,22 @@
+<%- contentFor('body') %>
+<div class="error">
+    <h1 class="page-ttl"><%- __('error.pageTitle') %></h1>
+    <p class="read"><%- __('error.detail.badRequest') %></p>
+    <div class="button-area clearfix">
+        <% if (isApp) { %>
+            <div class="prev-link"><a class="icon-prev-black"href="<%- APP_SITE_URL %>/#/purchase"><%- __('error.prev') %></a></div>
+        <% } else { %>
+            <div class="prev-link"><a class="icon-prev-black"href="<%= PORTAL_SITE_URL %>"><%- __('error.prev') %></a></div>
+        <% } %>
+    </div>
+    <% if (NODE_ENV !== 'production') { %>
+    <code style="
+    margin-top: 40px; 
+    display: block; 
+    background: #EEE; 
+    padding: 10px;
+    font-size: 14px;
+    line-height: 1.6;
+    word-wrap: break-word;"><%= JSON.stringify(error) %></code>
+    <% } %>
+</div>

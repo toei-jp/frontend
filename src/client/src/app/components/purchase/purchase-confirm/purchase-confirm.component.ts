@@ -61,14 +61,14 @@ export class PurchaseConfirmComponent implements OnInit {
             }
         }
         try {
-            if (this.user.isMember() && this.purchase.isReservePoint()) {
-                // 会員かつポイント使用
-                await this.purchase.pointPaymentProcess();
-            }
-            if (this.user.isMember() && this.purchase.isIncentive()) {
-                // 会員かつポイント未使用
-                await this.purchase.incentiveProcess();
-            }
+            // if (this.user.isMember() && this.purchase.isReservePoint()) {
+            //     // 会員かつポイント使用
+            //     await this.purchase.pointPaymentProcess();
+            // }
+            // if (this.user.isMember() && this.purchase.isIncentive()) {
+            //     // 会員かつポイント未使用
+            //     await this.purchase.incentiveProcess();
+            // }
             await this.purchase.purchaseRegistrationProcess();
             this.router.navigate(['/purchase/complete']);
         } catch (err) {

@@ -2,9 +2,9 @@
  * authorize
  */
 import * as debug from 'debug';
-import { /*NextFunction,*/ Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { AuthModel } from '../../models/auth/auth.model';
-// import { Auth2Model } from '../../models/auth2/auth2.model';
+import { Auth2Model } from '../../models/auth2/auth2.model';
 import { errorProsess } from '../base/base.controller';
 const log = debug('frontend:authorize');
 
@@ -33,7 +33,7 @@ export async function getCredentials(_: Request, res: Response) {
  * @param {Request} req
  * @param {Response} res
  */
-/*export async function signIn(req: Request, res: Response) {
+export async function signIn(req: Request, res: Response) {
     log('signIn');
     if (req.session === undefined) {
         throw new Error('session is undefined');
@@ -50,7 +50,7 @@ export async function getCredentials(_: Request, res: Response) {
     res.json({
         url: authUrl
     });
-}*/
+}
 
 /**
  * サインインリダイレクト処理
@@ -58,7 +58,7 @@ export async function getCredentials(_: Request, res: Response) {
  * @param {Response} res
  * @param {NextFunction} next
  */
-/*export async function signInRedirect(req: Request, res: Response, next: NextFunction) {
+export async function signInRedirect(req: Request, res: Response, next: NextFunction) {
     log('signInRedirect');
     try {
         if (req.session === undefined) {
@@ -83,4 +83,4 @@ export async function getCredentials(_: Request, res: Response) {
     } catch (err) {
         next(err);
     }
-}*/
+}

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import * as factory from '@toei-jp/cinerino-factory';
 import * as moment from 'moment';
 import { environment } from '../../../../environments/environment';
-import { CinerinoService } from '../../../services/cinerino/cinerino.service';
+// import { CinerinoService } from '../../../services/cinerino/cinerino.service';
 // import { TimeFormatPipe } from '../../../pipes/time-format/time-format.pipe';
 import { ErrorService } from '../../../services/error/error.service';
 import { SaveType, StorageService } from '../../../services/storage/storage.service';
@@ -18,14 +18,14 @@ export class PurchaseCompleteComponent implements OnInit {
         order: factory.order.IOrder;
         transaction: factory.transaction.placeOrder.ITransaction;
         movieTheaterOrganization: factory.organization.movieTheater.IOrganization;
-        sendEmailNotification?: factory.task.sendEmailMessage.ITask
+        // sendEmailNotification?: factory.task.sendEmailMessage.ITask
     };
     public environment = environment;
 
     constructor(
         private storage: StorageService,
         private error: ErrorService,
-        private cinerino: CinerinoService,
+        // private cinerino: CinerinoService,
         public user: UserService
     ) { }
 
@@ -35,9 +35,9 @@ export class PurchaseCompleteComponent implements OnInit {
         if (this.data === null) {
             this.error.redirect(new Error('complete data is null'));
         }
-        if (this.data.sendEmailNotification === undefined) {
+        /*if (this.data.sendEmailNotification === undefined) {
             this.mailSendProcess(0).then().catch();
-        }
+        }*/
     }
 
     /**
@@ -148,9 +148,9 @@ export class PurchaseCompleteComponent implements OnInit {
     /**
      * メール送信処理
      */
-    public async mailSendProcess(count: number) {
+    /*public async mailSendProcess(count: number) {
         try {
-            const movieTheaterPlace = await this.cinerino.place.findMovieTheater({
+            const movieTheaterPlace = await this.cinerino.findMovieTheaterByBranchCode({
                 branchCode: this.data.movieTheaterOrganization.location.branchCode
             });
             const text = (this.user.isNative())
@@ -187,7 +187,7 @@ export class PurchaseCompleteComponent implements OnInit {
                 );
             }
         }
-    }
+    }*/
 
     public getMailText(telephone: string) {
         // tslint:disable:max-line-length

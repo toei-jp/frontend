@@ -14,7 +14,7 @@ export const environment = {
     COGNITO_USER_POOL_ID: '',
     COGNITO_CLIENT_ID: '',
 
-    TOEI_API_ENDPOINT: 'https://toei-api-production.azurewebsites.net',
+    CINERINO_API_ENDPOINT: 'https://toei-api-production.azurewebsites.net',
     TOKEN_ISSUER: '',
 
     POINT_TICKET: PRODUCTION_POINT_TICKET,

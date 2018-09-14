@@ -5,7 +5,7 @@ import { environment } from '../../../../environments/environment';
 import { CinerinoService } from '../../../services/cinerino/cinerino.service';
 import { ErrorService } from '../../../services/error/error.service';
 import { ISalesTicketResult, IScreeningEvent, PurchaseService } from '../../../services/purchase/purchase.service';
-import { FlgMember, UserService } from '../../../services/user/user.service';
+// import { FlgMember, UserService } from '../../../services/user/user.service';
 import { IInputScreenData, ISeat } from '../../parts/screen/screen.component';
 
 @Component({
@@ -29,7 +29,7 @@ export class PurchaseSeatComponent implements OnInit, AfterViewInit {
         private formBuilder: FormBuilder,
         private cinerino: CinerinoService,
         private error: ErrorService,
-        private user: UserService
+        // private user: UserService
     ) { }
 
     public ngOnInit() {
@@ -48,12 +48,12 @@ export class PurchaseSeatComponent implements OnInit, AfterViewInit {
         }
 
         this.screenData = {
-            theaterCode: this.purchase.data.screeningEvent.location.branchCode,
-            dateJouei: this.purchase.data.screeningEvent.info.dateJouei,
-            titleCode: this.purchase.data.screeningEvent.info.titleCode,
-            titleBranchNum: this.purchase.data.screeningEvent.info.titleBranchNum,
-            timeBegin: this.purchase.data.screeningEvent.info.timeBegin,
-            screenCode: this.purchase.data.screeningEvent.info.screenCode
+            theaterCode: this.purchase.data.screeningEvent.superEvent.location.branchCode,
+            // dateJouei: this.purchase.data.screeningEvent.info.dateJouei,
+            titleCode: this.purchase.data.screeningEvent.superEvent.workPerformed.identifier,
+            // titleBranchNum: this.purchase.data.screeningEvent.info.titleBranchNum,
+            // timeBegin: this.purchase.data.screeningEvent.info.timeBegin,
+            screenCode: this.purchase.data.screeningEvent.location.branchCode
         };
 
     }
@@ -81,15 +81,17 @@ export class PurchaseSeatComponent implements OnInit, AfterViewInit {
     public async fitchSalesTickets() {
         const screeningEvent = <IScreeningEvent>this.purchase.data.screeningEvent;
         await this.cinerino.getServices();
-        const salesTicketArgs = {
+        /*const salesTicketArgs = {
             theaterCode: screeningEvent.location.branchCode,
             dateJouei: screeningEvent.info.dateJouei,
             titleCode: screeningEvent.info.titleCode,
-            titleBranchNum: screeningEvent.info.titleBranchNum,
+            // titleBranchNum: screeningEvent.info.titleBranchNum,
             timeBegin: screeningEvent.info.timeBegin
             // flgMember: (this.user.isMember()) ? FlgMember.Member : FlgMember.NonMember
-        };
-        const salesTickets = await this.cinerino.getSalesTickets(salesTicketArgs);
+        };*/
+        const salesTickets = await this.cinerino.event.searchScreeningEventTicketTypes({
+            eventId: screeningEvent.id
+        });
         // console.log('salesTickets', salesTicketArgs, salesTickets);
 
         return salesTickets;
@@ -123,23 +125,24 @@ export class PurchaseSeatComponent implements OnInit, AfterViewInit {
             if (this.purchase.data.salesTickets.length === 0) {
                 this.purchase.data.salesTickets = await this.fitchSalesTickets();
             }
+
             const offers = this.seats.map((seat) => {
                 const salesTicket = (<ISalesTicketResult[]>this.purchase.data.salesTickets)[0];
 
                 return {
                     seatSection: seat.section,
                     seatNumber: seat.code,
+                    price: 0,
+                    priceCurrency: '',
+                    selected: false,
+                    validation: false,
                     ticketInfo: {
-                        ticketCode: salesTicket.ticketCode,
-                        mvtkAppPrice: 0,
+                        ticketId: salesTicket.id,
+                        ticketName: salesTicket.name,
                         ticketCount: 1,
-                        addGlasses: 0,
-                        kbnEisyahousiki: '00',
-                        mvtkNum: '',
-                        mvtkKbnDenshiken: '00',
-                        mvtkKbnMaeuriken: '00',
-                        mvtkKbnKensyu: '00',
-                        mvtkSalesPrice: 0
+                        description: salesTicket.description,
+                        charge: salesTicket.charge,
+                        seatNum: seat.code
                     }
                 };
             });

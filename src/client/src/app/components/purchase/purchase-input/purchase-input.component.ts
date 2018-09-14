@@ -221,7 +221,7 @@ export class PurchaseInputComponent implements OnInit {
                             token: gmoTokenObject.token
                         }
                     };
-                    await this.cinerino.person.addCreditCard(addCreditCardArgs);
+                    await this.cinerino.personOwnershipInfo.addCreditCard(addCreditCardArgs);
                 }
             }
 

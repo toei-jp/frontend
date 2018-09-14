@@ -85,8 +85,8 @@ export class PurchaseTransactionComponent implements OnInit {
             }
             await this.cinerino.getServices();
             // イベント情報取得
-            const screeningEvent = await this.cinerino.event.findScreeningEvent({
-                identifier: (<string>this.parameters.performanceId)
+            const screeningEvent = await this.cinerino.event.findScreeningEventById({
+                id: (<string>this.parameters.performanceId)
             });
             // 開始可能日判定
             if (!this.purchase.isSalse(screeningEvent)) {
@@ -105,7 +105,7 @@ export class PurchaseTransactionComponent implements OnInit {
                 // アプリなら購入情報削除
                 this.purchase.reset();
             }
-            if (this.purchase.data.tmpSeatReservationAuthorization !== undefined) {
+            if (this.purchase.data.offers !== undefined) {
                 // 重複確認へ
                 this.storage.save('screeningEvent', screeningEvent, SaveType.Session);
                 this.router.navigate([`/purchase/overlap`]);

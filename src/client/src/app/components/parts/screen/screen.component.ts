@@ -187,7 +187,7 @@ export class ScreenComponent implements OnInit, AfterViewInit {
      */
     public async getData(): Promise<{
         screen: IScreen,
-        status: factory.action.reserve.IStateReserveSeatResult
+        status: factory.event.screeningEvent.IScreeningRoomSectionOffer[]
     }> {
         const DIGITS = {
             '02': -2,
@@ -199,17 +199,15 @@ export class ScreenComponent implements OnInit, AfterViewInit {
         const setting = await this.http.get<IScreen>('/assets/json/theater/setting.json').toPromise();
 
         await this.cinerino.getServices();
-        let seatStatus;
+        let seatStatus: factory.event.screeningEvent.IScreeningRoomSectionOffer[];
         if (this.test) {
             seatStatus = (<any>{ listSeat: [] });
         } else {
+            if (this.purchase.data.screeningEvent === undefined) {
+                throw new Error('screeningEvent is undefined');
+            }
             seatStatus = await this.cinerino.getSeatState({
-                theaterCode: this.inputData.theaterCode,
-                dateJouei: this.inputData.dateJouei,
-                titleCode: this.inputData.titleCode,
-                titleBranchNum: this.inputData.titleBranchNum,
-                timeBegin: this.inputData.timeBegin,
-                screenCode: this.inputData.screenCode
+                eventId: this.purchase.data.screeningEvent.id
             });
         }
         // スクリーンデータをマージ
@@ -224,7 +222,7 @@ export class ScreenComponent implements OnInit, AfterViewInit {
      */
     public createScreen(data: {
         screen: IScreen,
-        status: factory.reserve.IStateReserveSeatResult
+        status: factory.event.screeningEvent.IScreeningRoomSectionOffer[]
     }): IData {
         // console.log(data.screen);
         const screenData = data.screen;
@@ -321,19 +319,24 @@ export class ScreenComponent implements OnInit, AfterViewInit {
                         : `${labels[labelCount]}${String(screenData.map[y].length - x)}`;
                     let section = '';
                     let status = 'disabled';
-                    for (const listSeat of seatStatus.listSeat) {
-                        const targetSeat = listSeat.listFreeSeat.find((freeSeat) => {
-                            return (freeSeat.seatNum === code);
+                    const inStock = factory.itemAvailability.InStock;
+                    for (const listSeatSection of seatStatus) {
+                        const targetSeat = listSeatSection.containsPlace.find((s) => {
+                            return (
+                                s.branchCode === code
+                                && s.offers !== undefined
+                                && s.offers.find((o) => o.availability === inStock) !== undefined
+                            );
                         });
                         if (targetSeat !== undefined) {
-                            section = listSeat.seatSection;
+                            section = listSeatSection.name !== undefined ? listSeatSection.name.en : '';
                             status = 'default';
                             break;
                         }
                     }
                     // 選択中
-                    if (this.purchase.data.tmpSeatReservationAuthorization !== undefined) {
-                        const targetOffer = this.purchase.data.tmpSeatReservationAuthorization.object.offers.find((offer) => {
+                    if (this.purchase.data.offers !== undefined) {
+                        const targetOffer = this.purchase.data.offers.find((offer) => {
                             return (offer.seatNumber === code);
                         });
                         if (targetOffer !== undefined) {
@@ -462,9 +465,9 @@ interface IData {
 
 export interface IInputScreenData {
     theaterCode: string;
-    dateJouei: string;
+    // dateJouei: string;
     titleCode: string;
-    titleBranchNum: string;
-    timeBegin: string;
+    // titleBranchNum: string;
+    // timeBegin: string;
     screenCode: string;
 }

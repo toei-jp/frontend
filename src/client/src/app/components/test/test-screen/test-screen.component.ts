@@ -19,10 +19,10 @@ export class TestScreenComponent implements OnInit {
         this.activatedRoute.params.subscribe(params => {
             this.screenData = {
                 theaterCode: params.theaterCode,
-                dateJouei: '',
+                // dateJouei: '',
                 titleCode: '',
-                titleBranchNum: '',
-                timeBegin: '',
+                // titleBranchNum: '',
+                // timeBegin: '',
                 screenCode: params.screenCode
             };
 

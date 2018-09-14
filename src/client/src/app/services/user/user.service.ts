@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { factory } from '@toei-jp/cinerino-api-javascript-client';
-import { CinerinoService } from '../cinerino/cinerino.service';
+// import { CinerinoService } from '../cinerino/cinerino.service';
 import { SaveType, StorageService } from '../storage/storage.service';
 
 /**
@@ -46,7 +46,7 @@ export class UserService {
 
     constructor(
         private storage: StorageService,
-        private cinerino: CinerinoService
+        // private cinerino: CinerinoService
     ) {
         this.load();
         this.save();
@@ -92,7 +92,7 @@ export class UserService {
     /**
      * 会員初期化
      */
-    public async initMember() {
+    /*public async initMember() {
         this.data.memberType = FlgMember.Member;
         this.save();
         await this.cinerino.getServices();
@@ -107,7 +107,7 @@ export class UserService {
 
         try {
             // クレジットカード検索
-            const creditCards = await this.cinerino.person.findCreditCards({
+            const creditCards = await this.cinerino.personOwnershipInfo.searchCreditCards({
                 personId: 'me'
             });
             this.data.creditCards = creditCards;
@@ -125,7 +125,7 @@ export class UserService {
         });
         if (accounts.length === 0) {
             // 口座開設
-            this.data.account = await this.cinerino.person.openAccount({
+            this.data.account = await this.cinerino.personOwnershipInfo.openAccount({
                 personId: 'me',
                 name: `${this.data.contact.familyName} ${this.data.contact.givenName}`
             });
@@ -135,7 +135,7 @@ export class UserService {
         // console.log('口座番号', this.data.account.accountNumber);
 
         this.save();
-    }
+    }*/
 
     /**
      * クレジットカード登録判定

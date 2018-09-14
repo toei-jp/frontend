@@ -1,11 +1,11 @@
 /**
  * マスターデータ
  */
-import * as chevre from '@toei-jp/chevre-api-nodejs-client';
-import * as debug from 'debug';
-import { Request, Response } from 'express';
-import { errorProsess } from '../base/base.controller';
-const log = debug('frontend:master');
+// import * as chevre from '@toei-jp/chevre-api-nodejs-client';
+// import * as debug from 'debug';
+// import { Request, Response } from 'express';
+// import { errorProsess } from '../base/base.controller';
+// const log = debug('frontend:master');
 
 
 /**
@@ -15,7 +15,7 @@ const log = debug('frontend:master');
  * @param {Response} res
  * @returns {Promise<void>}
  */
-export async function getSalesTickets(req: Request, res: Response): Promise<void> {
+/*export async function getSalesTickets(req: Request, res: Response): Promise<void> {
     try {
         log('getSalesTickets');
         const args = req.query;
@@ -24,7 +24,7 @@ export async function getSalesTickets(req: Request, res: Response): Promise<void
     } catch (err) {
         errorProsess(res, err);
     }
-}
+}*/
 
 /**
  * 券種マスター一覧取得
@@ -33,7 +33,7 @@ export async function getSalesTickets(req: Request, res: Response): Promise<void
  * @param {Response} res
  * @returns {Promise<void>}
  */
-export async function getTickets(req: Request, res: Response): Promise<void> {
+/*export async function getTickets(req: Request, res: Response): Promise<void> {
     try {
         log('getTickets');
         const args = req.query;
@@ -42,4 +42,4 @@ export async function getTickets(req: Request, res: Response): Promise<void> {
     } catch (err) {
         errorProsess(res, err);
     }
-}
+}*/

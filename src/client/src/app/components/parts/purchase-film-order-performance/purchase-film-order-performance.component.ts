@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import * as cinerino from '@toei-jp/cinerino-api-javascript-client';
 import { environment } from '../../../../environments/environment';
 
-type IScreeningEvent = cinerino.factory.chevre.event.screeningEvent.IEventWithOffer;
+type IScreeningEvent = cinerino.factory.chevre.event.screeningEvent.IEvent;
 interface Iavailability {
     text: string;
     className: string;
@@ -20,15 +20,15 @@ export class PurchaseFilmOrderPerformanceComponent implements OnInit {
     constructor() { }
 
     public ngOnInit() {
-        this.availability = this.getAvailability(this.data.offer.availability);
+        this.availability = this.getAvailability(this.data.remainingAttendeeCapacity);
     }
 
     /**
      * @method getAvailability
-     * @param {number | null} availability
+     * @param {number | undefined} availability
      * @returns {Iavailability}
      */
-    public getAvailability(availability: number | null): Iavailability {
+    public getAvailability(remaining?: number): Iavailability {
         const availabilityList = [
             {
                 text: '満席',
@@ -44,8 +44,8 @@ export class PurchaseFilmOrderPerformanceComponent implements OnInit {
             }
         ];
 
-        return (availability === 0 || availability === null)
-            ? availabilityList[0] : (availability <= 10)
+        return (remaining === 0 || remaining === undefined)
+            ? availabilityList[0] : (remaining <= 10)
                 ? availabilityList[1] : availabilityList[2];
     }
 
@@ -54,8 +54,8 @@ export class PurchaseFilmOrderPerformanceComponent implements OnInit {
      * @returns {void}
      */
     public start(): void {
-        const availability = this.data.offer.availability;
-        if (availability === 0 || availability === null) {
+        const availability = this.data.remainingAttendeeCapacity;
+        if (availability === 0 || availability === undefined) {
             return;
         }
         location.href = `${environment.ENTRANCE_SERVER_URL}/purchase/index.html?id=${this.data.identifier}`;

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { environment } from '../../../../environments/environment';
-import { TimeFormatPipe } from '../../../pipes/time-format/time-format.pipe';
+// import { TimeFormatPipe } from '../../../pipes/time-format/time-format.pipe';
 import { ErrorService } from '../../../services/error/error.service';
 import { IScreeningEvent, PurchaseService } from '../../../services/purchase/purchase.service';
 import { SaveType, StorageService } from '../../../services/storage/storage.service';
@@ -99,12 +99,8 @@ export class PurchaseOverlapComponent implements OnInit {
      * @returns {string}
      */
     public getStartDate() {
-        const timeFormat = new TimeFormatPipe();
-
-        return timeFormat.transform(
-            this.screeningEvent.startDate,
-            this.screeningEvent.doorTime
-        );
+        const startDate = moment(this.screeningEvent.startDate);
+        return `${startDate.get('hour')}:${startDate.get('minute')}`;
     }
 
     /**
@@ -113,12 +109,8 @@ export class PurchaseOverlapComponent implements OnInit {
      * @returns {string}
      */
     public getEndDate() {
-        const timeFormat = new TimeFormatPipe();
-
-        return timeFormat.transform(
-            this.screeningEvent.endDate,
-            this.screeningEvent.doorTime
-        );
+        const endDate = moment(this.screeningEvent.endDate);
+        return `${endDate.get('hour')}:${endDate.get('minute')}`;
     }
 
 }

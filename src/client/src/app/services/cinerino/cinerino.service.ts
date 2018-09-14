@@ -13,7 +13,8 @@ export class CinerinoService {
     public order: cinerino.service.Order;
     public organization: cinerino.service.Organization;
     public person: cinerino.service.Person;
-    public place: cinerino.service.Place;
+    public personOwnershipInfo: cinerino.service.person.OwnershipInfo;
+    // public place: cinerino.service.Place;
     public transaction: {
         placeOrder: cinerino.service.transaction.PlaceOrder
     };
@@ -33,7 +34,7 @@ export class CinerinoService {
             this.order = new cinerino.service.Order(option);
             this.organization = new cinerino.service.Organization(option);
             this.person = new cinerino.service.Person(option);
-            this.place = new cinerino.service.Place(option);
+            // this.place = new cinerino.service.Place(option);
             this.transaction = {
                 placeOrder: new cinerino.service.transaction.PlaceOrder(option)
             };
@@ -122,14 +123,22 @@ export class CinerinoService {
 
     /**
      * 座席ステータス取得
-     * @param {cinerino.factory.chevre.services.reserve.IStateReserveSeatArgs} args
+     * @param { eventId: string } args
      */
     public async getSeatState(
-        args: cinerino.factory.chevre.services.reserve.IStateReserveSeatArgs
+        args: { eventId: string }
     ) {
         const url = `${environment.API_ENDPOINT}/api/purchase/getSeatState`;
 
-        return this.http.get<cinerino.factory.chevre.services.reserve.IStateReserveSeatResult>(url, {
+        return this.http.get<cinerino.factory.chevre.event.screeningEvent.IScreeningRoomSectionOffer[]>(url, {
+            params: <any>args
+        }).toPromise();
+    }
+
+    public async findMovieTheaterByBranchCode(args: { branchCode: string } ) {
+        const url = `${environment.API_ENDPOINT}/api/purchase/findMovieTheaterByBranchCode`;
+
+        return this.http.get<cinerino.factory.chevre.place.movieTheater.IPlace>(url, {
             params: <any>args
         }).toPromise();
     }
@@ -138,7 +147,7 @@ export class CinerinoService {
      * ムビチケチケットコード取得
      * @param {cinerino.factory.chevre.services.master.IMvtkTicketcodeArgs} args
      */
-    public async mvtkTicketcode(
+    /*public async mvtkTicketcode(
         args: cinerino.factory.chevre.services.master.IMvtkTicketcodeArgs
     ) {
         const url = `${environment.API_ENDPOINT}/api/purchase/mvtkTicketcode`;
@@ -149,34 +158,34 @@ export class CinerinoService {
         }
 
         return result;
-    }
+    }*/
 
     /**
      * 券種取得
      * @method getSalesTickets
      * @param {cinerino.factory.chevre.services.reserve.ISalesTicketArgs} args
      */
-    public async getSalesTickets(
+    /*public async getSalesTickets(
         args: cinerino.factory.chevre.services.reserve.ISalesTicketArgs
     ) {
         const url = `${environment.API_ENDPOINT}/api/master/getSalesTickets`;
         return this.http.get<cinerino.factory.chevre.services.reserve.ISalesTicketResult[]>(url, {
             params: <any>args
         }).toPromise();
-    }
+    }*/
 
     /**
      * 券種マスター一覧取得
      * @method getTickets
      * @param {cinerino.factory.chevre.services.reserve.ITicketArgs} args
      */
-    public async getTickets(
+    /*public async getTickets(
         args: cinerino.factory.chevre.services.master.ITicketArgs
     ) {
         const url = `${environment.API_ENDPOINT}/api/master/getTickets`;
         return this.http.get<cinerino.factory.chevre.services.master.ITicketResult[]>(url, {
             params: <any>args
         }).toPromise();
-    }
+    }*/
 
 }

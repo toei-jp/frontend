@@ -1,13 +1,13 @@
 /**
  * 購入
  */
-import * as mvtkReserve from '@motionpicture/mvtk-reserve-service';
+// import * as mvtkReserve from '@motionpicture/mvtk-reserve-service';
 import * as chevre from '@toei-jp/chevre-api-nodejs-client';
-import * as cinerino from '@toei-jp/cinerino-api-nodejs-client';
+// import * as cinerino from '@toei-jp/cinerino-api-nodejs-client';
 import * as debug from 'debug';
 import { Request, Response } from 'express';
-import * as moment from 'moment';
-import { AuthModel } from '../../models/auth/auth.model';
+// import * as moment from 'moment';
+// import { AuthModel } from '../../models/auth/auth.model';
 import { errorProsess, getOptions } from '../base/base.controller';
 const log = debug('frontend:purchase');
 
@@ -22,7 +22,27 @@ export async function getSeatState(req: Request, res: Response): Promise<void> {
     log('getSeatState');
     try {
         const args = req.query;
-        const result = await chevre.service.reserve.stateReserveSeat(args);
+        const options = getOptions(req);
+        const result = await new chevre.service.Event(options).searchScreeningEventOffers(args);
+        res.json(result);
+    } catch (err) {
+        errorProsess(res, err);
+    }
+}
+
+/**
+ * 劇場コードで劇場取得
+ * @function findMovieTheaterByBranchCode
+ * @param {Request} req
+ * @param {Response} res
+ * @returns {Promise<void>}
+ */
+export async function findMovieTheaterByBranchCode(req: Request, res: Response): Promise<void> {
+    log('getSeatState');
+    try {
+        const args = req.query;
+        const options = getOptions(req);
+        const result = await new chevre.service.Place(options).findMovieTheaterByBranchCode(args);
         res.json(result);
     } catch (err) {
         errorProsess(res, err);
@@ -36,7 +56,7 @@ export async function getSeatState(req: Request, res: Response): Promise<void> {
  * @param {Response} res
  * @returns {Promise<void>}
  */
-export async function mvtkTicketcode(req: Request, res: Response): Promise<void> {
+/*export async function mvtkTicketcode(req: Request, res: Response): Promise<void> {
     log('mvtkTicketcode');
     try {
         const args = req.body;
@@ -45,7 +65,8 @@ export async function mvtkTicketcode(req: Request, res: Response): Promise<void>
     } catch (err) {
         errorProsess(res, err);
     }
-}
+}*/
+// TODO: fix
 
 /**
  * ムビチケ照会
@@ -54,7 +75,7 @@ export async function mvtkTicketcode(req: Request, res: Response): Promise<void>
  * @param {Response} res
  * @returns {Promise<void>}
  */
-export async function mvtkPurchaseNumberAuth(req: Request, res: Response): Promise<void> {
+/*export async function mvtkPurchaseNumberAuth(req: Request, res: Response): Promise<void> {
     log('mvtkPurchaseNumberAuth');
     try {
         const args = req.body;
@@ -63,7 +84,7 @@ export async function mvtkPurchaseNumberAuth(req: Request, res: Response): Promi
     } catch (err) {
         errorProsess(res, err);
     }
-}
+}*/
 
 /**
  * ムビチケ座席指定情報連携
@@ -72,7 +93,7 @@ export async function mvtkPurchaseNumberAuth(req: Request, res: Response): Promi
  * @param {Response} res
  * @returns {Promise<void>}
  */
-export async function mvtksSatInfoSync(req: Request, res: Response): Promise<void> {
+/*export async function mvtksSatInfoSync(req: Request, res: Response): Promise<void> {
     log('mvtksSatInfoSync');
     try {
         const args = req.body;
@@ -81,7 +102,7 @@ export async function mvtksSatInfoSync(req: Request, res: Response): Promise<voi
     } catch (err) {
         errorProsess(res, err);
     }
-}
+}*/
 
 /**
  * スケジュールリスト取得
@@ -91,7 +112,7 @@ export async function mvtksSatInfoSync(req: Request, res: Response): Promise<voi
  * @param {Response} res
  * @returns {Promise<void>}
  */
-export async function getSchedule(req: Request, res: Response): Promise<void> {
+/*export async function getSchedule(req: Request, res: Response): Promise<void> {
     try {
         const options = getOptions(req);
         const args = {
@@ -105,11 +126,11 @@ export async function getSchedule(req: Request, res: Response): Promise<void> {
         const theaters = movietheaters.data.filter((movietheater) => {
             // 非表示劇場
             let filterResult = true;
-            const hidetTeaters = (process.env.HIDE_THEATERS === undefined)
+            const hideTheaters = (process.env.HIDE_THEATERS === undefined)
                 ? []
                 : process.env.HIDE_THEATERS.replace(/\s/g, '').split(',');
-            for (const teaterCode of hidetTeaters) {
-                if (teaterCode === movietheater.location.branchCode) {
+            for (const theaterCode of hideTheaters) {
+                if (theaterCode === movietheater.location.branchCode) {
                     filterResult = false;
                     break;
                 }
@@ -130,23 +151,23 @@ export async function getSchedule(req: Request, res: Response): Promise<void> {
     } catch (err) {
         errorProsess(res, err);
     }
-}
+}*/
 
-type IEventWithOffer = chevre.factory.event.screeningEvent.IEvent;
+// type IEventWithOffer = chevre.factory.event.screeningEvent.IEvent;
 
-interface IChevreSchedule {
+/*interface IChevreSchedule {
     theater: cinerino.factory.organization.movieTheater.IAttributes;
     schedules: chevre.service.master.IScheduleResult[];
-}
+}*/
 
-let chevreSchedules: IChevreSchedule[] = [];
-chevreSchedulesUpdate();
+// let chevreSchedules: IChevreSchedule[] = [];
+// chevreSchedulesUpdate();
 
 /**
  * Chevreスケジュール更新
  * @function chevreSchedulesUpdate
  */
-async function chevreSchedulesUpdate(): Promise<void> {
+/*async function chevreSchedulesUpdate(): Promise<void> {
     log('chevreSchedulesUpdate start', chevreSchedules.length);
     try {
         const result: IChevreSchedule[] = [];
@@ -181,13 +202,13 @@ async function chevreSchedulesUpdate(): Promise<void> {
         await chevreSchedulesUpdate();
     }
     log('chevreSchedulesUpdate end', chevreSchedules.length);
-}
+}*/
 
 /**
  * Chevreスケジュール更新待ち
  * @function waitChevreSchedulesUpdate
  */
-async function waitChevreSchedulesUpdate() {
+/*async function waitChevreSchedulesUpdate() {
     const timer = 1000;
     const limit = 10000;
     let count = 0;
@@ -208,13 +229,13 @@ async function waitChevreSchedulesUpdate() {
             timer
         );
     });
-}
+}*/
 
 /**
  * スケジュール整合性確認
  * @function checkedSchedules
  */
-async function checkedSchedules(args: {
+/*async function checkedSchedules(args: {
     theaters: cinerino.factory.organization.movieTheater.IAttributes[];
     screeningEvents: IEventWithOffer[];
 }): Promise<IEventWithOffer[]> {
@@ -249,7 +270,7 @@ async function checkedSchedules(args: {
     // log('diffList length', diffList.length);
 
     return screeningEvents;
-}
+}*/
 
 /**
  * 差分抽出
@@ -257,7 +278,7 @@ async function checkedSchedules(args: {
  * @param　{IEventWithOffer[]} array1
  * @param {IEventWithOffer[]} array2
  */
-export function diffScreeningEvents(array1: IEventWithOffer[], array2: IEventWithOffer[]) {
+/*export function diffScreeningEvents(array1: IEventWithOffer[], array2: IEventWithOffer[]) {
     const diffArray: IEventWithOffer[] = [];
 
     for (const array of array1) {
@@ -270,4 +291,4 @@ export function diffScreeningEvents(array1: IEventWithOffer[], array2: IEventWit
     }
 
     return diffArray;
-}
+}*/

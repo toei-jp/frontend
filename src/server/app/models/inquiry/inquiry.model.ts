@@ -7,7 +7,7 @@ import * as cinerino from '@toei-jp/cinerino-api-nodejs-client';
 export interface IInquiryModel {
     order?: cinerino.factory.order.IOrder;
     input?: IInput;
-    movieTheaterOrganization?: cinerino.factory.organization.movieTheater.IOrganization;
+    movieTheater?: cinerino.factory.chevre.place.movieTheater.IPlace;
 }
 
 interface IInput {
@@ -31,7 +31,7 @@ export class InquiryModel {
     /**
      * 劇場
      */
-    public movieTheaterOrganization?: cinerino.factory.organization.movieTheater.IOrganization;
+    public movieTheater?: cinerino.factory.chevre.place.movieTheater.IPlace;
 
     /**
      * @constructor
@@ -48,7 +48,7 @@ export class InquiryModel {
                 reserveNum: '',
                 telephone: ''
             };
-        this.movieTheaterOrganization = session.movieTheaterOrganization;
+        this.movieTheater = session.movieTheater;
     }
 
 
@@ -62,7 +62,7 @@ export class InquiryModel {
         const inquirySession: IInquiryModel = {
             order: this.order,
             input: this.input,
-            movieTheaterOrganization: this.movieTheaterOrganization
+            movieTheater: this.movieTheater
         };
         session.inquiry = inquirySession;
     }

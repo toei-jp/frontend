@@ -18,7 +18,7 @@ export class AuthSigninComponent implements OnInit {
 
     public async ngOnInit() {
         try {
-            await this.user.initMember();
+            // await this.user.initMember();
             this.user.save();
             this.router.navigate(['/']);
         } catch (err) {

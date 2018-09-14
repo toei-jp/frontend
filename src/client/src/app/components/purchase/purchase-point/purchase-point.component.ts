@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+/*import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import * as factory from '@toei-jp/chevre-factory';
 import { CinerinoService } from '../../../services/cinerino/cinerino.service';
@@ -100,4 +100,4 @@ export class PurchasePointComponent implements OnInit {
         this.router.navigate(['/purchase/ticket']);
     }
 
-}
+}*/

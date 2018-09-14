@@ -36,7 +36,7 @@ import { PurchaseInputComponent } from './components/purchase/purchase-input/pur
 import { PurchaseMvtkConfirmComponent } from './components/purchase/purchase-mvtk-confirm/purchase-mvtk-confirm.component';
 import { PurchaseMvtkInputComponent } from './components/purchase/purchase-mvtk-input/purchase-mvtk-input.component';
 import { PurchaseOverlapComponent } from './components/purchase/purchase-overlap/purchase-overlap.component';
-import { PurchasePointComponent } from './components/purchase/purchase-point/purchase-point.component';
+// import { PurchasePointComponent } from './components/purchase/purchase-point/purchase-point.component';
 import { PurchaseScheduleComponent } from './components/purchase/purchase-schedule/purchase-schedule.component';
 import { PurchaseSeatComponent } from './components/purchase/purchase-seat/purchase-seat.component';
 import { PurchaseTicketComponent } from './components/purchase/purchase-ticket/purchase-ticket.component';
@@ -96,7 +96,7 @@ import { UtilService } from './services/util/util.service';
         ExpiredComponent,
         PurchaseTermComponent,
         PurchaseNoteComponent,
-        PurchasePointComponent,
+        // PurchasePointComponent,
         AuthSigninComponent,
         TestScreenComponent
     ],

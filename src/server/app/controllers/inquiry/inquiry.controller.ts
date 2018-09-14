@@ -1,6 +1,7 @@
 /**
  * 照会
  */
+import * as chevre from '@toei-jp/chevre-api-nodejs-client';
 import * as cinerino from '@toei-jp/cinerino-api-nodejs-client';
 import * as debug from 'debug';
 import { Request, Response } from 'express';
@@ -24,7 +25,7 @@ export async function login(req: Request, res: Response): Promise<void> {
         const options = getOptions(req);
         const args = { branchCode: req.query.theater };
         log('findMovieTheaterByBranchCode', args);
-        inquiryModel.movieTheaterOrganization = await new cinerino.service.Organization(options).findMovieTheaterById(args);
+        inquiryModel.movieTheater = await new chevre.service.Place(options).findMovieTheaterByBranchCode(args);
         inquiryModel.input.reserveNum = (req.query.reserve !== undefined) ? req.query.reserve : '';
         inquiryModel.save(req.session);
         res.locals.inquiryModel = inquiryModel;
@@ -51,8 +52,8 @@ export async function auth(req: Request, res: Response): Promise<void> {
     const inquiryModel = new InquiryModel((<Express.Session>req.session).inquiry);
     try {
         loginForm(req);
-        if (inquiryModel.movieTheaterOrganization === undefined) {
-            throw new Error('movieTheaterOrganization is undefined');
+        if (inquiryModel.movieTheater === undefined) {
+            throw new Error('movieTheater is undefined');
         }
         const validationResult = await req.getValidationResult();
         inquiryModel.input = {
@@ -61,14 +62,14 @@ export async function auth(req: Request, res: Response): Promise<void> {
         };
         inquiryModel.save(req.session);
         if (validationResult.isEmpty()) {
-            const theaterCode = inquiryModel.movieTheaterOrganization.location.branchCode;
+            const theaterCode = inquiryModel.movieTheater.branchCode;
             const args = {
-                telephone: inquiryModel.input.telephone,
+                customer: { telephone: inquiryModel.input.telephone },
                 confirmationNumber: Number(inquiryModel.input.reserveNum),
-                theaterCode: inquiryModel.movieTheaterOrganization.location.branchCode
+                // theaterCode: inquiryModel.movieTheater.branchCode
             };
             log('findByOrderInquiryKey', args);
-            inquiryModel.order = await new cinerino.service.Order(options).findByOrderInquiryKey(args);
+            inquiryModel.order = await new cinerino.service.Order(options).findByConfirmationNumber(args);
             log('findByOrderInquiryKey', inquiryModel.order);
             if (inquiryModel.order === undefined) {
                 log('NOT FOUND');

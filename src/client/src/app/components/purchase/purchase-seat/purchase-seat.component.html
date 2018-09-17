@@ -2,7 +2,7 @@
     <h1 class="page-ttl">座席選択</h1>
     <p class="read">ご希望の座席を選択して「次へ」ボタンを押してください。
         <br>選択できる座席数は最大
-        <span class="seat-limit-text">{{ purchase.data.individualScreeningEvent?.coaInfo.availableNum }}</span>席までとなります。
+        <span class="seat-limit-text">{{ purchase.data.screeningEvent?.remainingAttendeeCapacity }}</span>席までとなります。
         <br>
         <span class="sp-text">画面をタッチすると画面がズームしますので座席を選択してください。
             <br>
@@ -11,7 +11,8 @@
     </p>
     <div class="mb-middle">
         <app-screen [inputData]="screenData" [test]="false" (select)="seatSelect($event)" (alert)="seatSelectionAlert()" (load)="loadScreen($event)">
-            <app-seat-info type="{{ purchase.data.individualScreeningEvent?.superEvent.coaInfo.kbnJoueihousiki?.kubunCode }}"></app-seat-info>
+            <!-- <app-seat-info type="{{ purchase.data.screeningEvent?.superEvent.coaInfo.kbnJoueihousiki?.kubunCode }}"></app-seat-info> -->
+            <app-seat-info></app-seat-info>
         </app-screen>
     </div>
 
@@ -34,7 +35,7 @@
     <h2 class="section-ttl">利用規約</h2>
     <p class="mb-small">利用規約に同意した上で「次へ」ボタンを押してください。</p>
 
-    <app-purchase-term class="mb-middle" [theaterCode]="purchase.data.individualScreeningEvent?.superEvent.location.branchCode.slice(-2)"></app-purchase-term>
+    <app-purchase-term class="mb-middle" [theaterCode]="purchase.data.screeningEvent?.superEvent.location.branchCode.slice(-2)"></app-purchase-term>
 
     <form [formGroup]="seatForm" (ngSubmit)="onSubmit()">
         <div class="mb-x-large text-center">
@@ -76,7 +77,7 @@
         <strong>予約座席数が上限です</strong>
     </div>
     <p class="text-center">予約座席数は最大
-        <span class="seat-limit-text">{{ purchase.data.individualScreeningEvent?.coaInfo.availableNum }}</span>席までとなります。</p>
+        <span class="seat-limit-text">{{ purchase.data.screeningEvent?.remainingAttendeeCapacity }}</span>席までとなります。</p>
 </app-modal>
 
 <app-loading [show]="isLoading"></app-loading>

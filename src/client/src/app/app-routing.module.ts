@@ -11,16 +11,16 @@ import { PurchaseBaseComponent } from './components/purchase/purchase-base/purch
 import { PurchaseCompleteComponent } from './components/purchase/purchase-complete/purchase-complete.component';
 import { PurchaseConfirmComponent } from './components/purchase/purchase-confirm/purchase-confirm.component';
 import { PurchaseInputComponent } from './components/purchase/purchase-input/purchase-input.component';
-import { PurchaseMvtkConfirmComponent } from './components/purchase/purchase-mvtk-confirm/purchase-mvtk-confirm.component';
-import { PurchaseMvtkInputComponent } from './components/purchase/purchase-mvtk-input/purchase-mvtk-input.component';
+// import { PurchaseMvtkConfirmComponent } from './components/purchase/purchase-mvtk-confirm/purchase-mvtk-confirm.component';
+// import { PurchaseMvtkInputComponent } from './components/purchase/purchase-mvtk-input/purchase-mvtk-input.component';
 import { PurchaseOverlapComponent } from './components/purchase/purchase-overlap/purchase-overlap.component';
-import { PurchasePointComponent } from './components/purchase/purchase-point/purchase-point.component';
+// import { PurchasePointComponent } from './components/purchase/purchase-point/purchase-point.component';
 import { PurchaseScheduleComponent } from './components/purchase/purchase-schedule/purchase-schedule.component';
 import { PurchaseSeatComponent } from './components/purchase/purchase-seat/purchase-seat.component';
 import { PurchaseTicketComponent } from './components/purchase/purchase-ticket/purchase-ticket.component';
 import { PurchaseTransactionComponent } from './components/purchase/purchase-transaction/purchase-transaction.component';
 import { TestScreenComponent } from './components/test/test-screen/test-screen.component';
-import { MemberGuardService } from './services/member-guard/member-guard.service';
+// import { MemberGuardService } from './services/member-guard/member-guard.service';
 import { PurchaseGuardService } from './services/purchase-guard/purchase-guard.service';
 import { TestGuardService } from './services/test-guard/test-guard.service';
 
@@ -47,9 +47,9 @@ const routes: Routes = [
             { path: 'ticket', component: PurchaseTicketComponent },
             { path: 'input', component: PurchaseInputComponent },
             { path: 'confirm', component: PurchaseConfirmComponent },
-            { path: 'mvtk/input', component: PurchaseMvtkInputComponent },
-            { path: 'mvtk/confirm', component: PurchaseMvtkConfirmComponent },
-            { path: 'point', canActivate: [MemberGuardService], component: PurchasePointComponent }
+            // { path: 'mvtk/input', component: PurchaseMvtkInputComponent },
+            // { path: 'mvtk/confirm', component: PurchaseMvtkConfirmComponent },
+            // { path: 'point', canActivate: [MemberGuardService], component: PurchasePointComponent }
         ]
     },
     {

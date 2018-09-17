@@ -33,8 +33,8 @@ import { PurchaseBaseComponent } from './components/purchase/purchase-base/purch
 import { PurchaseCompleteComponent } from './components/purchase/purchase-complete/purchase-complete.component';
 import { PurchaseConfirmComponent } from './components/purchase/purchase-confirm/purchase-confirm.component';
 import { PurchaseInputComponent } from './components/purchase/purchase-input/purchase-input.component';
-import { PurchaseMvtkConfirmComponent } from './components/purchase/purchase-mvtk-confirm/purchase-mvtk-confirm.component';
-import { PurchaseMvtkInputComponent } from './components/purchase/purchase-mvtk-input/purchase-mvtk-input.component';
+// import { PurchaseMvtkConfirmComponent } from './components/purchase/purchase-mvtk-confirm/purchase-mvtk-confirm.component';
+// import { PurchaseMvtkInputComponent } from './components/purchase/purchase-mvtk-input/purchase-mvtk-input.component';
 import { PurchaseOverlapComponent } from './components/purchase/purchase-overlap/purchase-overlap.component';
 // import { PurchasePointComponent } from './components/purchase/purchase-point/purchase-point.component';
 import { PurchaseScheduleComponent } from './components/purchase/purchase-schedule/purchase-schedule.component';
@@ -67,8 +67,8 @@ import { UtilService } from './services/util/util.service';
         PurchaseTicketComponent,
         PurchaseInputComponent,
         PurchaseConfirmComponent,
-        PurchaseMvtkInputComponent,
-        PurchaseMvtkConfirmComponent,
+        // PurchaseMvtkInputComponent,
+        // PurchaseMvtkConfirmComponent,
         InquiryBaseComponent,
         InquiryLoginComponent,
         InquiryConfirmComponent,

@@ -263,7 +263,7 @@ export class PurchaseInputComponent implements OnInit {
                 }
             };
             const Multipayment = (<any>window).Multipayment;
-            Multipayment.init(this.purchase.data.movieTheaterOrganization.gmoInfo.shopId);
+            Multipayment.init(this.purchase.data.movieTheaterOrganization.identifier);
             Multipayment.getToken(sendParam, (<any>window).someCallbackFunction);
         });
     }

@@ -48,8 +48,8 @@
                 <dl>
                     <dt>座席</dt>
                     <dd>
-                        <p *ngFor="let offer of purchase.data.seatReservationAuthorization?.object.offers">
-                            {{ offer.seatNumber }} {{ offer.ticketInfo.ticketName }} ￥{{ offer.ticketInfo.salePrice }}
+                        <p *ngFor="let offer of purchase.data.offers">
+                            {{ offer.seatNumber }} {{ offer.ticketInfo.ticketName.jp }} ￥{{ offer.ticketInfo.charge }}
                         </p>
                     </dd>
                 </dl>
@@ -105,7 +105,7 @@
         <h2 class="section-ttl">注意事項(重要)</h2>
         <p class="mb-small">下記項目をご確認いただきチェックを入れて「購入完了」ボタンを押してください。</p>
         
-        <app-purchase-note class="mb-middle" [theaterCode]="purchase.data.individualScreeningEvent?.superEvent.location.branchCode.slice(-2)"></app-purchase-note>
+        <app-purchase-note class="mb-middle" [theaterCode]="purchase.data.screeningEvent?.superEvent.location.branchCode.slice(-2)"></app-purchase-note>
 
         <form [formGroup]="confirmForm" (ngSubmit)="onSubmit()">
             <div class="mb-x-large text-center">

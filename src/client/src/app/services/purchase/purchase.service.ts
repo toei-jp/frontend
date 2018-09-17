@@ -76,7 +76,7 @@ interface IData {
      */
     seatReservationAuthorization?: factory.action.authorize.offer.seatReservation.IAction;
     /**
-     *
+     * 予約座席パラメタ
      */
     reservationAuthorizationArgs?: factory.chevre.transaction.reserve.IObjectWithoutDetail & {
         /**

@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const chevre = require("@toei-jp/chevre-api-nodejs-client");
 // import * as cinerino from '@toei-jp/cinerino-api-nodejs-client';
 const debug = require("debug");
+const auth_model_1 = require("../../models/auth/auth.model");
 // import * as moment from 'moment';
 // import { AuthModel } from '../../models/auth/auth.model';
 const base_controller_1 = require("../base/base.controller");
@@ -31,7 +32,7 @@ function getSeatState(req, res) {
         log('getSeatState');
         try {
             const args = req.query;
-            const options = base_controller_1.getOptions(req);
+            const options = base_controller_1.getOptions(req, auth_model_1.ApiEndpoint.chevre);
             const result = yield new chevre.service.Event(options).searchScreeningEventOffers(args);
             res.json(result);
         }
@@ -53,7 +54,7 @@ function findMovieTheaterByBranchCode(req, res) {
         log('getSeatState');
         try {
             const args = req.query;
-            const options = base_controller_1.getOptions(req);
+            const options = base_controller_1.getOptions(req, auth_model_1.ApiEndpoint.chevre);
             const result = yield new chevre.service.Place(options).findMovieTheaterByBranchCode(args);
             res.json(result);
         }
@@ -296,3 +297,4 @@ exports.findMovieTheaterByBranchCode = findMovieTheaterByBranchCode;
 
     return diffArray;
 }*/
+//# sourceMappingURL=purchase.controller.js.map

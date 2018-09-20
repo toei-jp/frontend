@@ -40,3 +40,4 @@
         errorProsess(res, err);
     }
 }*/
+//# sourceMappingURL=master.controller.js.map

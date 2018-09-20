@@ -40,8 +40,8 @@
                 <dt>座席</dt>
                 <dd>
                     <p *ngFor="let offer of data.order.acceptedOffers">
-                        {{ offer.itemOffered.reservedTicket.coaTicketInfo.seatNum }} {{ offer.itemOffered.reservedTicket.coaTicketInfo.ticketName
-                        }} ￥{{ offer.itemOffered.reservedTicket.coaTicketInfo.salePrice }}
+                        {{ offer.itemOffered.reservedTicket.ticketedSeat.seatNumber }} {{ offer.itemOffered.reservedTicket.ticketType.name.ja
+                        }} ￥{{ offer.itemOffered.reservedTicket.totalPrice }}
                     </p>
                 </dd>
             </dl>

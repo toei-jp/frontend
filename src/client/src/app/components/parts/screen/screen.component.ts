@@ -241,11 +241,11 @@ export class ScreenComponent implements OnInit, AfterViewInit {
         // 座席リスト
         const seats: ISeat[] = [];
 
-        const toFullWidth = (value: string) => {
+        /*const toFullWidth = (value: string) => {
             return value.replace(/./g, (s: string) => {
                 return String.fromCharCode(s.charCodeAt(0) + 0xFEE0);
             });
-        };
+        };*/
         const pos = { x: 0, y: 0 };
         let labelCount = 0;
         for (let y = 0; y < screenData.map.length; y++) {
@@ -312,8 +312,8 @@ export class ScreenComponent implements OnInit, AfterViewInit {
                     || screenData.map[y][x] === 10) {
                     // 座席HTML生成
                     const code = (data.screen.seatNumberAlign === 'left')
-                        ? `${toFullWidth(labels[labelCount])}－${toFullWidth(String(x + 1))}`
-                        : `${toFullWidth(labels[labelCount])}－${toFullWidth(String(screenData.map[y].length - x))}`;
+                        ? `${labels[labelCount]}-${String(x + 1)}`
+                        : `${labels[labelCount]}-${String(screenData.map[y].length - x)}`;
                     const label = (data.screen.seatNumberAlign === 'left')
                         ? `${labels[labelCount]}${String(x + 1)}`
                         : `${labels[labelCount]}${String(screenData.map[y].length - x)}`;

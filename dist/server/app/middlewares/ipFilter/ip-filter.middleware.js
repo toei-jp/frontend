@@ -8,8 +8,8 @@ const http_status_1 = require("http-status");
 exports.default = (req, res, next) => {
     // debug('x-forwarded-for:', req.headers['x-forwarded-for']);
     // IP制限拒否の場合
-    if (process.env.CINERINO_ALLOWED_IPS !== undefined) {
-        const allowedIps = process.env.CINERINO_ALLOWED_IPS.split(',');
+    if (process.env.ALLOWED_IPS !== undefined) {
+        const allowedIps = process.env.ALLOWED_IPS.split(',');
         const forbidden = allowedIps.every((ip) => {
             const regex = new RegExp(`^${ip}(:\\d+)?$`);
             return !regex.test(req.headers['x-forwarded-for']);
@@ -22,3 +22,4 @@ exports.default = (req, res, next) => {
     }
     next();
 };
+//# sourceMappingURL=ip-filter.middleware.js.map

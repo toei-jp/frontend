@@ -65,9 +65,9 @@ export class PurchaseTransactionComponent implements OnInit {
                 this.user.load();
                 this.user.save();
             }
-            if (!this.parametersChack()) {
-                throw new Error('parameters is undefined');
-            }
+            // if (!this.parametersChack()) {
+            //     throw new Error('parameters is undefined');
+            // }
             this.user.setNative(this.parameters.native);
             // this.user.setAccessToken(this.parameters.accessToken);
             this.user.save();
@@ -105,7 +105,7 @@ export class PurchaseTransactionComponent implements OnInit {
                 // アプリなら購入情報削除
                 this.purchase.reset();
             }
-            if (this.purchase.data.offers !== undefined) {
+            if (this.purchase.data.offers.length > 0) {
                 // 重複確認へ
                 this.storage.save('screeningEvent', screeningEvent, SaveType.Session);
                 this.router.navigate([`/purchase/overlap`]);
@@ -128,14 +128,14 @@ export class PurchaseTransactionComponent implements OnInit {
      * @method parametersChack
      * @requires {boolean}
      */
-    private parametersChack(): boolean {
-        let result = true;
-        if (this.parameters.passportToken === undefined
-            || this.parameters.performanceId === undefined) {
-            result = false;
-        }
+    // private parametersChack(): boolean {
+    //     let result = true;
+    //     if (this.parameters.passportToken === undefined
+    //         || this.parameters.performanceId === undefined) {
+    //         result = false;
+    //     }
 
-        return result;
-    }
+    //     return result;
+    // }
 
 }

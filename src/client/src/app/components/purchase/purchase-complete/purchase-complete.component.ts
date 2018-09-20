@@ -115,9 +115,9 @@ export class PurchaseCompleteComponent implements OnInit {
         if (itemOffered.typeOf !== factory.chevre.reservationType.EventReservation) {
             return '';
         }
-        const startDate = moment(itemOffered.reservationFor.startDate);
+        const startDate = moment(itemOffered.reservationFor.startDate).tz('Asia/Tokyo');
 
-        return `${startDate.get('hour')}:${startDate.get('minute')}`;
+        return `${startDate.format('HH')}:${startDate.format('mm')}`;
     }
 
     /**
@@ -130,9 +130,9 @@ export class PurchaseCompleteComponent implements OnInit {
         if (itemOffered.typeOf !== factory.chevre.reservationType.EventReservation) {
             return '';
         }
-        const endDate = moment(itemOffered.reservationFor.endDate);
+        const endDate = moment(itemOffered.reservationFor.endDate).tz('Asia/Tokyo');
 
-        return `${endDate.get('hour')}:${endDate.get('minute')}`;
+        return `${endDate.format('HH')}:${endDate.format('mm')}`;
     }
 
     /**

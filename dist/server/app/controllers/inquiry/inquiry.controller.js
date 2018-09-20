@@ -16,6 +16,7 @@ const cinerino = require("@toei-jp/cinerino-api-nodejs-client");
 const debug = require("debug");
 const http_status_1 = require("http-status");
 const moment = require("moment");
+const auth_model_1 = require("../../models/auth/auth.model");
 const inquiry_model_1 = require("../../models/inquiry/inquiry.model");
 const base_controller_1 = require("../base/base.controller");
 const log = debug('frontend:inquiry');
@@ -31,7 +32,7 @@ function login(req, res) {
         log('render');
         try {
             const inquiryModel = new inquiry_model_1.InquiryModel(req.session.inquiry);
-            const options = base_controller_1.getOptions(req);
+            const options = base_controller_1.getOptions(req, auth_model_1.ApiEndpoint.chevre);
             const args = { branchCode: req.query.theater };
             log('findMovieTheaterByBranchCode', args);
             inquiryModel.movieTheater = yield new chevre.service.Place(options).findMovieTheaterByBranchCode(args);
@@ -191,3 +192,4 @@ function timeFormat(screeningTime, referenceDate) {
     const minutes = moment(screeningTime).format('mm');
     return `${hour}:${minutes}`;
 }
+//# sourceMappingURL=inquiry.controller.js.map

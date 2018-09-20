@@ -5,7 +5,7 @@
 import * as debug from 'debug';
 import { Request, Response } from 'express';
 import * as httpStatus from 'http-status';
-import { AuthModel } from '../../models/auth/auth.model';
+import { ApiEndpoint, AuthModel } from '../../models/auth/auth.model';
 
 const log = debug('frontend:base');
 
@@ -14,10 +14,16 @@ const log = debug('frontend:base');
  * @function getOptions
  * @param {Request} req
  */
-export function getOptions(req: Request) {
-    const authModel = new AuthModel((<Express.Session>req.session).auth);
+export function getOptions(req: Request, apiEndpoint?: ApiEndpoint) {
+    let endpoint: string;
+    if (apiEndpoint === ApiEndpoint.chevre) {
+        endpoint = (<string>process.env.CHEVRE_API_ENDPOINT);
+    } else {
+        endpoint = (<string>process.env.CINERINO_API_ENDPOINT);
+    }
+    const authModel = new AuthModel((<Express.Session>req.session).auth, apiEndpoint);
     const options = {
-        endpoint: (<string>process.env.CINERINO_API_ENDPOINT),
+        endpoint,
         auth: authModel.create()
     };
     authModel.save(req.session);

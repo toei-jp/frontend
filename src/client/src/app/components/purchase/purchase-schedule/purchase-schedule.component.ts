@@ -105,7 +105,7 @@ export class PurchaseScheduleComponent implements OnInit {
             }
             this.schedules = (await this.cinerino.event.searchScreeningEvents({
                 superEvent: {
-                    workPerformedIdentifiers: [theater.identifier]
+                    locationBranchCodes: [theater.location.branchCode]
                 },
                 startFrom: moment(this.conditions.date).toDate(),
                 startThrough: moment(this.conditions.date).add(1, 'day').toDate()

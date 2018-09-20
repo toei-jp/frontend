@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { factory } from '@toei-jp/cinerino-api-javascript-client';
 import * as libphonenumber from 'libphonenumber-js';
 import * as moment from 'moment';
 import { LibphonenumberFormatPipe } from '../../../pipes/libphonenumber-format/libphonenumber-format.pipe';
@@ -225,12 +226,13 @@ export class PurchaseInputComponent implements OnInit {
                 }
             }
 
+            const phoneNumber = libphonenumber.parse(this.inputForm.controls.telephone.value, 'JP');
             // 入力情報を登録
             const contact = {
                 familyName: this.inputForm.controls.familyName.value,
                 givenName: this.inputForm.controls.givenName.value,
                 email: this.inputForm.controls.email.value,
-                telephone: this.inputForm.controls.telephone.value
+                telephone: libphonenumber.formatNumber(phoneNumber, 'E.164')
             };
             await this.purchase.customerContactRegistrationProcess(contact);
             this.router.navigate(['/purchase/confirm']);
@@ -252,7 +254,10 @@ export class PurchaseInputComponent implements OnInit {
         };
         // console.log(sendParam);
         return new Promise<IGmoTokenObject>((resolve, reject) => {
-            if (this.purchase.data.movieTheaterOrganization === undefined) {
+            if (
+                this.purchase.data.movieTheaterOrganization === undefined ||
+                this.purchase.data.movieTheaterOrganization.paymentAccepted === undefined
+            ) {
                 return reject(new Error('status is different'));
             }
             (<any>window).someCallbackFunction = function someCallbackFunction(response: any) {
@@ -262,8 +267,15 @@ export class PurchaseInputComponent implements OnInit {
                     reject(new Error(response.resultCode));
                 }
             };
+            const creditCardPayment = this.purchase.data.movieTheaterOrganization.paymentAccepted.find((payment) => {
+                return payment.paymentMethodType === factory.paymentMethodType.CreditCard;
+            });
+            if (creditCardPayment === undefined) {
+                return reject(new Error('status is different'));
+            }
+            const { shopId } = (<factory.organization.IPaymentAccepted<factory.paymentMethodType.CreditCard>>creditCardPayment).gmoInfo;
             const Multipayment = (<any>window).Multipayment;
-            Multipayment.init(this.purchase.data.movieTheaterOrganization.identifier);
+            Multipayment.init(shopId);
             Multipayment.getToken(sendParam, (<any>window).someCallbackFunction);
         });
     }

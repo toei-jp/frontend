@@ -34,7 +34,7 @@ export enum FlgMember {
 export interface IData {
     native: NativeAppFlg;
     memberType: FlgMember;
-    contact?: factory.person.IContact;
+    contact?: factory.person.IProfile;
     creditCards?: factory.paymentMethod.paymentCard.creditCard.ICheckedCard[];
     accessToken?: string;
     account?: factory.pecorino.account.IAccount<factory.accountType.Point>;

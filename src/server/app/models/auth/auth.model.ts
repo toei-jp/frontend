@@ -25,6 +25,15 @@ export interface IAuthSession {
 }
 
 /**
+ * ApiEndpointを確定のため
+ * @enum ApiEndpoint
+ */
+export enum ApiEndpoint {
+    cinerino = 'cinerino',
+    chevre = 'chevre'
+}
+
+/**
  * 認証モデル
  * @class AuthModel
  */
@@ -45,17 +54,24 @@ export class AuthModel {
      * コード検証
      */
     public codeVerifier?: string;
+    public apiEndpoint?: ApiEndpoint;
 
     /**
      * @constructor
      * @param {any} session
      */
-    constructor(session?: any) {
+    constructor(session?: any, apiEndpoint?: ApiEndpoint) {
+        this.apiEndpoint = apiEndpoint;
         if (session === undefined) {
             session = {};
         }
         this.state = (session.state !== undefined) ? session.state : uuid.v1();
-        const resourceServerUrl  = <string>process.env.RESOURCE_SERVER_URL;
+        let resourceServerUrl: string;
+        if (apiEndpoint === ApiEndpoint.chevre) {
+            resourceServerUrl = <string>process.env.CHEVRE_RESOURCE_SERVER_URL;
+        } else {
+            resourceServerUrl = <string>process.env.CINERINO_RESOURCE_SERVER_URL;
+        }
         this.scopes = (session.scopes !== undefined) ? session.scopes : [
             `${resourceServerUrl}/transactions`,
             `${resourceServerUrl}/events.read-only`,
@@ -74,13 +90,24 @@ export class AuthModel {
      * @returns {cinerino.auth.ClientCredentials}
      */
     public create(): cinerino.auth.ClientCredentials {
-        return new cinerino.auth.ClientCredentials({
-            domain: (<string>process.env.AUTHORIZE_SERVER_DOMAIN),
-            clientId: (<string>process.env.CLIENT_ID),
-            clientSecret: (<string>process.env.CLIENT_SECRET),
-            state: this.state,
-            scopes: this.scopes
-        });
+        switch (this.apiEndpoint) {
+            case ApiEndpoint.chevre:
+                return new cinerino.auth.ClientCredentials({
+                    domain: (<string>process.env.CHEVRE_AUTHORIZE_SERVER_DOMAIN),
+                    clientId: (<string>process.env.CHEVRE_CLIENT_ID),
+                    clientSecret: (<string>process.env.CHEVRE_CLIENT_SECRET),
+                    state: this.state,
+                    scopes: this.scopes
+                });
+            default:
+                return new cinerino.auth.ClientCredentials({
+                    domain: (<string>process.env.CINERINO_AUTHORIZE_SERVER_DOMAIN),
+                    clientId: (<string>process.env.CINERINO_CLIENT_ID),
+                    clientSecret: (<string>process.env.CINERINO_CLIENT_SECRET),
+                    state: this.state,
+                    scopes: this.scopes
+                });
+        }
     }
 
     /**

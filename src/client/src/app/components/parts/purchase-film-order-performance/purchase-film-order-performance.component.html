@@ -3,9 +3,9 @@
         <dt>
             <div class="text-left">
                 <div class="large-text mb-x-small">
-                    <strong>{{ data.startDate }}</strong>
+                    <strong>{{ data.startDate| timeFormat }}</strong>
                 </div>
-                <div>～{{ data.endDate }}</div>
+                <div>～{{ data.endDate | timeFormat }}</div>
             </div>
             <div class="text-center small-x-text status">
                 <div class="mb-x-small text">{{ availability.text }}</div>

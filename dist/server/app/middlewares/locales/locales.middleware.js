@@ -29,3 +29,4 @@ function setLocale(req, res, next) {
     }
 }
 exports.setLocale = setLocale;
+//# sourceMappingURL=locales.middleware.js.map

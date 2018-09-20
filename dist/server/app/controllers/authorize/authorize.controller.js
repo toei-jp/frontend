@@ -94,3 +94,4 @@ function signInRedirect(req, res, next) {
     });
 }
 exports.signInRedirect = signInRedirect;
+//# sourceMappingURL=authorize.controller.js.map

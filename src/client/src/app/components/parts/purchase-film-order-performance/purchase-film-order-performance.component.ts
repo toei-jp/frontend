@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import * as cinerino from '@toei-jp/cinerino-api-javascript-client';
-import { environment } from '../../../../environments/environment';
+import { SaveType, StorageService } from '../../../services/storage/storage.service';
+// import { environment } from '../../../../environments/environment';
 
 type IScreeningEvent = cinerino.factory.chevre.event.screeningEvent.IEvent;
 interface Iavailability {
@@ -17,7 +19,10 @@ export class PurchaseFilmOrderPerformanceComponent implements OnInit {
     @Input() public data: IScreeningEvent;
     public availability: Iavailability;
 
-    constructor() { }
+    constructor(
+        private storage: StorageService,
+        private router: Router
+    ) { }
 
     public ngOnInit() {
         this.availability = this.getAvailability(this.data.remainingAttendeeCapacity);
@@ -58,7 +63,13 @@ export class PurchaseFilmOrderPerformanceComponent implements OnInit {
         if (availability === 0 || availability === undefined) {
             return;
         }
-        location.href = `${environment.ENTRANCE_SERVER_URL}/purchase/index.html?id=${this.data.identifier}`;
+        // location.href = `${environment.ENTRANCE_SERVER_URL}/purchase/index.html?id=${this.data.identifier}`;
+        this.storage.save('parameters', {
+            passportToken: '',
+            signInRedirect: false,
+            performanceId: this.data.id
+        }, SaveType.Session);
+        this.router.navigate(['/purchase/transaction']);
     }
 
 }

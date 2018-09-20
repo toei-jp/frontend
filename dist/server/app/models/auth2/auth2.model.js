@@ -80,3 +80,4 @@ Auth2Model.STATE = 'STATE';
  */
 Auth2Model.CODE_VERIFIER = 'CODE_VERIFIER';
 exports.Auth2Model = Auth2Model;
+//# sourceMappingURL=auth2.model.js.map

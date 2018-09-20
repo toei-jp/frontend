@@ -10,11 +10,11 @@ export const environment = {
     MVTK_COMPANY_CODE: 'SSK000',
 
     COGNITO_REGION: 'ap-northeast-1', // identity poolのリージョンを指定する
-    COGNITO_IDENTITY_POOL_ID: 'ap-northeast-1:xxxxxxxxxxxxxxxxxxxxx', // identity poolのID(AWS consoleで確認)
+    COGNITO_IDENTITY_POOL_ID: 'ap-northeast-1:49f4caee-80e0-429a-8f8d-4850b626d96d', // identity poolのID(AWS consoleで確認)
     COGNITO_USER_POOL_ID: '',
     COGNITO_CLIENT_ID: '',
 
-    CINERINO_API_ENDPOINT: 'https://toei-api-test.azurewebsites.net',
+    CINERINO_API_ENDPOINT: 'https://toei-cinerino-api-test.azurewebsites.net',
     TOKEN_ISSUER: '',
 
     POINT_TICKET: DEVELOPMENT_POINT_TICKET,

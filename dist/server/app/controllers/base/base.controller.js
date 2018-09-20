@@ -12,10 +12,17 @@ const log = debug('frontend:base');
  * @function getOptions
  * @param {Request} req
  */
-function getOptions(req) {
-    const authModel = new auth_model_1.AuthModel(req.session.auth);
+function getOptions(req, apiEndpoint) {
+    let endpoint;
+    if (apiEndpoint === auth_model_1.ApiEndpoint.chevre) {
+        endpoint = process.env.CHEVRE_API_ENDPOINT;
+    }
+    else {
+        endpoint = process.env.CINERINO_API_ENDPOINT;
+    }
+    const authModel = new auth_model_1.AuthModel(req.session.auth, apiEndpoint);
     const options = {
-        endpoint: process.env.CINERINO_API_ENDPOINT,
+        endpoint,
         auth: authModel.create()
     };
     authModel.save(req.session);
@@ -39,3 +46,4 @@ function errorProsess(res, err) {
     res.json(err);
 }
 exports.errorProsess = errorProsess;
+//# sourceMappingURL=base.controller.js.map

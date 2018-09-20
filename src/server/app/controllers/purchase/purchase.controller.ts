@@ -6,6 +6,7 @@ import * as chevre from '@toei-jp/chevre-api-nodejs-client';
 // import * as cinerino from '@toei-jp/cinerino-api-nodejs-client';
 import * as debug from 'debug';
 import { Request, Response } from 'express';
+import { ApiEndpoint } from '../../models/auth/auth.model';
 // import * as moment from 'moment';
 // import { AuthModel } from '../../models/auth/auth.model';
 import { errorProsess, getOptions } from '../base/base.controller';
@@ -22,7 +23,7 @@ export async function getSeatState(req: Request, res: Response): Promise<void> {
     log('getSeatState');
     try {
         const args = req.query;
-        const options = getOptions(req);
+        const options = getOptions(req, ApiEndpoint.chevre);
         const result = await new chevre.service.Event(options).searchScreeningEventOffers(args);
         res.json(result);
     } catch (err) {
@@ -41,7 +42,7 @@ export async function findMovieTheaterByBranchCode(req: Request, res: Response):
     log('getSeatState');
     try {
         const args = req.query;
-        const options = getOptions(req);
+        const options = getOptions(req, ApiEndpoint.chevre);
         const result = await new chevre.service.Place(options).findMovieTheaterByBranchCode(args);
         res.json(result);
     } catch (err) {

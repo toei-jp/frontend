@@ -13,3 +13,4 @@ router.get('/getSeatState', purchase.getSeatState);
 // router.post('/mvtksSatInfoSync', purchase.mvtksSatInfoSync);
 // router.post('/getSchedule', purchase.getSchedule);
 exports.default = router;
+//# sourceMappingURL=purchase.js.map

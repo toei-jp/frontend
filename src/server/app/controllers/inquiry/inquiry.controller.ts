@@ -7,6 +7,7 @@ import * as debug from 'debug';
 import { Request, Response } from 'express';
 import { NOT_FOUND } from 'http-status';
 import * as moment from 'moment';
+import { ApiEndpoint } from '../../models/auth/auth.model';
 import { InquiryModel } from '../../models/inquiry/inquiry.model';
 import { getOptions } from '../base/base.controller';
 const log = debug('frontend:inquiry');
@@ -22,7 +23,7 @@ export async function login(req: Request, res: Response): Promise<void> {
     log('render');
     try {
         const inquiryModel = new InquiryModel((<Express.Session>req.session).inquiry);
-        const options = getOptions(req);
+        const options = getOptions(req, ApiEndpoint.chevre);
         const args = { branchCode: req.query.theater };
         log('findMovieTheaterByBranchCode', args);
         inquiryModel.movieTheater = await new chevre.service.Place(options).findMovieTheaterByBranchCode(args);

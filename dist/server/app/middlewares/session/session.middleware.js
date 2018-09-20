@@ -27,3 +27,4 @@ exports.default = session({
         maxAge: 1800000 // 30 * 60 * 1000
     }
 });
+//# sourceMappingURL=session.middleware.js.map

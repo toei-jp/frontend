@@ -38,7 +38,7 @@
                     </div>
                     <div *ngIf="offer.selected" class="blue-button ghost-button">
                         <button type="button" (click)="ticketSelect(offer)">
-                            {{ offer.ticketInfo.ticketName }} ￥{{ offer.ticketInfo.salePrice }}
+                            {{ offer.ticketInfo.ticketName.ja }} ￥{{ offer.ticketInfo.charge }}
                         </button>
                     </div>
                 </dd>
@@ -113,7 +113,7 @@
             <dl class="d-table">
                 <dt class="d-td">
                     <div class="mb-xx-small">
-                        <strong>{{ ticket.ticketName }} ￥{{ ticket.salePrice }}</strong>
+                        <strong>{{ ticket.name.ja }} ￥{{ ticket.charge }}</strong>
                     </div>
                     <p class="small-x-text">{{ ticket.ticketNote }}</p>
                 </dt>

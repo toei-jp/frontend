@@ -38,3 +38,4 @@ class InquiryModel {
     }
 }
 exports.InquiryModel = InquiryModel;
+//# sourceMappingURL=inquiry.model.js.map

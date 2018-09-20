@@ -38,3 +38,4 @@ app.use(express.static(`${__dirname}/../../client/${process.env.NODE_ENV}`, {
 })); // client
 router_1.default(app);
 module.exports = app;
+//# sourceMappingURL=app.js.map

@@ -264,7 +264,7 @@ export class PurchaseService {
 
         // return (moment(screeningEvent.info.rsvStartDate).unix() <= moment().unix()
         //     || screeningEvent.info.flgEarlyBooking === PRE_SALE);
-        return moment(screeningEvent.doorTime).unix() > moment().unix();
+        return moment(screeningEvent.doorTime).unix() >= moment().unix();
     }
 
     /**
@@ -615,8 +615,8 @@ export class PurchaseService {
         this.data.screeningEvent = args.screeningEvent;
         await this.cinerino.getServices();
         // 劇場のショップを検索
-        this.data.movieTheaterOrganization = (await this.cinerino.organization.searchMovieTheaters({
-            name: this.data.screeningEvent.superEvent.location.name.en
+        this.data.movieTheaterOrganization = (await this.cinerino.organization.findMovieTheaterByBranchCode({
+            id: this.data.screeningEvent.superEvent.location.branchCode
         })).data[0];
         // 取引期限
         const VALID_TIME = 15;
@@ -624,8 +624,15 @@ export class PurchaseService {
         // 取引開始
         this.data.transaction = await this.cinerino.transaction.placeOrder.start({
             expires: expires,
-            sellerId: this.data.movieTheaterOrganization.id,
-            passportToken: args.passportToken
+            seller: {
+                id: this.data.movieTheaterOrganization.id,
+                typeOf: this.data.movieTheaterOrganization.typeOf
+            },
+            object: {
+                passport: {
+                    token: args.passportToken
+                }
+            }
         });
         this.save();
     }

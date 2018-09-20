@@ -53,7 +53,7 @@
                 <dl>
                     <dt>鑑賞日時</dt>
                     <dd>
-                        {{ getAppreciationDate() }} {{ getStartDate() }} - {{ getEndDate() }}
+                        {{ getAppreciationDate() }} {{ screeningEvent.startDate | timeFormat }} - {{ screeningEvent.endDate | timeFormat }}
                     </dd>
                 </dl>
             </li>

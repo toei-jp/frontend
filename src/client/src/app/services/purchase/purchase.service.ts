@@ -4,7 +4,7 @@ import * as factory from '@toei-jp/cinerino-factory';
 import * as moment from 'moment';
 // import { ISeat } from '../../components/parts/screen/screen.component';
 // import { environment } from '../../../environments/environment';
-// import { TimeFormatPipe } from '../../pipes/time-format/time-format.pipe';
+import { TimeFormatPipe } from '../../pipes/time-format/time-format.pipe';
 import { AwsCognitoService } from '../aws-cognito/aws-cognito.service';
 import { CallNativeService } from '../call-native/call-native.service';
 import { CinerinoService } from '../cinerino/cinerino.service';
@@ -333,10 +333,7 @@ export class PurchaseService {
         if (this.data.screeningEvent === undefined) {
             return '';
         }
-        const screeningEvent = this.data.screeningEvent;
-        const startDate = moment(screeningEvent.startDate);
-
-        return `${startDate.get('hour')}:${startDate.get('minute')}`;
+        return new TimeFormatPipe().transform(this.data.screeningEvent.startDate);
     }
 
     /**
@@ -348,10 +345,7 @@ export class PurchaseService {
         if (this.data.screeningEvent === undefined) {
             return '';
         }
-        const screeningEvent = this.data.screeningEvent;
-        const endDate = moment(screeningEvent.endDate);
-
-        return `${endDate.get('hour')}:${endDate.get('minute')}`;
+        return new TimeFormatPipe().transform(this.data.screeningEvent.endDate);
     }
 
     /**
@@ -616,7 +610,7 @@ export class PurchaseService {
         await this.cinerino.getServices();
         // 劇場のショップを検索
         this.data.movieTheaterOrganization = (await this.cinerino.organization.findMovieTheaterByBranchCode({
-            id: this.data.screeningEvent.superEvent.location.branchCode
+            branchCode: this.data.screeningEvent.superEvent.location.branchCode
         })).data[0];
         // 取引期限
         const VALID_TIME = 15;

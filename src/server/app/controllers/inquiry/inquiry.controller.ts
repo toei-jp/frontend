@@ -1,13 +1,12 @@
 /**
  * 照会
  */
-import * as chevre from '@toei-jp/chevre-api-nodejs-client';
 import * as cinerino from '@toei-jp/cinerino-api-nodejs-client';
 import * as debug from 'debug';
 import { Request, Response } from 'express';
 import { NOT_FOUND } from 'http-status';
-import * as moment from 'moment';
-import { ApiEndpoint } from '../../models/auth/auth.model';
+import { formatNumber, parseNumber } from 'libphonenumber-js';
+import * as moment from 'moment-timezone';
 import { InquiryModel } from '../../models/inquiry/inquiry.model';
 import { getOptions } from '../base/base.controller';
 const log = debug('frontend:inquiry');
@@ -23,10 +22,10 @@ export async function login(req: Request, res: Response): Promise<void> {
     log('render');
     try {
         const inquiryModel = new InquiryModel((<Express.Session>req.session).inquiry);
-        const options = getOptions(req, ApiEndpoint.chevre);
+        const options = getOptions(req);
         const args = { branchCode: req.query.theater };
         log('findMovieTheaterByBranchCode', args);
-        inquiryModel.movieTheater = await new chevre.service.Place(options).findMovieTheaterByBranchCode(args);
+        inquiryModel.movieTheater = (await new cinerino.service.Organization(options).findMovieTheaterByBranchCode(args)).data[0];
         inquiryModel.input.reserveNum = (req.query.reserve !== undefined) ? req.query.reserve : '';
         inquiryModel.save(req.session);
         res.locals.inquiryModel = inquiryModel;
@@ -57,15 +56,17 @@ export async function auth(req: Request, res: Response): Promise<void> {
             throw new Error('movieTheater is undefined');
         }
         const validationResult = await req.getValidationResult();
+        const phoneNumber = parseNumber(req.body.telephone, 'JP');
+        const telephone = formatNumber(phoneNumber, 'E.164');
         inquiryModel.input = {
             reserveNum: req.body.reserveNum,
             telephone: req.body.telephone
         };
         inquiryModel.save(req.session);
         if (validationResult.isEmpty()) {
-            const theaterCode = inquiryModel.movieTheater.branchCode;
+            const theaterCode = inquiryModel.movieTheater.location.branchCode;
             const args = {
-                customer: { telephone: inquiryModel.input.telephone },
+                customer: { telephone },
                 confirmationNumber: Number(inquiryModel.input.reserveNum),
                 // theaterCode: inquiryModel.movieTheater.branchCode
             };
@@ -170,16 +171,13 @@ function getInquiryError(req: Request) {
 /**
  * 時間フォーマット
  * @function timeFormat
- * @param {string} referenceDate 基準日
- * @param {Date} screeningTime 時間
+ * @param {Date} time 時間
  * @returns {string}
  */
-function timeFormat(screeningTime: Date, referenceDate: string) {
-    const DIGITS = -2;
-    const HOUR = 60;
-    const diff = moment(screeningTime).diff(moment(referenceDate), 'minutes');
-    const hour = (`00${Math.floor(diff / HOUR)}`).slice(DIGITS);
-    const minutes = moment(screeningTime).format('mm');
+function timeFormat(time: Date | string) {
+    const mm = moment(time).tz('Asia/Tokyo');
+    const hour = mm.format('HH');
+    const minutes = mm.format('mm');
 
     return `${hour}:${minutes}`;
 }

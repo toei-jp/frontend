@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
-import { environment } from '../../../../environments/environment';
+// import { environment } from '../../../../environments/environment';
 // import { TimeFormatPipe } from '../../../pipes/time-format/time-format.pipe';
 import { ErrorService } from '../../../services/error/error.service';
 import { IScreeningEvent, PurchaseService } from '../../../services/purchase/purchase.service';
@@ -52,7 +52,13 @@ export class PurchaseOverlapComponent implements OnInit {
             console.error(err);
         }
         this.storage.remove('screeningEvent', SaveType.Session);
-        location.href = `${environment.ENTRANCE_SERVER_URL}/purchase/index.html?id=${this.screeningEvent.identifier}`;
+        this.storage.save('parameters', {
+            passportToken: '',
+            signInRedirect: false,
+            performanceId: this.screeningEvent.id
+        }, SaveType.Session);
+        this.router.navigate(['/purchase/transaction']);
+        // location.href = `${environment.ENTRANCE_SERVER_URL}/purchase/index.html?id=${this.screeningEvent.identifier}`;
     }
 
     /**
@@ -98,19 +104,17 @@ export class PurchaseOverlapComponent implements OnInit {
      * @method getStartDate
      * @returns {string}
      */
-    public getStartDate() {
-        const startDate = moment(this.screeningEvent.startDate);
-        return `${startDate.get('hour')}:${startDate.get('minute')}`;
-    }
+    // public getStartDate() {
+    //     return new TimeFormatPipe().transform(this.screeningEvent.startDate);
+    // }
 
     /**
      * 上映終了取得
      * @method getEndDate
      * @returns {string}
      */
-    public getEndDate() {
-        const endDate = moment(this.screeningEvent.endDate);
-        return `${endDate.get('hour')}:${endDate.get('minute')}`;
-    }
+    // public getEndDate() {
+    //     return new TimeFormatPipe().transform(this.screeningEvent.endDate);
+    // }
 
 }

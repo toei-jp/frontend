@@ -38,7 +38,7 @@
                         <strong class="large-text"><%= offer.itemOffered.reservedTicket.ticketedSeat.seatNumber %></strong>
                     </div>
                     <div>
-                        [<%= offer.itemOffered.reservedTicket.coaTicketInfo.ticketName %>]
+                        [<%= offer.itemOffered.reservedTicket.ticketType.name.ja %>]
                     </div>
                 </div>
                 
@@ -58,14 +58,14 @@
                     <div class="mb-x-small">
                         <%
                         moment.locale('ja');
-                        const date = moment(offer.itemOffered.reservationFor.coaInfo.dateJouei).format('YYYY年MM月DD日(ddd)');
-                        const startTime = timeFormat(offer.itemOffered.reservationFor.startDate, offer.itemOffered.reservationFor.coaInfo.dateJouei);
-                        const endTime = timeFormat(offer.itemOffered.reservationFor.endDate, offer.itemOffered.reservationFor.coaInfo.dateJouei);
+                        const date = moment(offer.itemOffered.reservationFor.startDate).format('YYYY年MM月DD日(ddd)');
+                        const startTime = timeFormat(offer.itemOffered.reservationFor.startDate);
+                        const endTime = timeFormat(offer.itemOffered.reservationFor.endDate);
                          %>
                         <%= date %> <%= startTime %> - <%= endTime %>
                     </div>
                     <div class="mb-xx-small small-text"><strong><%- __('common.theater') %></strong></div>
-                    <div class="mb-x-small"><%= inquiryModel.movieTheaterOrganization.location.name.ja %></div>
+                    <div class="mb-x-small"><%= inquiryModel.movieTheater.location.name.ja %></div>
                     <div class="mb-xx-small small-text"><strong><%- __('common.screen') %></strong></div>
                     <div class="mb-x-small"><%= offer.itemOffered.reservationFor.location.name.ja %></div>
                     <div class="mb-xx-small small-text"><strong><%- __('common.filmTitle') %></strong></div>
@@ -77,14 +77,14 @@
     </ul>
     
     <div class="button-area clearfix">
-        <div class="prev-link"><a class="icon-prev-black" href="/inquiry/login?theater=<%= inquiryModel.movieTheaterOrganization.location.branchCode %>"><%- __('inquiry.confirm.prev') %></a></div>
+        <div class="prev-link"><a class="icon-prev-black" href="/inquiry/login?theater=<%= inquiryModel.movieTheater.location.branchCode %>"><%- __('inquiry.confirm.prev') %></a></div>
     </div>
 </div>
 <div id="copy" style="display: none"></div>
 
-<input type="hidden" name="theaterCode" value="<%= inquiryModel.movieTheaterOrganization.location.branchCode %>">
+<input type="hidden" name="theaterCode" value="<%= inquiryModel.movieTheater.location.branchCode %>">
 <input type="hidden" name="reserveNum" value="<%= inquiryModel.input.reserveNum %>">
 <input type="hidden" name="telephone" value="<%= inquiryModel.input.telephone %>">
 <input type="hidden" name="orderNumber" value="<%= inquiryModel.order.orderNumber %>">
-<input type="hidden" name="expire" value="<%= moment(inquiryModel.order.acceptedOffers[0].itemOffered.reservationFor.coaInfo.dateJouei).add(10, 'day').format('x') %>">
+<input type="hidden" name="expire" value="<%= moment(inquiryModel.order.acceptedOffers[0].itemOffered.reservationFor.startDate).add(10, 'day').format('x') %>">
 

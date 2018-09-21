@@ -22,6 +22,7 @@ export interface IAuthSession {
      * コード検証
      */
     codeVerifier?: string;
+    api?: ApiEndpoint;
 }
 
 /**
@@ -116,13 +117,25 @@ export class AuthModel {
      * @method save
      * @returns {Object}
      */
-    public save(session: any): void {
+    public save(session: any, apiEndpoint?: ApiEndpoint): void {
         const authSession: IAuthSession = {
             state: this.state,
             scopes: this.scopes,
             credentials: this.credentials,
-            codeVerifier: this.codeVerifier
+            codeVerifier: this.codeVerifier,
+            api: apiEndpoint
         };
-        session.auth = authSession;
+        if (session.auth === undefined) {
+            session.auth = [authSession];
+            return;
+        }
+        for (let i = 0; i < session.auth.length; i++) {
+            if (session.auth[0].api === apiEndpoint) {
+                session.auth[0] = authSession;
+                return;
+            }
+        }
+        session.auth.push(authSession);
+        return;
     }
 }

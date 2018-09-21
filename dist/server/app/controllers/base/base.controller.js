@@ -20,12 +20,19 @@ function getOptions(req, apiEndpoint) {
     else {
         endpoint = process.env.CINERINO_API_ENDPOINT;
     }
-    const authModel = new auth_model_1.AuthModel(req.session.auth, apiEndpoint);
+    let authModel;
+    if (req.session.auth !== undefined) {
+        const authSession = req.session.auth.find((auth) => auth.api === apiEndpoint);
+        authModel = new auth_model_1.AuthModel(authSession, apiEndpoint);
+    }
+    else {
+        authModel = new auth_model_1.AuthModel({}, apiEndpoint);
+    }
     const options = {
         endpoint,
         auth: authModel.create()
     };
-    authModel.save(req.session);
+    authModel.save(req.session, apiEndpoint);
     return options;
 }
 exports.getOptions = getOptions;

@@ -75,14 +75,26 @@ class AuthModel {
      * @method save
      * @returns {Object}
      */
-    save(session) {
+    save(session, apiEndpoint) {
         const authSession = {
             state: this.state,
             scopes: this.scopes,
             credentials: this.credentials,
-            codeVerifier: this.codeVerifier
+            codeVerifier: this.codeVerifier,
+            api: apiEndpoint
         };
-        session.auth = authSession;
+        if (session.auth === undefined) {
+            session.auth = [authSession];
+            return;
+        }
+        for (let i = 0; i < session.auth.length; i++) {
+            if (session.auth[0].api === apiEndpoint) {
+                session.auth[0] = authSession;
+                return;
+            }
+        }
+        session.auth.push(authSession);
+        return;
     }
 }
 exports.AuthModel = AuthModel;

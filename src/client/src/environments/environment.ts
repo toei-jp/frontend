@@ -5,7 +5,7 @@ export const environment = {
     PORTAL_SITE_URL: '/#/purchase/schedule',
     APP_SITE_URL: 'https://localhost:3333',
     API_ENDPOINT: 'https://localhost',
-    FRONTEND_ENDPOINT: 'https://toei-frontend-development.azurewebsites.net',
+    FRONTEND_ENDPOINT: '',
     ENTRANCE_SERVER_URL: 'https://xxxx.cloudfront.net',
     MVTK_COMPANY_CODE: 'SSK000',
 

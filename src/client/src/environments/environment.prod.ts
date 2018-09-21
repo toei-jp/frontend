@@ -5,7 +5,7 @@ export const environment = {
     PORTAL_SITE_URL: 'http://theaters.toei.co.jp',
     APP_SITE_URL: 'https://smpapp.ticket-toei.co.jp',
     API_ENDPOINT: '',
-    FRONTEND_ENDPOINT: 'https://ticket-toei.co.jp',
+    FRONTEND_ENDPOINT: '',
     ENTRANCE_SERVER_URL: 'https://entrance.ticket-toei.co.jp',
     MVTK_COMPANY_CODE: 'SSK000',
 

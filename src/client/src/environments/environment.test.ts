@@ -5,7 +5,7 @@ export const environment = {
     PORTAL_SITE_URL: 'http://testtoeiportal.azurewebsites.net',
     APP_SITE_URL: 'https://toei-ticket-test.azurewebsites.net',
     API_ENDPOINT: '',
-    FRONTEND_ENDPOINT: 'https://toei-frontend-test.azurewebsites.net',
+    FRONTEND_ENDPOINT: '',
     ENTRANCE_SERVER_URL: 'https://xxxxx.cloudfront.net',
     MVTK_COMPANY_CODE: 'SSK000',
 

@@ -68,8 +68,6 @@ function auth(req, res) {
                 throw new Error('movieTheater is undefined');
             }
             const validationResult = yield req.getValidationResult();
-            const phoneNumber = libphonenumber_js_1.parseNumber(req.body.telephone, 'JP');
-            const telephone = libphonenumber_js_1.formatNumber(phoneNumber, 'E.164');
             inquiryModel.input = {
                 reserveNum: req.body.reserveNum,
                 telephone: req.body.telephone
@@ -77,6 +75,8 @@ function auth(req, res) {
             inquiryModel.save(req.session);
             if (validationResult.isEmpty()) {
                 const theaterCode = inquiryModel.movieTheater.location.branchCode;
+                const phoneNumber = libphonenumber_js_1.parseNumber(req.body.telephone, 'JP');
+                const telephone = libphonenumber_js_1.formatNumber(phoneNumber, 'E.164');
                 const args = {
                     customer: { telephone },
                     confirmationNumber: Number(inquiryModel.input.reserveNum),

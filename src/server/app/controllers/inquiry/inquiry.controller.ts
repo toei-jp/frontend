@@ -56,8 +56,6 @@ export async function auth(req: Request, res: Response): Promise<void> {
             throw new Error('movieTheater is undefined');
         }
         const validationResult = await req.getValidationResult();
-        const phoneNumber = parseNumber(req.body.telephone, 'JP');
-        const telephone = formatNumber(phoneNumber, 'E.164');
         inquiryModel.input = {
             reserveNum: req.body.reserveNum,
             telephone: req.body.telephone
@@ -65,6 +63,8 @@ export async function auth(req: Request, res: Response): Promise<void> {
         inquiryModel.save(req.session);
         if (validationResult.isEmpty()) {
             const theaterCode = inquiryModel.movieTheater.location.branchCode;
+            const phoneNumber = parseNumber(req.body.telephone, 'JP');
+            const telephone = formatNumber(phoneNumber, 'E.164');
             const args = {
                 customer: { telephone },
                 confirmationNumber: Number(inquiryModel.input.reserveNum),

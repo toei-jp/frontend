@@ -329,7 +329,7 @@ export class ScreenComponent implements OnInit, AfterViewInit {
                             );
                         });
                         if (targetSeat !== undefined) {
-                            section = listSeatSection.name !== undefined ? listSeatSection.name.en : '';
+                            section = listSeatSection.branchCode;
                             status = 'default';
                             break;
                         }

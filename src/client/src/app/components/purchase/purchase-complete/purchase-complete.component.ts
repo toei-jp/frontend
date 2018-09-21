@@ -3,7 +3,7 @@ import * as factory from '@toei-jp/cinerino-factory';
 import * as moment from 'moment';
 import { environment } from '../../../../environments/environment';
 // import { CinerinoService } from '../../../services/cinerino/cinerino.service';
-// import { TimeFormatPipe } from '../../../pipes/time-format/time-format.pipe';
+import { TimeFormatPipe } from '../../../pipes/time-format/time-format.pipe';
 import { ErrorService } from '../../../services/error/error.service';
 import { SaveType, StorageService } from '../../../services/storage/storage.service';
 import { UserService } from '../../../services/user/user.service';
@@ -115,9 +115,7 @@ export class PurchaseCompleteComponent implements OnInit {
         if (itemOffered.typeOf !== factory.chevre.reservationType.EventReservation) {
             return '';
         }
-        const startDate = moment(itemOffered.reservationFor.startDate).tz('Asia/Tokyo');
-
-        return `${startDate.format('HH')}:${startDate.format('mm')}`;
+        return new TimeFormatPipe().transform(itemOffered.reservationFor.startDate);
     }
 
     /**
@@ -130,9 +128,7 @@ export class PurchaseCompleteComponent implements OnInit {
         if (itemOffered.typeOf !== factory.chevre.reservationType.EventReservation) {
             return '';
         }
-        const endDate = moment(itemOffered.reservationFor.endDate).tz('Asia/Tokyo');
-
-        return `${endDate.format('HH')}:${endDate.format('mm')}`;
+        return new TimeFormatPipe().transform(itemOffered.reservationFor.endDate);
     }
 
     /**

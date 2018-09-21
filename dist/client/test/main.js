@@ -3010,7 +3010,7 @@ var ScreenComponent = /** @class */ (function () {
                                 && s.offers.find(function (o) { return o.availability === inStock_1; }) !== undefined);
                         });
                         if (targetSeat !== undefined) {
-                            section = listSeatSection.name !== undefined ? listSeatSection.name.en : '';
+                            section = listSeatSection.branchCode;
                             status_1 = 'default';
                             break;
                         }
@@ -3449,15 +3449,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! moment */ "../../node_modules/moment/moment.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../environments/environment */ "./src/environments/environment.ts");
-/* harmony import */ var _services_error_error_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../services/error/error.service */ "./src/app/services/error/error.service.ts");
-/* harmony import */ var _services_storage_storage_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../services/storage/storage.service */ "./src/app/services/storage/storage.service.ts");
-/* harmony import */ var _services_user_user_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../services/user/user.service */ "./src/app/services/user/user.service.ts");
+/* harmony import */ var _pipes_time_format_time_format_pipe__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../pipes/time-format/time-format.pipe */ "./src/app/pipes/time-format/time-format.pipe.ts");
+/* harmony import */ var _services_error_error_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../services/error/error.service */ "./src/app/services/error/error.service.ts");
+/* harmony import */ var _services_storage_storage_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../services/storage/storage.service */ "./src/app/services/storage/storage.service.ts");
+/* harmony import */ var _services_user_user_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../services/user/user.service */ "./src/app/services/user/user.service.ts");
 
 
 
 
 // import { CinerinoService } from '../../../services/cinerino/cinerino.service';
-// import { TimeFormatPipe } from '../../../pipes/time-format/time-format.pipe';
+
 
 
 
@@ -3472,7 +3473,7 @@ var PurchaseCompleteComponent = /** @class */ (function () {
     }
     PurchaseCompleteComponent.prototype.ngOnInit = function () {
         window.scrollTo(0, 0);
-        this.data = this.storage.load('complete', _services_storage_storage_service__WEBPACK_IMPORTED_MODULE_5__["SaveType"].Session);
+        this.data = this.storage.load('complete', _services_storage_storage_service__WEBPACK_IMPORTED_MODULE_6__["SaveType"].Session);
         if (this.data === null) {
             this.error.redirect(new Error('complete data is null'));
         }
@@ -3546,8 +3547,7 @@ var PurchaseCompleteComponent = /** @class */ (function () {
         if (itemOffered.typeOf !== _toei_jp_cinerino_factory__WEBPACK_IMPORTED_MODULE_1__["chevre"].reservationType.EventReservation) {
             return '';
         }
-        var startDate = moment__WEBPACK_IMPORTED_MODULE_2__(itemOffered.reservationFor.startDate).tz('Asia/Tokyo');
-        return startDate.format('HH') + ":" + startDate.format('mm');
+        return new _pipes_time_format_time_format_pipe__WEBPACK_IMPORTED_MODULE_4__["TimeFormatPipe"]().transform(itemOffered.reservationFor.startDate);
     };
     /**
      * 上映終了取得
@@ -3559,8 +3559,7 @@ var PurchaseCompleteComponent = /** @class */ (function () {
         if (itemOffered.typeOf !== _toei_jp_cinerino_factory__WEBPACK_IMPORTED_MODULE_1__["chevre"].reservationType.EventReservation) {
             return '';
         }
-        var endDate = moment__WEBPACK_IMPORTED_MODULE_2__(itemOffered.reservationFor.endDate).tz('Asia/Tokyo');
-        return endDate.format('HH') + ":" + endDate.format('mm');
+        return new _pipes_time_format_time_format_pipe__WEBPACK_IMPORTED_MODULE_4__["TimeFormatPipe"]().transform(itemOffered.reservationFor.endDate);
     };
     /**
      * 照会URL取得

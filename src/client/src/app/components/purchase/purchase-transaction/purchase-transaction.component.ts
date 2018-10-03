@@ -89,7 +89,7 @@ export class PurchaseTransactionComponent implements OnInit {
                 id: (<string>this.parameters.performanceId)
             });
             // 開始可能日判定
-            if (!this.purchase.isSalse(screeningEvent)) {
+            if (!this.purchase.isSales(screeningEvent)) {
                 throw new Error('Unable to start sales');
             }
             const END_TIME = 30;

@@ -1,4 +1,4 @@
-/*import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ErrorService } from '../../../services/error/error.service';
 import { PurchaseService } from '../../../services/purchase/purchase.service';
@@ -28,4 +28,4 @@ export class PurchaseMvtkConfirmComponent implements OnInit {
         this.router.navigate(['/purchase/ticket']);
     }
 
-}*/
+}

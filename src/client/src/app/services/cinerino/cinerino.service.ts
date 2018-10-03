@@ -112,10 +112,10 @@ export class CinerinoService {
      * ムビチケ座席指定情報連携
      * @param {mvtkReserve.services.seat.seatInfoSync.ISeatInfoSyncIn} args
      */
-    public async mvtksSatInfoSync(
+    public async mvtksSeatInfoSync(
         args: mvtkReserve.services.seat.seatInfoSync.ISeatInfoSyncIn
     ) {
-        const url = `${environment.API_ENDPOINT}/api/purchase/mvtksSatInfoSync`;
+        const url = `${environment.API_ENDPOINT}/api/purchase/mvtksSeatInfoSync`;
 
 
         return this.http.post<mvtkReserve.services.seat.seatInfoSync.ISeatInfoSyncResult>(url, args).toPromise();
@@ -144,21 +144,17 @@ export class CinerinoService {
     }
 
     /**
-     * ムビチケチケットコード取得
-     * @param {cinerino.factory.chevre.services.master.IMvtkTicketcodeArgs} args
+     * ムビチケ券種取得
+     * @param {ticketCode: string} args
      */
-    /*public async mvtkTicketcode(
-        args: cinerino.factory.chevre.services.master.IMvtkTicketcodeArgs
+    public async mvtkTicket(
+        args: { ticketCode: string }
     ) {
-        const url = `${environment.API_ENDPOINT}/api/purchase/mvtkTicketcode`;
-        const result = await this.http.post<cinerino.factory.chevre.services.master.IMvtkTicketcodeResult>(url, args).toPromise();
-        // 暫定的に対応
-        if ((<any>result).name === 'ChevreServiceError') {
-            throw new Error('ChevreServiceError');
-        }
-
-        return result;
-    }*/
+        const url = `${environment.API_ENDPOINT}/api/purchase/mvtkTicket`;
+        return this.http.get<{ name: string; code: string }>(url, {
+            params: args
+        }).toPromise();
+    }
 
     /**
      * 券種取得

@@ -11,10 +11,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * 購入
  */
-// import * as mvtkReserve from '@motionpicture/mvtk-reserve-service';
+const mvtkReserve = require("@motionpicture/mvtk-reserve-service");
 const chevre = require("@toei-jp/chevre-api-nodejs-client");
 // import * as cinerino from '@toei-jp/cinerino-api-nodejs-client';
 const debug = require("debug");
+const http_status_1 = require("http-status");
 const auth_model_1 = require("../../models/auth/auth.model");
 // import * as moment from 'moment';
 // import { AuthModel } from '../../models/auth/auth.model';
@@ -71,17 +72,21 @@ exports.findMovieTheaterByBranchCode = findMovieTheaterByBranchCode;
  * @param {Response} res
  * @returns {Promise<void>}
  */
-/*export async function mvtkTicketcode(req: Request, res: Response): Promise<void> {
-    log('mvtkTicketcode');
-    try {
-        const args = req.body;
-        const result = await chevre.service.master.mvtkTicketcode(args);
-        res.json(result);
-    } catch (err) {
-        errorProsess(res, err);
-    }
-}*/
-// TODO: fix
+function mvtkTicket(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        log('mvtkTicket');
+        const ticketCode = req.query.ticketCode;
+        const ticketTypes = mvtkReserve.util.constants.TICKET_TYPE;
+        const ticket = ticketTypes.find((t) => t.code === ticketCode);
+        if (ticket !== undefined) {
+            res.json(ticket);
+        }
+        else {
+            res.status(http_status_1.NOT_FOUND);
+        }
+    });
+}
+exports.mvtkTicket = mvtkTicket;
 /**
  * ムビチケ照会
  * @function mvtkPurchaseNumberAuth
@@ -89,16 +94,20 @@ exports.findMovieTheaterByBranchCode = findMovieTheaterByBranchCode;
  * @param {Response} res
  * @returns {Promise<void>}
  */
-/*export async function mvtkPurchaseNumberAuth(req: Request, res: Response): Promise<void> {
-    log('mvtkPurchaseNumberAuth');
-    try {
-        const args = req.body;
-        const result = await mvtkReserve.services.auth.purchaseNumberAuth.purchaseNumberAuth(args);
-        res.json(result);
-    } catch (err) {
-        errorProsess(res, err);
-    }
-}*/
+function mvtkPurchaseNumberAuth(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        log('mvtkPurchaseNumberAuth');
+        try {
+            const args = req.body;
+            const result = yield mvtkReserve.services.auth.purchaseNumberAuth.purchaseNumberAuth(args);
+            res.json(result);
+        }
+        catch (err) {
+            base_controller_1.errorProsess(res, err);
+        }
+    });
+}
+exports.mvtkPurchaseNumberAuth = mvtkPurchaseNumberAuth;
 /**
  * ムビチケ座席指定情報連携
  * @function mvtksSatInfoSync
@@ -106,16 +115,20 @@ exports.findMovieTheaterByBranchCode = findMovieTheaterByBranchCode;
  * @param {Response} res
  * @returns {Promise<void>}
  */
-/*export async function mvtksSatInfoSync(req: Request, res: Response): Promise<void> {
-    log('mvtksSatInfoSync');
-    try {
-        const args = req.body;
-        const result = await mvtkReserve.services.seat.seatInfoSync.seatInfoSync(args);
-        res.json(result);
-    } catch (err) {
-        errorProsess(res, err);
-    }
-}*/
+function mvtksSeatInfoSync(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        log('mvtksSatInfoSync');
+        try {
+            const args = req.body;
+            const result = yield mvtkReserve.services.seat.seatInfoSync.seatInfoSync(args);
+            res.json(result);
+        }
+        catch (err) {
+            base_controller_1.errorProsess(res, err);
+        }
+    });
+}
+exports.mvtksSeatInfoSync = mvtksSeatInfoSync;
 /**
  * スケジュールリスト取得
  * @memberof Purchase.PerformancesModule

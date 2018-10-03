@@ -71,7 +71,12 @@ export async function auth(req: Request, res: Response): Promise<void> {
                 // theaterCode: inquiryModel.movieTheater.branchCode
             };
             log('findByOrderInquiryKey', args);
-            inquiryModel.order = await new cinerino.service.Order(options).findByConfirmationNumber(args);
+            const orderService = new cinerino.service.Order(options);
+            const order = await orderService.findByConfirmationNumber(args);
+            inquiryModel.order = await orderService.authorizeOwnershipInfos({
+                customer: args.customer,
+                orderNumber: order.orderNumber
+            });
             log('findByOrderInquiryKey', inquiryModel.order);
             if (inquiryModel.order === undefined) {
                 log('NOT FOUND');

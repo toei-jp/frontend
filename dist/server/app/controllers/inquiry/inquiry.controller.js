@@ -82,7 +82,12 @@ function auth(req, res) {
                     confirmationNumber: Number(inquiryModel.input.reserveNum),
                 };
                 log('findByOrderInquiryKey', args);
-                inquiryModel.order = yield new cinerino.service.Order(options).findByConfirmationNumber(args);
+                const orderService = new cinerino.service.Order(options);
+                const order = yield orderService.findByConfirmationNumber(args);
+                inquiryModel.order = yield orderService.authorizeOwnershipInfos({
+                    customer: args.customer,
+                    orderNumber: order.orderNumber
+                });
                 log('findByOrderInquiryKey', inquiryModel.order);
                 if (inquiryModel.order === undefined) {
                     log('NOT FOUND');

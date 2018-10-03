@@ -2,7 +2,7 @@
     <h1 class="page-ttl">券種選択</h1>
     <p class="read">ご希望の券種を選択して「次へ」ボタンを押してください。</p>
 
-    <!--<div *ngIf="purchase.isUsedMvtk() && purchase.data.mvtkTickets.length === 0" class="box radius bg-ultra-light-gray mb-middle mvtk">
+    <div *ngIf="purchase.isUsedMvtk() && purchase.data.mvtkTickets.length === 0" class="box radius bg-ultra-light-gray mb-middle mvtk">
         <dl class="d-table">
             <dt class="d-td">ムビチケ券を利用される方</dt>
             <dd class="d-td width-medium">
@@ -13,7 +13,7 @@
                 </div>
             </dd>
         </dl>
-    </div>-->
+    </div>
 
     <!--<div *ngIf="user.isMember() && purchase.isUsedPoint() && purchase.data.pointTickets.length === 0" class="box radius bg-ultra-light-gray mb-middle point">
         <dl class="d-table">
@@ -77,7 +77,7 @@
 
 <app-modal [open]="ticketsModal" [layout]="false" (close)="ticketsModal = false">
     <ul inner class="not-layout box radius bg-light-gray">
-        <!--<li *ngFor="let mvtkTicket of salesMvtkTickets" [class.disabled]="mvtkTicket.selected">
+        <li *ngFor="let mvtkTicket of salesMvtkTickets" [class.disabled]="mvtkTicket.selected">
             <dl class="d-table">
                 <dt class="d-td">
                     <div class="mb-xx-small">
@@ -93,7 +93,7 @@
                     </div>
                 </dd>
             </dl>
-        </li>-->
+        </li>
         <!--<li *ngFor="let pointTicket of salesPointTickets" [class.disabled]="pointTicket.selected">
                 <dl class="d-table">
                     <dt class="d-td">
@@ -104,7 +104,7 @@
                     </dt>
                     <dd class="d-td width-small">
                         <div class="button blue-button ticket-type-select">
-                            <button type="button" (click)="selectSalseTicket(pointTicket)">選択</button>
+                            <button type="button" (click)="selectSalesTicket(pointTicket)">選択</button>
                         </div>
                     </dd>
                 </dl>
@@ -119,7 +119,7 @@
                 </dt>
                 <dd class="d-td width-small">
                     <div class="button blue-button ticket-type-select">
-                        <button type="button" (click)="selectSalseTicket(ticket)">選択</button>
+                        <button type="button" (click)="selectSalesTicket(ticket)">選択</button>
                     </div>
                 </dd>
             </dl>

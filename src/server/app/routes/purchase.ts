@@ -8,9 +8,9 @@ const router = express.Router();
 
 router.get('/findMovieTheaterByBranchCode', purchase.findMovieTheaterByBranchCode);
 router.get('/getSeatState', purchase.getSeatState);
-// router.post('/mvtkTicketcode', purchase.mvtkTicketcode);
-// router.post('/mvtkPurchaseNumberAuth', purchase.mvtkPurchaseNumberAuth);
-// router.post('/mvtksSatInfoSync', purchase.mvtksSatInfoSync);
+router.post('/mvtkTicketcode', purchase.mvtkTicket);
+router.post('/mvtkPurchaseNumberAuth', purchase.mvtkPurchaseNumberAuth);
+router.post('/mvtksSeatInfoSync', purchase.mvtksSeatInfoSync);
 // router.post('/getSchedule', purchase.getSchedule);
 
 export default router;

@@ -1,11 +1,12 @@
 /**
  * 購入
  */
-// import * as mvtkReserve from '@motionpicture/mvtk-reserve-service';
+import * as mvtkReserve from '@motionpicture/mvtk-reserve-service';
 import * as chevre from '@toei-jp/chevre-api-nodejs-client';
 // import * as cinerino from '@toei-jp/cinerino-api-nodejs-client';
 import * as debug from 'debug';
 import { Request, Response } from 'express';
+import { NOT_FOUND } from 'http-status';
 import { ApiEndpoint } from '../../models/auth/auth.model';
 // import * as moment from 'moment';
 // import { AuthModel } from '../../models/auth/auth.model';
@@ -57,17 +58,17 @@ export async function findMovieTheaterByBranchCode(req: Request, res: Response):
  * @param {Response} res
  * @returns {Promise<void>}
  */
-/*export async function mvtkTicketcode(req: Request, res: Response): Promise<void> {
-    log('mvtkTicketcode');
-    try {
-        const args = req.body;
-        const result = await chevre.service.master.mvtkTicketcode(args);
-        res.json(result);
-    } catch (err) {
-        errorProsess(res, err);
+export async function mvtkTicket(req: Request, res: Response): Promise<void> {
+    log('mvtkTicket');
+    const ticketCode = req.query.ticketCode;
+    const ticketTypes = mvtkReserve.util.constants.TICKET_TYPE;
+    const ticket = ticketTypes.find((t) => t.code === ticketCode);
+    if (ticket !== undefined) {
+        res.json(ticket);
+    } else {
+        res.status(NOT_FOUND);
     }
-}*/
-// TODO: fix
+}
 
 /**
  * ムビチケ照会
@@ -76,7 +77,7 @@ export async function findMovieTheaterByBranchCode(req: Request, res: Response):
  * @param {Response} res
  * @returns {Promise<void>}
  */
-/*export async function mvtkPurchaseNumberAuth(req: Request, res: Response): Promise<void> {
+export async function mvtkPurchaseNumberAuth(req: Request, res: Response): Promise<void> {
     log('mvtkPurchaseNumberAuth');
     try {
         const args = req.body;
@@ -85,7 +86,7 @@ export async function findMovieTheaterByBranchCode(req: Request, res: Response):
     } catch (err) {
         errorProsess(res, err);
     }
-}*/
+}
 
 /**
  * ムビチケ座席指定情報連携
@@ -94,7 +95,7 @@ export async function findMovieTheaterByBranchCode(req: Request, res: Response):
  * @param {Response} res
  * @returns {Promise<void>}
  */
-/*export async function mvtksSatInfoSync(req: Request, res: Response): Promise<void> {
+export async function mvtksSeatInfoSync(req: Request, res: Response): Promise<void> {
     log('mvtksSatInfoSync');
     try {
         const args = req.body;
@@ -103,7 +104,7 @@ export async function findMovieTheaterByBranchCode(req: Request, res: Response):
     } catch (err) {
         errorProsess(res, err);
     }
-}*/
+}
 
 /**
  * スケジュールリスト取得

@@ -142,7 +142,14 @@ export class PurchaseSeatComponent implements OnInit, AfterViewInit {
                         ticketCount: 1,
                         description: salesTicket.description,
                         charge: salesTicket.charge,
-                        seatNum: seat.code
+                        seatNum: seat.code,
+                        mvtkNum: '',
+                        mvtkAppPrice: 0,
+                        mvtkSalesPrice: 0,
+                        mvtkKbnDenshiken: '00',
+                        mvtkKbnKensyu: '00',
+                        kbnEisyahousiki: '00',
+                        mvtkKbnMaeuriken: '00'
                     }
                 };
             });

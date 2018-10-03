@@ -127,7 +127,11 @@ export class PurchaseScheduleComponent implements OnInit {
         const results: IFilmOrder[] = [];
         this.schedules.forEach((screeningEvent) => {
             // 販売可能時間判定
-            if (!this.purchase.isSalseTime(screeningEvent)) {
+            if (
+                !this.purchase.isSales(screeningEvent) ||
+                !this.purchase.isSalesTime(screeningEvent) ||
+                screeningEvent.maximumAttendeeCapacity === undefined
+            ) {
                 return;
             }
             const film = results.find((event) => {
@@ -143,7 +147,15 @@ export class PurchaseScheduleComponent implements OnInit {
             }
         });
 
-        return results;
+        return results.sort((event1, event2) => {
+            if (event1.films[0].name.ja < event2.films[0].name.ja) {
+                return -1;
+            }
+            if (event1.films[0].name.ja > event2.films[0].name.ja) {
+                return 1;
+            }
+            return 0;
+        });
     }
 
 }

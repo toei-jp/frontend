@@ -53,4 +53,3 @@ function errorProsess(res, err) {
     res.json(err);
 }
 exports.errorProsess = errorProsess;
-//# sourceMappingURL=base.controller.js.map

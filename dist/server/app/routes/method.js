@@ -10,4 +10,3 @@ router.get('/ticketing', (_, res) => {
     res.render('method/ticketing');
 });
 exports.default = router;
-//# sourceMappingURL=method.js.map

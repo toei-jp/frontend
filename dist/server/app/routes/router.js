@@ -58,4 +58,3 @@ exports.default = (app) => {
     app.use(notfound);
     app.use(error);
 };
-//# sourceMappingURL=router.js.map

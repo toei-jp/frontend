@@ -310,4 +310,3 @@ exports.mvtksSeatInfoSync = mvtksSeatInfoSync;
 
     return diffArray;
 }*/
-//# sourceMappingURL=purchase.controller.js.map

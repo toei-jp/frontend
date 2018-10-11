@@ -13,4 +13,3 @@ router.post('/mvtkPurchaseNumberAuth', purchase.mvtkPurchaseNumberAuth);
 router.post('/mvtksSeatInfoSync', purchase.mvtksSeatInfoSync);
 // router.post('/getSchedule', purchase.getSchedule);
 exports.default = router;
-//# sourceMappingURL=purchase.js.map

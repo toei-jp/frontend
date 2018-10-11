@@ -9,4 +9,3 @@ const router = express.Router();
 router.get('/getCredentials', authorize.getCredentials);
 // router.get('/signIn', authorize.signIn);
 exports.default = router;
-//# sourceMappingURL=authorize.js.map

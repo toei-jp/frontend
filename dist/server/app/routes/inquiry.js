@@ -13,4 +13,3 @@ router.post('/login', inquiry.auth);
 // チケット照会
 router.get('/confirm/:orderNumber/', inquiry.confirm);
 exports.default = router;
-//# sourceMappingURL=inquiry.js.map

@@ -22,4 +22,3 @@ exports.default = (req, res, next) => {
     }
     next();
 };
-//# sourceMappingURL=ip-filter.middleware.js.map

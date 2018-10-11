@@ -14,4 +14,3 @@ exports.default = new (winston.Logger)({
         })
     ]
 });
-//# sourceMappingURL=logger.middleware.js.map

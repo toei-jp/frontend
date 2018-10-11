@@ -74,4 +74,3 @@ function onListening() {
     // tslint:disable-next-line:no-unused-expression
     bind;
 }
-//# sourceMappingURL=index.js.map

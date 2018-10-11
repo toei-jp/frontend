@@ -195,4 +195,3 @@ function timeFormat(time) {
     const minutes = mm.format('mm');
     return `${hour}:${minutes}`;
 }
-//# sourceMappingURL=inquiry.controller.js.map

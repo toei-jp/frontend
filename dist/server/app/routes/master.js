@@ -9,4 +9,3 @@ const router = express.Router();
 // router.get('/getSalesTickets', master.getSalesTickets);
 // router.get('/getTickets', master.getTickets);
 exports.default = router;
-//# sourceMappingURL=master.js.map

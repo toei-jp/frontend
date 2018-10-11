@@ -25,4 +25,3 @@ exports.default = (req, res, next) => {
     }
     next();
 };
-//# sourceMappingURL=white-list.middleware.js.map

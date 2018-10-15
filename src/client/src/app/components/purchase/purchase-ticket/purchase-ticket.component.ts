@@ -49,6 +49,7 @@ export class PurchaseTicketComponent implements OnInit {
     ) { }
 
     public ngOnInit() {
+        // console.log(this.purchase.data.salesTickets);
         window.scrollTo(0, 0);
         this.purchase.load();
         this.isLoading = false;
@@ -450,7 +451,7 @@ export class PurchaseTicketComponent implements OnInit {
         //     return (pointTicket.ticketCode === ticket.ticketCode);
         // });
         // const usePoint = (findTicket !== undefined) ? findTicket.usePoint : 0;
-        target.price = ticket.charge;
+        target.price = this.purchase.getTicketPrice(ticket).total;
         target.priceCurrency = this.selectOffer.priceCurrency;
         target.seatNumber = this.selectOffer.seatNumber;
         target.seatSection = this.selectOffer.seatSection;
@@ -461,7 +462,7 @@ export class PurchaseTicketComponent implements OnInit {
             mvtkNum: '',
             ticketId: ticket.id,
             ticketName: ticket.name,
-            charge: ticket.charge,
+            charge: this.purchase.getTicketPrice(ticket).total,
             description: ticket.description,
             mvtkAppPrice: 0,
             // addGlasses: ticket.addGlasses,

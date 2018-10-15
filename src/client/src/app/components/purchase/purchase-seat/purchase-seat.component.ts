@@ -89,7 +89,7 @@ export class PurchaseSeatComponent implements OnInit, AfterViewInit {
             timeBegin: screeningEvent.info.timeBegin
             // flgMember: (this.user.isMember()) ? FlgMember.Member : FlgMember.NonMember
         };*/
-        const salesTickets = await this.cinerino.event.searchScreeningEventTicketTypes({
+        const salesTickets = await this.cinerino.event.searchScreeningEventTicketOffers({
             eventId: screeningEvent.id
         });
         // console.log('salesTickets', salesTicketArgs, salesTickets);
@@ -128,7 +128,6 @@ export class PurchaseSeatComponent implements OnInit, AfterViewInit {
 
             const offers = this.seats.map((seat) => {
                 const salesTicket = (<ISalesTicketResult[]>this.purchase.data.salesTickets)[0];
-
                 return {
                     seatSection: seat.section,
                     seatNumber: seat.code,
@@ -141,7 +140,7 @@ export class PurchaseSeatComponent implements OnInit, AfterViewInit {
                         ticketName: salesTicket.name,
                         ticketCount: 1,
                         description: salesTicket.description,
-                        charge: salesTicket.charge,
+                        charge: (salesTicket.price === undefined) ? 0 : salesTicket.price,
                         seatNum: seat.code,
                         mvtkNum: '',
                         mvtkAppPrice: 0,

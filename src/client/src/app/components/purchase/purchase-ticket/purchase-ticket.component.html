@@ -113,9 +113,9 @@
             <dl class="d-table">
                 <dt class="d-td">
                     <div class="mb-xx-small">
-                        <strong>{{ ticket.name.ja }} ￥{{ ticket.charge }}</strong>
+                        <strong>{{ ticket.name.ja }} ￥{{ purchase.getTicketPrice(ticket).total }}</strong>
                     </div>
-                    <p class="small-x-text">{{ ticket.ticketNote }}</p>
+                    <p class="small-x-text">{{ ticket.description.ja }}</p>
                 </dt>
                 <dd class="d-td width-small">
                     <div class="button blue-button ticket-type-select">

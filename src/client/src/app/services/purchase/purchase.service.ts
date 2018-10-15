@@ -15,7 +15,7 @@ declare const ga: Function;
 
 export type IScreeningEvent = factory.chevre.event.screeningEvent.IEvent;
 export type ICustomerContact = factory.transaction.placeOrder.ICustomerContact;
-export type ISalesTicketResult = factory.chevre.ticketType.ITicketType;
+export type ISalesTicketResult = factory.chevre.event.screeningEvent.ITicketOffer;
 type IUnauthorizedCardOfMember = factory.paymentMethod.paymentCard.creditCard.IUnauthorizedCardOfMember;
 type IUncheckedCardTokenized = factory.paymentMethod.paymentCard.creditCard.IUncheckedCardTokenized;
 
@@ -264,7 +264,11 @@ export class PurchaseService {
 
         // return (moment(screeningEvent.info.rsvStartDate).unix() <= moment().unix()
         //     || screeningEvent.info.flgEarlyBooking === PRE_SALE);
-        return moment(screeningEvent.releaseTime).unix() <= moment().unix();
+        if (screeningEvent.saleStartDate === undefined) {
+            // 一旦true
+            return true;
+        }
+        return moment(screeningEvent.saleStartDate).unix() <= moment().unix();
     }
 
     /**
@@ -408,8 +412,8 @@ export class PurchaseService {
             return false;
         }
 
-        return this.data.screeningEvent.superEvent.mvtkFlg === '1' &&
-            this.data.screeningEvent.mvtkExcludeFlg !== '1';
+        return this.data.screeningEvent.superEvent.mvtkFlg === 1 &&
+            this.data.screeningEvent.mvtkExcludeFlg !== 1;
     }
 
     /**
@@ -668,18 +672,6 @@ export class PurchaseService {
             this.save();
         }
 
-        const tickets = offers.map((o) => ({
-            ticketedSeat: {
-                seatSection: o.seatSection,
-                seatNumber: o.seatNumber,
-                seatRow: '',
-                seatingType: '',
-                typeOf: factory.chevre.placeType.Seat
-            },
-            ticketType: {
-                id: ''
-            }
-        }));
         this.data.reservationAuthorizationArgs = {
             transactionId: this.data.transaction.id,
             event: {
@@ -687,7 +679,16 @@ export class PurchaseService {
             },
             notes: '',
             clientUser: this.data.transaction.object.clientUser,
-            tickets
+            acceptedOffer: offers.map((o) => ({
+                ticketedSeat: {
+                    seatSection: o.seatSection,
+                    seatNumber: o.seatNumber,
+                    seatRow: '',
+                    seatingType: '',
+                    typeOf: factory.chevre.placeType.Seat
+                },
+                id: ''
+            }))
         };
         this.data.offers = offers;
 
@@ -731,11 +732,11 @@ export class PurchaseService {
         // this.data.seatReservationAuthorization =
         //     await this.cinerino.transaction.placeOrder.changeSeatReservationOffers(changeSeatReservationArgs);
         const rsvArgs = this.data.reservationAuthorizationArgs;
-        rsvArgs.tickets = rsvArgs.tickets.map((t) => {
-            const match = tickets.find((ticket) => ticket.seatNum === t.ticketedSeat.seatNumber);
+        rsvArgs.acceptedOffer = rsvArgs.acceptedOffer.map((offer) => {
+            const match = tickets.find((ticket) => ticket.seatNum === offer.ticketedSeat.seatNumber);
             if (match !== undefined) {
-                t.ticketType.id = match.ticketId;
-                return t;
+                offer.id = match.ticketId;
+                return offer;
             }
             throw new Error('seat ticket not found');
         });
@@ -1097,7 +1098,7 @@ export class PurchaseService {
                 //     titleCode: (<any>eventInfo).titleCode,
                 //     titleBranchNum: (<any>eventInfo).titleBranchNum
                 // };
-                const mvtkTicketcodeResult = await this.cinerino.mvtkTicket({ticketCode: ykknInfo.ykknshTyp});
+                const mvtkTicketcodeResult = await this.cinerino.mvtkTicket({ ticketCode: ykknInfo.ykknshTyp });
                 // console.log('mvtkTicketcodeResult', mvtkTicketcodeResult);
                 const data = {
                     mvtkTicketcodeResult: mvtkTicketcodeResult,
@@ -1112,5 +1113,30 @@ export class PurchaseService {
         }
         this.data.mvtkTickets = results;
         this.save();
+    }
+
+    /**
+     * 券種金額取得
+     */
+    public getTicketPrice(ticket: ISalesTicketResult) {
+        const unitPriceSpecification = ticket.priceSpecification.priceComponent
+            .filter((s) => s.typeOf === factory.chevre.priceSpecificationType.UnitPriceSpecification)
+            .shift();
+        const videoFormatCharge = ticket.priceSpecification.priceComponent
+            .filter((s) => s.typeOf === factory.chevre.priceSpecificationType.VideoFormatChargeSpecification)
+            .shift();
+        const soundFormatCharge = ticket.priceSpecification.priceComponent
+            .filter((s) => s.typeOf === factory.chevre.priceSpecificationType.SoundFormatChargeSpecification)
+            .shift();
+        const price = {
+            unitPriceSpecification: (unitPriceSpecification === undefined) ? 0 : unitPriceSpecification.price,
+            videoFormatCharge: (videoFormatCharge === undefined) ? 0 : videoFormatCharge.price,
+            soundFormatCharge: (soundFormatCharge === undefined) ? 0 : soundFormatCharge.price,
+            total: 0
+        };
+
+        price.total = price.unitPriceSpecification + price.videoFormatCharge + price.soundFormatCharge;
+
+        return price;
     }
 }

@@ -20,7 +20,7 @@ const auth_model_1 = require("../../models/auth/auth.model");
 // import * as moment from 'moment';
 // import { AuthModel } from '../../models/auth/auth.model';
 const base_controller_1 = require("../base/base.controller");
-const log = debug('frontend:purchase');
+const log = debug('toei-frontend:purchase');
 /**
  * 座席ステータス取得
  * @function getSeatState

@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const debug = require("debug");
 const httpStatus = require("http-status");
 const auth_model_1 = require("../../models/auth/auth.model");
-const log = debug('frontend:base');
+const log = debug('toei-frontend:base');
 /**
  * オプション取得
  * @function getOptions

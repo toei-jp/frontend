@@ -1,9 +1,9 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([["main"],{
 
 /***/ "../../node_modules/moment/locale sync recursive ^\\.\\/.*$":
-/*!******************************************************************************************!*\
-  !*** /Users/phi.nt/source/toei-ticket/frontend/node_modules/moment/locale sync ^\.\/.*$ ***!
-  \******************************************************************************************/
+/*!*****************************************************************************************************************!*\
+  !*** C:/Users/hataguchi/Desktop/workspace/motionpicture/TOEI/frontend/node_modules/moment/locale sync ^\.\/.*$ ***!
+  \*****************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -5737,6 +5737,7 @@ var PurchaseScheduleComponent = /** @class */ (function () {
                     case 3:
                         _a.schedules = (_b.sent()).data;
                         this.filmOrder = this.getEventFilmOrder();
+                        console.log(this.filmOrder);
                         return [3 /*break*/, 5];
                     case 4:
                         err_2 = _b.sent();
@@ -6057,7 +6058,7 @@ var PurchaseSeatComponent = /** @class */ (function () {
                         return [4 /*yield*/, this.cinerino.getServices()];
                     case 1:
                         _a.sent();
-                        return [4 /*yield*/, this.cinerino.event.searchScreeningEventTicketTypes({
+                        return [4 /*yield*/, this.cinerino.event.searchScreeningEventTicketOffers({
                                 eventId: screeningEvent.id
                             })];
                     case 2:
@@ -6120,7 +6121,7 @@ var PurchaseSeatComponent = /** @class */ (function () {
                                     ticketName: salesTicket.name,
                                     ticketCount: 1,
                                     description: salesTicket.description,
-                                    charge: salesTicket.charge,
+                                    charge: (salesTicket.price === undefined) ? 0 : salesTicket.price,
                                     seatNum: seat.code,
                                     mvtkNum: '',
                                     mvtkAppPrice: 0,
@@ -6244,7 +6245,7 @@ function View_PurchaseTicketComponent_5(_l) { return _angular_core__WEBPACK_IMPO
 function View_PurchaseTicketComponent_6(_l) { return _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵvid"](0, [(_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](0, 0, null, null, 11, "li", [], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](1, 0, null, null, 10, "dl", [["class", "d-table"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](2, 0, null, null, 5, "dt", [["class", "d-td"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](3, 0, null, null, 2, "div", [["class", "mb-xx-small"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](4, 0, null, null, 1, "strong", [], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](5, null, ["", " \uFFE5", ""])), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](6, 0, null, null, 1, "p", [["class", "small-x-text"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](7, null, ["", ""])), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](8, 0, null, null, 3, "dd", [["class", "d-td width-small"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](9, 0, null, null, 2, "div", [["class", "button blue-button ticket-type-select"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](10, 0, null, null, 1, "button", [["type", "button"]], null, [[null, "click"]], function (_v, en, $event) { var ad = true; var _co = _v.component; if (("click" === en)) {
         var pd_0 = (_co.selectSalesTicket(_v.context.$implicit) !== false);
         ad = (pd_0 && ad);
-    } return ad; }, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](-1, null, ["\u9078\u629E"]))], null, function (_ck, _v) { var currVal_0 = _v.context.$implicit.name.ja; var currVal_1 = _v.context.$implicit.charge; _ck(_v, 5, 0, currVal_0, currVal_1); var currVal_2 = _v.context.$implicit.ticketNote; _ck(_v, 7, 0, currVal_2); }); }
+    } return ad; }, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](-1, null, ["\u9078\u629E"]))], null, function (_ck, _v) { var _co = _v.component; var currVal_0 = _v.context.$implicit.name.ja; var currVal_1 = _co.purchase.getTicketPrice(_v.context.$implicit).total; _ck(_v, 5, 0, currVal_0, currVal_1); var currVal_2 = _v.context.$implicit.description.ja; _ck(_v, 7, 0, currVal_2); }); }
 function View_PurchaseTicketComponent_0(_l) { return _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵvid"](0, [(_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](0, 0, null, null, 31, "div", [["class", "contents"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](1, 0, null, null, 1, "h1", [["class", "page-ttl"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](-1, null, ["\u5238\u7A2E\u9078\u629E"])), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](3, 0, null, null, 1, "p", [["class", "read"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](-1, null, ["\u3054\u5E0C\u671B\u306E\u5238\u7A2E\u3092\u9078\u629E\u3057\u3066\u300C\u6B21\u3078\u300D\u30DC\u30BF\u30F3\u3092\u62BC\u3057\u3066\u304F\u3060\u3055\u3044\u3002"])), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵand"](16777216, null, null, 1, null, View_PurchaseTicketComponent_1)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](6, 16384, null, 0, _angular_common__WEBPACK_IMPORTED_MODULE_3__["NgIf"], [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewContainerRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["TemplateRef"]], { ngIf: [0, "ngIf"] }, null), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](7, 0, null, null, 2, "ul", [["class", "box radius bg-light-gray mb-middle seats"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵand"](16777216, null, null, 1, null, View_PurchaseTicketComponent_2)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](9, 278528, null, 0, _angular_common__WEBPACK_IMPORTED_MODULE_3__["NgForOf"], [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewContainerRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["TemplateRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["IterableDiffers"]], { ngForOf: [0, "ngForOf"] }, null), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](10, 0, null, null, 12, "div", [["class", "box radius bg-light-gray mb-large total"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](11, 0, null, null, 10, "div", [["class", "text-right mb-small"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](12, 0, null, null, 3, "div", [["class", "length mb-x-small"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](-1, null, ["\u8CFC\u5165\u679A\u6570 "])), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](14, 0, null, null, 1, "strong", [["class", "red-text large-text"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](15, null, ["", "\u679A"])), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](16, 0, null, null, 5, "div", [["class", "price"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](-1, null, ["\u5408\u8A08\u91D1\u984D "])), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](18, 0, null, null, 3, "strong", [["class", "red-text large-text"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](19, 0, null, null, 1, "span", [], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](20, null, ["", ""])), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](-1, null, ["\u5186"])), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](22, 0, null, null, 0, "div", [["class", "border-bottom-dot mb-small"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](23, 0, null, null, 6, "form", [["novalidate", ""]], [[2, "ng-untouched", null], [2, "ng-touched", null], [2, "ng-pristine", null], [2, "ng-dirty", null], [2, "ng-valid", null], [2, "ng-invalid", null], [2, "ng-pending", null]], [[null, "ngSubmit"], [null, "submit"], [null, "reset"]], function (_v, en, $event) { var ad = true; var _co = _v.component; if (("submit" === en)) {
         var pd_0 = (_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 25).onSubmit($event) !== false);
         ad = (pd_0 && ad);
@@ -6364,6 +6365,7 @@ var PurchaseTicketComponent = /** @class */ (function () {
         this.error = error;
     }
     PurchaseTicketComponent.prototype.ngOnInit = function () {
+        // console.log(this.purchase.data.salesTickets);
         window.scrollTo(0, 0);
         this.purchase.load();
         this.isLoading = false;
@@ -6761,7 +6763,7 @@ var PurchaseTicketComponent = /** @class */ (function () {
         //     return (pointTicket.ticketCode === ticket.ticketCode);
         // });
         // const usePoint = (findTicket !== undefined) ? findTicket.usePoint : 0;
-        target.price = ticket.charge;
+        target.price = this.purchase.getTicketPrice(ticket).total;
         target.priceCurrency = this.selectOffer.priceCurrency;
         target.seatNumber = this.selectOffer.seatNumber;
         target.seatSection = this.selectOffer.seatSection;
@@ -6772,7 +6774,7 @@ var PurchaseTicketComponent = /** @class */ (function () {
             mvtkNum: '',
             ticketId: ticket.id,
             ticketName: ticket.name,
-            charge: ticket.charge,
+            charge: this.purchase.getTicketPrice(ticket).total,
             description: ticket.description,
             mvtkAppPrice: 0,
             // addGlasses: ticket.addGlasses,
@@ -7752,6 +7754,7 @@ var CinerinoService = /** @class */ (function () {
                         this.transaction = {
                             placeOrder: new _toei_jp_cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_1__["service"].transaction.PlaceOrder(option)
                         };
+                        console.log(this);
                         return [3 /*break*/, 3];
                     case 2:
                         err_1 = _a.sent();
@@ -8223,7 +8226,11 @@ var PurchaseService = /** @class */ (function () {
         // const PRE_SALE = '1'; // 先行販売
         // return (moment(screeningEvent.info.rsvStartDate).unix() <= moment().unix()
         //     || screeningEvent.info.flgEarlyBooking === PRE_SALE);
-        return moment__WEBPACK_IMPORTED_MODULE_1__(screeningEvent.releaseTime).unix() <= moment__WEBPACK_IMPORTED_MODULE_1__().unix();
+        if (screeningEvent.saleStartDate === undefined) {
+            // 一旦true
+            return true;
+        }
+        return moment__WEBPACK_IMPORTED_MODULE_1__(screeningEvent.saleStartDate).unix() <= moment__WEBPACK_IMPORTED_MODULE_1__().unix();
     };
     /**
      * 劇場名取得
@@ -8352,8 +8359,8 @@ var PurchaseService = /** @class */ (function () {
         if (this.data.screeningEvent === undefined) {
             return false;
         }
-        return this.data.screeningEvent.superEvent.mvtkFlg === '1' &&
-            this.data.screeningEvent.mvtkExcludeFlg !== '1';
+        return this.data.screeningEvent.superEvent.mvtkFlg === 1 &&
+            this.data.screeningEvent.mvtkExcludeFlg !== 1;
     };
     /**
      * ポイント対応作品判定
@@ -8619,7 +8626,7 @@ var PurchaseService = /** @class */ (function () {
      */
     PurchaseService.prototype.seatRegistrationProcess = function (offers) {
         return __awaiter(this, void 0, void 0, function () {
-            var cancelSeatReservationArgs, tickets;
+            var cancelSeatReservationArgs;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -8641,18 +8648,6 @@ var PurchaseService = /** @class */ (function () {
                         this.save();
                         _a.label = 3;
                     case 3:
-                        tickets = offers.map(function (o) { return ({
-                            ticketedSeat: {
-                                seatSection: o.seatSection,
-                                seatNumber: o.seatNumber,
-                                seatRow: '',
-                                seatingType: '',
-                                typeOf: _toei_jp_cinerino_factory__WEBPACK_IMPORTED_MODULE_0__["chevre"].placeType.Seat
-                            },
-                            ticketType: {
-                                id: ''
-                            }
-                        }); });
                         this.data.reservationAuthorizationArgs = {
                             transactionId: this.data.transaction.id,
                             event: {
@@ -8660,7 +8655,16 @@ var PurchaseService = /** @class */ (function () {
                             },
                             notes: '',
                             clientUser: this.data.transaction.object.clientUser,
-                            tickets: tickets
+                            acceptedOffer: offers.map(function (o) { return ({
+                                ticketedSeat: {
+                                    seatSection: o.seatSection,
+                                    seatNumber: o.seatNumber,
+                                    seatRow: '',
+                                    seatingType: '',
+                                    typeOf: _toei_jp_cinerino_factory__WEBPACK_IMPORTED_MODULE_0__["chevre"].placeType.Seat
+                                },
+                                id: ''
+                            }); })
                         };
                         this.data.offers = offers;
                         // 座席登録
@@ -8704,11 +8708,11 @@ var PurchaseService = /** @class */ (function () {
                     case 1:
                         _b.sent();
                         rsvArgs = this.data.reservationAuthorizationArgs;
-                        rsvArgs.tickets = rsvArgs.tickets.map(function (t) {
-                            var match = tickets.find(function (ticket) { return ticket.seatNum === t.ticketedSeat.seatNumber; });
+                        rsvArgs.acceptedOffer = rsvArgs.acceptedOffer.map(function (offer) {
+                            var match = tickets.find(function (ticket) { return ticket.seatNum === offer.ticketedSeat.seatNumber; });
                             if (match !== undefined) {
-                                t.ticketType.id = match.ticketId;
-                                return t;
+                                offer.id = match.ticketId;
+                                return offer;
                             }
                             throw new Error('seat ticket not found');
                         });
@@ -9169,6 +9173,28 @@ var PurchaseService = /** @class */ (function () {
                 }
             });
         });
+    };
+    /**
+     * 券種金額取得
+     */
+    PurchaseService.prototype.getTicketPrice = function (ticket) {
+        var unitPriceSpecification = ticket.priceSpecification.priceComponent
+            .filter(function (s) { return s.typeOf === _toei_jp_cinerino_factory__WEBPACK_IMPORTED_MODULE_0__["chevre"].priceSpecificationType.UnitPriceSpecification; })
+            .shift();
+        var videoFormatCharge = ticket.priceSpecification.priceComponent
+            .filter(function (s) { return s.typeOf === _toei_jp_cinerino_factory__WEBPACK_IMPORTED_MODULE_0__["chevre"].priceSpecificationType.VideoFormatChargeSpecification; })
+            .shift();
+        var soundFormatCharge = ticket.priceSpecification.priceComponent
+            .filter(function (s) { return s.typeOf === _toei_jp_cinerino_factory__WEBPACK_IMPORTED_MODULE_0__["chevre"].priceSpecificationType.SoundFormatChargeSpecification; })
+            .shift();
+        var price = {
+            unitPriceSpecification: (unitPriceSpecification === undefined) ? 0 : unitPriceSpecification.price,
+            videoFormatCharge: (videoFormatCharge === undefined) ? 0 : videoFormatCharge.price,
+            soundFormatCharge: (soundFormatCharge === undefined) ? 0 : soundFormatCharge.price,
+            total: 0
+        };
+        price.total = price.unitPriceSpecification + price.videoFormatCharge + price.soundFormatCharge;
+        return price;
     };
     return PurchaseService;
 }());
@@ -9692,7 +9718,7 @@ _angular_platform_browser__WEBPACK_IMPORTED_MODULE_4__["platformBrowser"]().boot
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/phi.nt/source/toei-ticket/frontend/src/client/src/main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! C:\Users\hataguchi\Desktop\workspace\motionpicture\TOEI\frontend\src\client\src\main.ts */"./src/main.ts");
 
 
 /***/ }),

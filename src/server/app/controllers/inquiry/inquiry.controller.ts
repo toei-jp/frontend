@@ -9,7 +9,7 @@ import { formatNumber, parseNumber } from 'libphonenumber-js';
 import * as moment from 'moment-timezone';
 import { InquiryModel } from '../../models/inquiry/inquiry.model';
 import { getOptions } from '../base/base.controller';
-const log = debug('frontend:inquiry');
+const log = debug('toei-frontend:inquiry');
 
 /**
  * 照会表示

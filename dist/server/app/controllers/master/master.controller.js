@@ -5,7 +5,7 @@
 // import * as debug from 'debug';
 // import { Request, Response } from 'express';
 // import { errorProsess } from '../base/base.controller';
-// const log = debug('frontend:master');
+// const log = debug('toei-frontend:master');
 /**
  * 券種一覧取得
  * @function getSalesTickets

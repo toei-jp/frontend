@@ -7,7 +7,7 @@ import { Request, Response } from 'express';
 import * as httpStatus from 'http-status';
 import { ApiEndpoint, AuthModel, IAuthSession } from '../../models/auth/auth.model';
 
-const log = debug('frontend:base');
+const log = debug('toei-frontend:base');
 
 /**
  * オプション取得

@@ -18,7 +18,7 @@ const libphonenumber_js_1 = require("libphonenumber-js");
 const moment = require("moment-timezone");
 const inquiry_model_1 = require("../../models/inquiry/inquiry.model");
 const base_controller_1 = require("../base/base.controller");
-const log = debug('frontend:inquiry');
+const log = debug('toei-frontend:inquiry');
 /**
  * 照会表示
  * @function render

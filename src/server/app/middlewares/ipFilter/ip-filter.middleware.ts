@@ -2,7 +2,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { FORBIDDEN } from 'http-status';
 
-// const debug = createDebug('frontend:middlewares:ipFilter');
+// const debug = createDebug('toei-frontend:middlewares:ipFilter');
 
 /**
  * IP制限ミドルウェア

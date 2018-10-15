@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const http_status_1 = require("http-status");
-// const debug = createDebug('frontend:middlewares:ipFilter');
+// const debug = createDebug('toei-frontend:middlewares:ipFilter');
 /**
  * IP制限ミドルウェア
  */

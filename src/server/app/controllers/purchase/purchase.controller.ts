@@ -11,7 +11,7 @@ import { ApiEndpoint } from '../../models/auth/auth.model';
 // import * as moment from 'moment';
 // import { AuthModel } from '../../models/auth/auth.model';
 import { errorProsess, getOptions } from '../base/base.controller';
-const log = debug('frontend:purchase');
+const log = debug('toei-frontend:purchase');
 
 /**
  * 座席ステータス取得

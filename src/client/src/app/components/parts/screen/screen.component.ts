@@ -107,8 +107,8 @@ export class ScreenComponent implements OnInit, AfterViewInit {
         }
         const screeningEvent = this.purchase.data.screeningEvent;
         if (screeningEvent !== undefined
-            && screeningEvent.remainingAttendeeCapacity !== undefined
-            && screeningEvent.remainingAttendeeCapacity < this.getSelectSeats().length) {
+            && screeningEvent.maxSeatNumber <= this.getSelectSeats().length
+        ) {
             seat.status = 'default';
             this.alert.emit();
 

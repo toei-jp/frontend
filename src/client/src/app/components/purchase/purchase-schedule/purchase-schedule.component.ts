@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { factory } from '@toei-jp/cinerino-api-javascript-client';
 import * as moment from 'moment';
 import { environment } from '../../../../environments/environment';
@@ -15,7 +16,11 @@ interface IFilmOrder {
 
 interface IDate {
     value: string;
-    label: string;
+    label: {
+        date: string,
+        month: string,
+        day: string
+    };
 }
 
 @Component({
@@ -26,19 +31,28 @@ interface IDate {
 export class PurchaseScheduleComponent implements OnInit {
     public theaters: IMovieTheater[];
     public isLoading: boolean;
+    public showTheaterList: boolean;
     public dateList: IDate[];
     public filmOrder: IFilmOrder[];
     public schedules: IScreeningEvent[];
     public conditions: { theater: string; date: string };
     public environment = environment;
+    private preSaleSchedules: IScreeningEvent[];
+    public preSaleDateList: IDate[];
+    public preSaleFilmOrder: IFilmOrder[];
+    public isPreSaleSchedules: boolean;
 
     constructor(
         private error: ErrorService,
+        private route: ActivatedRoute,
         private purchase: PurchaseService,
         private cinerino: CinerinoService
     ) {
+        this.showTheaterList = true;
         this.theaters = [];
         this.dateList = [];
+        this.preSaleDateList = [];
+        this.preSaleFilmOrder = [];
         this.filmOrder = [];
         this.conditions = {
             theater: '',
@@ -53,15 +67,39 @@ export class PurchaseScheduleComponent implements OnInit {
      */
     public async ngOnInit(): Promise<void> {
         window.scrollTo(0, 0);
+        moment.locale('ja');
         this.isLoading = true;
+        this.isPreSaleSchedules = false;
         try {
             await this.cinerino.getServices();
+            const theaterQs = this.route.snapshot.queryParamMap.get('theater');
             this.theaters = (await this.cinerino.organization.searchMovieTheaters({})).data;
-            this.dateList = this.getDateList(3);
+            if (theaterQs !== null) {
+                const theater = this.theaters.find((t) => (
+                    t.name.en.toLocaleLowerCase().indexOf(theaterQs.toLocaleLowerCase()) >= 0
+                ));
+                if (theater !== undefined) {
+                    this.theaters = [theater];
+                    this.showTheaterList = false;
+                }
+            }
+            this.dateList = this.getDateList(7);
             this.conditions = {
                 theater: this.theaters[0].location.branchCode,
                 date: this.dateList[0].value
             };
+            this.preSaleSchedules = (await this.cinerino.event.searchScreeningEvents({
+                superEvent: {
+                    locationBranchCodes: [this.theaters[0].location.branchCode]
+                },
+                preSaleFlg: 1,
+                startFrom: moment().toDate(),
+                saleStartThrough: moment().toDate()
+            })).data;
+            this.preSaleDateList = this.getPreSaleDateList();
+            if (this.preSaleDateList.length > 0) {
+                this.changePreSaleDate(this.preSaleDateList[0].value);
+            }
             await this.changeConditions();
         } catch (err) {
             this.error.redirect(err);
@@ -80,11 +118,65 @@ export class PurchaseScheduleComponent implements OnInit {
             const date = moment().add(i, 'day');
             results.push({
                 value: date.format('YYYYMMDD'),
-                label: (i === 0) ? '本日' : (i === 1) ? '明日' : (i === 2) ? '明後日' : date.format('YYYY/MM/DD')
+                label: {
+                    date: date.format('DD'),
+                    month: date.format('MM'),
+                    day: date.format('（dd）')
+                }
             });
         }
 
         return results;
+    }
+
+    /**
+     * @method getPreSaleDateList
+     * @param {number} loop
+     * @returns {IDate[]}
+     */
+    public getPreSaleDateList(): IDate[] {
+        const results: IDate[] = [];
+        this.preSaleSchedules.forEach((schedule) => {
+            const date = moment(schedule.startDate);
+            const data = {
+                value: date.format('YYYYMMDD'),
+                label: {
+                    date: date.format('DD'),
+                    month: date.format('MM'),
+                    day: date.format('（dd）')
+                }
+            };
+            const duplicate = results.find((d) => d.value === data.value);
+            if (!duplicate) {
+                results.push(data);
+            }
+        });
+
+        return results;
+    }
+
+    /**
+     * 日付変更
+     * @method changeDate
+     * @param { string } date
+     * @returns {Promise<void>}
+     */
+    public async changeDate(date: string): Promise<void> {
+        this.conditions.date = date;
+        await this.changeConditions();
+    }
+
+    /**
+     * 日付変更
+     * @method changePreSaleDate
+     * @param { string } date
+     * @returns { void }
+     */
+    public changePreSaleDate(date: string): void {
+        const schedules = this.preSaleSchedules.filter((s) => {
+            return date === moment(s.startDate).format('YYYYMMDD');
+        });
+        this.preSaleFilmOrder = this.getEventFilmOrder(schedules);
     }
 
     /**
@@ -110,7 +202,7 @@ export class PurchaseScheduleComponent implements OnInit {
                 startFrom: moment(this.conditions.date).toDate(),
                 startThrough: moment(this.conditions.date).add(1, 'day').toDate()
             })).data;
-            this.filmOrder = this.getEventFilmOrder();
+            this.filmOrder = this.getEventFilmOrder(this.schedules);
             console.log(this.filmOrder);
         } catch (err) {
             this.error.redirect(err);
@@ -123,14 +215,12 @@ export class PurchaseScheduleComponent implements OnInit {
      * @function getScreeningEvents
      * @returns {IFilmOrder[]}
      */
-    public getEventFilmOrder(): IFilmOrder[] {
+    public getEventFilmOrder(schedules: IScreeningEvent[]): IFilmOrder[] {
         const results: IFilmOrder[] = [];
-        this.schedules.forEach((screeningEvent) => {
+        schedules.forEach((screeningEvent) => {
             // 販売可能時間判定
             if (
-                !this.purchase.isSales(screeningEvent) ||
-                !this.purchase.isSalesTime(screeningEvent) ||
-                screeningEvent.maximumAttendeeCapacity === undefined
+                !this.purchase.isSales(screeningEvent)
             ) {
                 return;
             }

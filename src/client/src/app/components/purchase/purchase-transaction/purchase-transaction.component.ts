@@ -92,9 +92,9 @@ export class PurchaseTransactionComponent implements OnInit {
             if (!this.purchase.isSales(screeningEvent)) {
                 throw new Error('Unable to start sales');
             }
-            const END_TIME = 30;
+            const END_TIME = screeningEvent.endSaleTimeAfterScreening || 0;
             // 終了可能日判定
-            if (moment().add(END_TIME, 'minutes').unix() > moment(screeningEvent.startDate).unix()) {
+            if (moment().unix() > moment(screeningEvent.startDate).add(END_TIME, 'minutes').unix()) {
                 throw new Error('unable to end sales');
             }
             if (this.purchase.data.transaction !== undefined && this.purchase.isExpired()) {

@@ -366,10 +366,6 @@ ISC
 ISC
 ISC
 
-@waiter/factory@1.0.0
-ISC
-ISC
-
 setprototypeof@1.1.0
 ISC
 Copyright (c) 2015, Wes Todd

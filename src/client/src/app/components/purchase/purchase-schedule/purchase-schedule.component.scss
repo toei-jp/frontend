@@ -3,3 +3,24 @@ $mobile: 767px;
 .film-order {
     
 }
+
+.date-list {
+    margin: 0 -60px;
+    @media screen and (max-width: $mobile){
+        margin: 0 -15px;
+    }
+    height: 150px;
+    text-align: center;
+    background: #F0F0F2;
+    padding: 20px;
+
+    .date-btn {
+        width: 12%;
+        height: 100%;
+        display: inline-block;
+        margin: 0 5px;
+        background-color: #FFE200;
+        border-bottom: 5px solid #FDD100;
+        padding: 20px 0;
+    }
+}

@@ -9605,7 +9605,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var environment = {
     production: false,
-    PORTAL_SITE_URL: 'http://testtoeiportal.azurewebsites.net',
+    PORTAL_SITE_URL: '/',
     APP_SITE_URL: 'https://toei-ticket-test.azurewebsites.net',
     API_ENDPOINT: '',
     FRONTEND_ENDPOINT: '',

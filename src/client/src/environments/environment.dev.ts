@@ -2,7 +2,7 @@ import { DEVELOPMENT_MEMBER_TICKET, DEVELOPMENT_POINT_TICKET } from './ticket';
 
 export const environment = {
     production: false,
-    PORTAL_SITE_URL: 'http://devtoeiportal.azurewebsites.net',
+    PORTAL_SITE_URL: '/',
     APP_SITE_URL: 'https://toei-ticket-development.azurewebsites.net',
     API_ENDPOINT: '',
     FRONTEND_ENDPOINT: '',

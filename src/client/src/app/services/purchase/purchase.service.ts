@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import * as mvtkReserve from '@motionpicture/mvtk-reserve-service';
 import * as factory from '@toei-jp/cinerino-factory';
 import * as moment from 'moment';
-// import { ISeat } from '../../components/parts/screen/screen.component';
-import { environment } from '../../../environments/environment';
+import { Reservation } from '../../models';
 import { TimeFormatPipe } from '../../pipes/time-format/time-format.pipe';
 import { AwsCognitoService } from '../aws-cognito/aws-cognito.service';
 import { CallNativeService } from '../call-native/call-native.service';
@@ -13,7 +12,6 @@ import { UserService } from '../user/user.service';
 
 declare const ga: Function;
 
-export type IScreeningEvent = factory.chevre.event.screeningEvent.IEvent;
 export type ICustomerContact = factory.transaction.placeOrder.ICustomerContact;
 export type ISalesTicketResult = factory.chevre.event.screeningEvent.ITicketOffer;
 type IUnauthorizedCardOfMember = factory.paymentMethod.paymentCard.creditCard.IUnauthorizedCardOfMember;
@@ -25,32 +23,21 @@ export interface IOffer {
     seatNumber: string;
     seatSection: string;
     selected: boolean;
-    // limitCount: number;
-    // limitUnit: string;
     validation: boolean;
     ticketInfo: {
         mvtkNum: string;
-        // ticketCode: string;
         ticketId: string,
         ticketName: { en: string, ja: string };
         description: { en: string, ja: string };
         charge: number,
         mvtkAppPrice: number;
-        // addGlasses: number;
         kbnEisyahousiki: string;
         mvtkKbnDenshiken: string;
         mvtkKbnMaeuriken: string;
         mvtkKbnKensyu: string;
         mvtkSalesPrice: number;
-        // addPrice: number,
-        // disPrice: number,
-        // salePrice: number,
         seatNum: string;
-        // stdPrice: number,
         ticketCount: number,
-        // ticketNameEng: string;
-        // ticketNameKana: string;
-        // usePoint?: number;
     };
 }
 
@@ -62,7 +49,7 @@ interface IData {
     /**
      * 上映イベント
      */
-    screeningEvent?: IScreeningEvent;
+    screeningEvent?: factory.chevre.event.screeningEvent.IEvent;
     /**
      * 劇場ショップ
      */
@@ -114,27 +101,11 @@ interface IData {
     /**
      * ムビチケ券種情報
      */
-    mvtkTickets: IMvtkTicket[];
+    mvtkTickets: factory.action.check.paymentMethod.movieTicket.IAction[];
     /**
-     * ムビチケ使用情報
+     * 予約リスト
      */
-    // mvtkAuthorization?: {
-    //     id: string;
-    // };
-    /**
-     * インセンティブ情報
-     */
-    // pecorinoAwardAuthorization?: {
-    //     id: string;
-    // };
-    /**
-     * インセンティブ
-     */
-    // incentive: number;
-    /**
-     * ポイント券種情報
-     */
-    // pointTickets: factory.chevre.services.master.ITicketResult[];
+    reservations: Reservation[];
 }
 
 export interface IGmoTokenObject {
@@ -190,7 +161,8 @@ export class PurchaseService {
                 orderCount: 0,
                 // incentive: 0,
                 isCreditCardError: false,
-                offers: []
+                offers: [],
+                reservations: []
             };
 
             return;
@@ -218,7 +190,9 @@ export class PurchaseService {
             orderCount: 0,
             // incentive: 0,
             isCreditCardError: false,
-            offers: []
+            offers: [],
+            reservations: []
+
         };
         this.save();
     }
@@ -244,10 +218,10 @@ export class PurchaseService {
     /**
      * 販売可能時間判定
      * @method isSalesTime
-     * @param {IScreeningEvent} screeningEvent
+     * @param {factory.chevre.event.screeningEvent.IEvent} screeningEvent
      * @returns {boolean}
      */
-    public isSalesTime(screeningEvent: IScreeningEvent): boolean {
+    public isSalesTime(screeningEvent: factory.chevre.event.screeningEvent.IEvent): boolean {
         const END_TIME = 30; // 30分前
 
         return (moment().unix() < moment(screeningEvent.startDate).subtract(END_TIME, 'minutes').unix());
@@ -256,10 +230,10 @@ export class PurchaseService {
     /**
      * 販売可能判定
      * @method isSales
-     * @param {IScreeningEvent} screeningEvent
+     * @param {factory.chevre.event.screeningEvent.IEvent} screeningEvent
      * @returns {boolean}
      */
-    public isSales(screeningEvent: IScreeningEvent): boolean {
+    public isSales(screeningEvent: factory.chevre.event.screeningEvent.IEvent): boolean {
         // const PRE_SALE = '1'; // 先行販売
 
         // return (moment(screeningEvent.info.rsvStartDate).unix() <= moment().unix()
@@ -385,24 +359,6 @@ export class PurchaseService {
     }
 
     /**
-     * メンバーズの券種コード取得
-     * @method getMemberTicketCode
-     * @returns {string[]}
-     */
-    /*public getMemberTicketCode(): string[] {
-        if (this.data.screeningEvent === undefined) {
-            return [];
-        }
-        const branchCode = this.data.movieTheaterOrganization ?
-        this.data.movieTheaterOrganization.location.branchCode : undefined;
-        const memberTicket = environment.MEMBER_TICKET.find((data) => data.THEATER === branchCode);
-        if (memberTicket === undefined) {
-            return [];
-        }
-        return memberTicket.TICKET_CODE;
-    }*/
-
-    /**
      * ムビチケ対応作品判定
      * @method isUsedMvtk
      * @returns {boolean}
@@ -415,40 +371,6 @@ export class PurchaseService {
         return this.data.screeningEvent.superEvent.mvtkFlg === 1 &&
             this.data.screeningEvent.mvtkExcludeFlg !== 1;
     }
-
-    /**
-     * ポイント対応作品判定
-     * @method isUsedPoint
-     * @returns {boolean}
-     */
-    /*public isUsedPoint(): boolean {
-        if (this.data.salesTickets.length === 0
-            || this.data.screeningEvent === undefined) {
-            return false;
-        }
-
-        const screeningEvent = this.data.screeningEvent;
-
-        const pointInfo = environment.POINT_TICKET.find((ticket) => {
-            return ticket.THEATER === screeningEvent.location.branchCode;
-        });
-
-        if (pointInfo === undefined) {
-            return false;
-        }
-
-        const pointTicketCodeList = pointInfo.TICKET_CODE;
-
-        const pointTickets = this.data.salesTickets.filter((salesTicket) => {
-            const ticketCode = pointTicketCodeList.find((pointTicketcode) => {
-                return pointTicketcode === salesTicket.ticketCode;
-            });
-
-            return ticketCode !== undefined;
-        });
-
-        return pointTickets.length > 0;
-    }*/
 
     /**
      * ポイントでの予約判定
@@ -470,140 +392,12 @@ export class PurchaseService {
     }
 
     /**
-     * インセンティブ判定
-     * @method isIncentive
-     * @returns {boolean}
-     */
-    /*public isIncentive(): boolean {
-        if (this.data.seatReservationAuthorization === undefined) {
-            return false;
-        }
-        const pointTickets: factory.chevre.services.master.ITicketResult[] = [];
-        for (const offer of this.data.seatReservationAuthorization.object.offers) {
-            const pointTicket = this.data.pointTickets.find((ticket) => {
-                return (ticket.ticketCode === offer.ticketInfo.ticketCode);
-            });
-            if (pointTicket !== undefined) {
-                pointTickets.push(pointTicket);
-            }
-        }
-
-        return (pointTickets.length !== this.data.seatReservationAuthorization.object.offers.length);
-    }*/
-
-    /**
-     * ポイントでの予約判定
-     * @method isReservePoint
-     * @returns {boolean}
-     */
-    /*public isReservePoint(): boolean {
-        let result = false;
-        if (this.data.seatReservationAuthorization === undefined
-            || this.data.pointTickets.length === 0) {
-            return result;
-        }
-        for (const offer of this.data.seatReservationAuthorization.object.offers) {
-            const pointTickets = this.data.pointTickets.filter((ticket) => {
-                return (ticket.ticketCode === offer.ticketInfo.ticketCode);
-            });
-            if (pointTickets.length > 0) {
-                result = true;
-                break;
-            }
-        }
-
-        return result;
-    }*/
-
-    /**
-     * ムビチケ着券情報取得
-     * @method getMvtkSeatInfoSync
-     */
-    public getMvtkSeatInfoSync(confirmationNumber: number, options?: {
-        deleteFlag?: string
-        reservedDeviceType?: string
-    }) {
-        if (this.data.seatReservationAuthorization === undefined
-            || this.data.seatReservationAuthorization.result === undefined
-            || this.data.screeningEvent === undefined
-            || this.data.mvtkTickets === undefined) {
-            throw new Error('status is different');
-        }
-        const mvtkPurchaseNoInfoList: mvtkReserve.services.seat.seatInfoSync.IKnyknrNoInfo[] = [];
-        const mvtkseat: { zskCd: string; }[] = [];
-
-        for (const offer of this.data.offers) {
-            const mvtkTicket = this.data.mvtkTickets.find((ticket) => {
-                return (ticket.knyknrNoInfo.knyknrNo === offer.ticketInfo.mvtkNum
-                    && ticket.mvtkTicketcodeResult.code === offer.ticketInfo.ticketId);
-            });
-            if (mvtkTicket === undefined || mvtkTicket.input === undefined) {
-                continue;
-            }
-            const mvtkPurchaseNoInfo = mvtkPurchaseNoInfoList.find((i) => {
-                return (i.knyknrNo === mvtkTicket.knyknrNoInfo.knyknrNo);
-            });
-            if (mvtkPurchaseNoInfo !== undefined) {
-                const knshInfo = mvtkPurchaseNoInfo.knshInfo.find((i) => {
-                    return (i.knshTyp === mvtkTicket.ykknInfo.ykknshTyp);
-                });
-                if (knshInfo !== undefined) {
-                    knshInfo.miNum += 1;
-                } else {
-                    mvtkPurchaseNoInfo.knshInfo.push({
-                        knshTyp: mvtkTicket.ykknInfo.ykknshTyp,
-                        miNum: 1
-                    });
-                }
-            } else {
-                mvtkPurchaseNoInfoList.push({
-                    knyknrNo: mvtkTicket.knyknrNoInfo.knyknrNo,
-                    pinCd: mvtkTicket.input.pinCd,
-                    knshInfo: [{
-                        knshTyp: mvtkTicket.ykknInfo.ykknshTyp,
-                        miNum: 1
-                    }]
-                });
-            }
-            mvtkseat.push({ zskCd: offer.seatNumber });
-        }
-        if (mvtkPurchaseNoInfoList.length === 0 || mvtkseat.length === 0) {
-            throw new Error('status is different');
-        }
-        const DIGITS = -2;
-        const info = this.data.screeningEvent;
-        const day = moment(info.doorTime).format('YYYY/MM/DD');
-        const time = `${new TimeFormatPipe().transform(this.data.screeningEvent.startDate)}:00`;
-        const tmpReserveNum = confirmationNumber;
-        const systemReservationNumber = `${moment(info.doorTime).format('YYYYMMDD')}${confirmationNumber}`;
-        const siteCode = String(Number(`00${this.data.screeningEvent.location.branchCode}`.slice(DIGITS)));
-        const deleteFlag = (options === undefined || options.deleteFlag === undefined) ? '0' : options.deleteFlag;
-        const reservedDeviceType = (options === undefined || options.reservedDeviceType === undefined) ? '02' : options.reservedDeviceType;
-        const skhnCd = info.workPerformed.identifier;
-
-        return {
-            kgygishCd: environment.MVTK_COMPANY_CODE,
-            yykDvcTyp: reservedDeviceType,
-            trkshFlg: deleteFlag,
-            kgygishSstmZskyykNo: systemReservationNumber,
-            kgygishUsrZskyykNo: String(tmpReserveNum),
-            jeiDt: `${day} ${time}`,
-            kijYmd: day,
-            stCd: siteCode,
-            screnCd: info.location.branchCode,
-            knyknrNoInfo: mvtkPurchaseNoInfoList,
-            zskInfo: mvtkseat,
-            skhnCd: skhnCd
-        };
-    }
-
-    /**
      * 取引開始処理
      * @method transactionStartProcess
      */
     public async transactionStartProcess(args: {
         passportToken: string;
-        screeningEvent: IScreeningEvent
+        screeningEvent: factory.chevre.event.screeningEvent.IEvent
     }) {
         // 購入データ削除
         this.reset();
@@ -691,21 +485,6 @@ export class PurchaseService {
             }))
         };
         this.data.offers = offers;
-
-        // 座席登録
-        /*this.data.tmpSeatReservationAuthorization =
-            await this.cinerino.transaction.placeOrder.authorizeSeatReservation({
-                transactionId: this.data.transaction.id,
-                event: {
-                    id: this.data.screeningEvent.id
-                },
-                tickets: {
-                    includes: [{}]
-                },
-                notes: '',
-                clientUser: this.data.transaction.object.clientUser
-
-            });*/
         this.data.orderCount = 0;
         this.data.seatReservationAuthorization = undefined;
         this.save();
@@ -813,15 +592,15 @@ export class PurchaseService {
         }
         // クレジットカード登録
         const METHOD_LUMP = '1';
-        const createCreditCardAuthorizationArgs = {
-            transactionId: this.data.transaction.id,
-            orderId: this.createOrderId(),
-            amount: this.getTotalPrice(),
-            method: METHOD_LUMP,
-            creditCard: this.data.paymentCreditCard
-        };
         this.data.creditCardAuthorization =
-            await this.cinerino.transaction.placeOrder.authorizeCreditCardPayment(createCreditCardAuthorizationArgs);
+            await this.cinerino.transaction.placeOrder.authorizeCreditCardPayment({
+                transactionId: this.data.transaction.id,
+                typeOf: factory.paymentMethodType.CreditCard,
+                orderId: this.createOrderId(),
+                amount: this.getTotalPrice(),
+                method: <any>METHOD_LUMP,
+                creditCard: this.data.paymentCreditCard
+            });
         this.save();
     }
 
@@ -850,57 +629,6 @@ export class PurchaseService {
     }
 
     /**
-     * インセンティブ処理
-     */
-    /*public async incentiveProcess() {
-        if (this.data.transaction === undefined
-            || this.user.data.account === undefined) {
-            throw new Error('status is different');
-        }
-        await this.cinerino.getServices();
-        this.data.pecorinoAwardAuthorization = await this.cinerino.transaction.placeOrder.createPecorinoAwardAuthorization({
-            transactionId: this.data.transaction.id,
-            amount: Incentive.WatchingMovies,
-            toAccountNumber: this.user.data.account.accountNumber,
-            notes: '鑑賞'
-        });
-        this.data.incentive = Incentive.WatchingMovies;
-    }*/
-
-    /**
-     * ポイント決済処理
-     */
-    /*public async pointPaymentProcess() {
-        if (this.data.transaction === undefined
-            || this.user.data.account === undefined
-            || this.data.seatReservationAuthorization === undefined) {
-            throw new Error('status is different');
-        }
-        await this.cinerino.getServices();
-        const ticketNames = [];
-        let usePoint = 0;
-        for (const offer of this.data.seatReservationAuthorization.object.offers) {
-            const pointTicket = this.data.pointTickets.find((ticket) => {
-                return (ticket.ticketCode === offer.ticketInfo.ticketCode);
-            });
-            if (pointTicket === undefined) {
-                continue;
-            }
-            ticketNames.push(`${offer.ticketInfo.ticketName} 引換`);
-            usePoint += pointTicket.usePoint;
-        }
-
-        const notes = ticketNames.join(',');
-
-        await this.cinerino.transaction.placeOrder.createPecorinoPaymentAuthorization({
-            transactionId: this.data.transaction.id,
-            amount: usePoint,
-            fromAccountNumber: this.user.data.account.accountNumber,
-            notes: notes
-        });
-    }*/
-
-    /**
      * 購入登録処理
      */
     public async purchaseRegistrationProcess() {
@@ -910,47 +638,25 @@ export class PurchaseService {
         }
         await this.cinerino.getServices();
         let order: factory.order.IOrder;
-        try {
-            if (this.isReserveMvtk()) {
-                // 決済方法として、ムビチケを追加する
-                // const createMvtkAuthorizationArgs = {
-                //     transactionId: this.data.transaction.id,
-                //     mvtk: {
-                //         typeOf: factory.action.authorize.discount.mvtk.ObjectType.Mvtk,
-                //         price: this.getMvtkTotalPrice(),
-                //         seatInfoSyncIn: this.getMvtkSeatInfoSync()
-                //     }
-                // };
-                // console.log('createMvtkAuthorizationArgs', createMvtkAuthorizationArgs);
-                // this.data.mvtkAuthorization =
-                //     await this.cinerino.transaction.placeOrder.createMvtkAuthorization(createMvtkAuthorizationArgs);
-            }
-            /*const incentives = [];
-            if (this.user.isMember()
-                && !this.isReservePoint()
-                && this.user.data.account !== undefined) {
-                incentives.push({
-                    amount: Incentive.WatchingMovies,
-                    toAccountNumber: this.user.data.account.accountNumber
-                });
-            }*/
-            // 取引確定
-            order = (await this.cinerino.transaction.placeOrder.confirm({
-                transactionId: this.data.transaction.id,
-                sendEmailMessage: true
-            })).order;
-        } catch (err) {
-            /*if (this.isReserveMvtk()) {
-                await this.cancelMvtksSatInfoSync(0);
-            }*/
-            throw err;
-        }
-
         if (this.isReserveMvtk()) {
-            // ムビチケ使用
-            const mvtksSatInfoSyncArgs = this.getMvtkSeatInfoSync(order.confirmationNumber);
-            await this.cinerino.mvtksSeatInfoSync(mvtksSatInfoSyncArgs);
+            // 決済方法として、ムビチケを追加する
+            // const createMvtkAuthorizationArgs = {
+            //     transactionId: this.data.transaction.id,
+            //     mvtk: {
+            //         typeOf: factory.action.authorize.discount.mvtk.ObjectType.Mvtk,
+            //         price: this.getMvtkTotalPrice(),
+            //         seatInfoSyncIn: this.getMvtkSeatInfoSync()
+            //     }
+            // };
+            // console.log('createMvtkAuthorizationArgs', createMvtkAuthorizationArgs);
+            // this.data.mvtkAuthorization =
+            //     await this.cinerino.transaction.placeOrder.createMvtkAuthorization(createMvtkAuthorizationArgs);
         }
+        // 取引確定
+        order = (await this.cinerino.transaction.placeOrder.confirm({
+            transactionId: this.data.transaction.id,
+            sendEmailMessage: true
+        })).order;
         const complete = {
             order: order,
             transaction: this.data.transaction,
@@ -1054,64 +760,50 @@ export class PurchaseService {
     /**
      * ムビチケ認証処理
      */
-    public async mvtkAuthenticationProcess(mvtkInputDataList: {
+    public async mvtkAuthenticationProcess(movieTickets: {
         knyknrNo: string;
         pinCd: string;
     }[]) {
-        if (this.data.screeningEvent === undefined) {
+        if (this.data.screeningEvent === undefined
+            || this.data.transaction === undefined) {
             throw new Error('status is different');
         }
         await this.cinerino.getServices();
-        const DIGITS = -2;
+        const transaction = this.data.transaction;
         const eventInfo = this.data.screeningEvent;
-        const valid = '1';
-        const purchaseNumberAuthArgs = {
-            kgygishCd: environment.MVTK_COMPANY_CODE,
-            jhshbtsCd: <any>valid,
-            knyknrNoInfoIn: mvtkInputDataList,
-            skhnCd: eventInfo.workPerformed.identifier,
-            stCd: `00${eventInfo.superEvent.location.branchCode}`.slice(DIGITS),
-            jeiYmd: moment(eventInfo.doorTime).format('YYYY/MM/DD')
-        };
-        const mvtkPurchaseNumberAuthResult = await this.cinerino.mvtkPurchaseNumberAuth(purchaseNumberAuthArgs);
-        const success = 'N000';
-        if (mvtkPurchaseNumberAuthResult.resultInfo.status !== success
-            || mvtkPurchaseNumberAuthResult.ykknmiNumSum === null
-            || mvtkPurchaseNumberAuthResult.ykknmiNumSum === 0
-            || mvtkPurchaseNumberAuthResult.knyknrNoInfoOut === null) {
-            throw new Error('mvtkPurchaseNumberAuth error');
-        }
-        const results = [];
-        for (const knyknrNoInfo of mvtkPurchaseNumberAuthResult.knyknrNoInfoOut) {
-            if (knyknrNoInfo.ykknInfo === null) {
-                continue;
-            }
-            for (const ykknInfo of knyknrNoInfo.ykknInfo) {
-                // const mvtkTicketcodeArgs = {
-                //     theaterCode: eventInfo.superEvent.location.branchCode,
-                //     kbnDenshiken: knyknrNoInfo.dnshKmTyp,
-                //     kbnMaeuriken: knyknrNoInfo.znkkkytsknGkjknTyp,
-                //     kbnKensyu: ykknInfo.ykknshTyp,
-                //     salesPrice: Number(ykknInfo.knshknhmbiUnip),
-                //     appPrice: Number(ykknInfo.kijUnip),
-                //     kbnEisyahousiki: ykknInfo.eishhshkTyp,
-                //     titleCode: (<any>eventInfo).titleCode,
-                //     titleBranchNum: (<any>eventInfo).titleBranchNum
-                // };
-                const mvtkTicketcodeResult = await this.cinerino.mvtkTicket({ ticketCode: ykknInfo.ykknshTyp });
-                // console.log('mvtkTicketcodeResult', mvtkTicketcodeResult);
-                const data = {
-                    mvtkTicketcodeResult: mvtkTicketcodeResult,
-                    knyknrNoInfo: knyknrNoInfo,
-                    ykknInfo: ykknInfo,
-                    input: mvtkInputDataList.find((mvtkInputData) => {
-                        return (mvtkInputData.knyknrNo === knyknrNoInfo.knyknrNo);
-                    })
+
+        const checkMovieTicketAction = await this.cinerino.payment.checkMovieTicket({
+            typeOf: factory.paymentMethodType.MovieTicket,
+            movieTickets: <any[]>movieTickets.map((movieTicket) => {
+                return {
+                    identifier: movieTicket.knyknrNo,
+                    accessCode: movieTicket.pinCd,
+                    typeOf: factory.paymentMethodType.MovieTicket,
+                    serviceType: '', // 情報空でよし
+                    serviceOutput: {
+                        reservationFor: {
+                            typeOf: eventInfo.typeOf,
+                            id: eventInfo.id
+                        },
+                        reservedTicket: {
+                            ticketedSeat: {
+                                typeOf: factory.chevre.placeType.Seat,
+                                seatingType: '', // 情報空でよし
+                                seatNumber: '', // 情報空でよし
+                                seatRow: '', // 情報空でよし
+                                seatSection: '' // 情報空でよし
+                            }
+                        }
+                    }
                 };
-                results.push(data);
+            }),
+            seller: {
+                typeOf: transaction.seller.typeOf,
+                id: transaction.seller.id
             }
-        }
-        this.data.mvtkTickets = results;
+        });
+
+        this.data.mvtkTickets = [checkMovieTicketAction];
         this.save();
     }
 

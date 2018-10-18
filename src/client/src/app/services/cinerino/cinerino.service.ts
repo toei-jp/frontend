@@ -1,6 +1,5 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import * as mvtkReserve from '@motionpicture/mvtk-reserve-service';
 import * as cinerino from '@toei-jp/cinerino-api-javascript-client';
 import 'rxjs/add/operator/toPromise';
 import { environment } from '../../../environments/environment';
@@ -14,7 +13,7 @@ export class CinerinoService {
     public organization: cinerino.service.Organization;
     public person: cinerino.service.Person;
     public personOwnershipInfo: cinerino.service.person.OwnershipInfo;
-    // public place: cinerino.service.Place;
+    public payment: cinerino.service.Payment;
     public transaction: {
         placeOrder: cinerino.service.transaction.PlaceOrder
     };
@@ -34,7 +33,7 @@ export class CinerinoService {
             this.order = new cinerino.service.Order(option);
             this.organization = new cinerino.service.Organization(option);
             this.person = new cinerino.service.Person(option);
-            // this.place = new cinerino.service.Place(option);
+            this.payment = new cinerino.service.Payment(option);
             this.transaction = {
                 placeOrder: new cinerino.service.transaction.PlaceOrder(option)
             };
@@ -96,93 +95,5 @@ export class CinerinoService {
         // console.log(result.url);
         location.href = result.url;
     }
-
-    /**
-     * ムビチケ照会
-     * @param {mvtkReserve.services.auth.purchaseNumberAuth.IPurchaseNumberAuthIn} args
-     */
-    public async mvtkPurchaseNumberAuth(
-        args: mvtkReserve.services.auth.purchaseNumberAuth.IPurchaseNumberAuthIn
-    ) {
-        const url = `${environment.API_ENDPOINT}/api/purchase/mvtkPurchaseNumberAuth`;
-
-        return this.http.post<mvtkReserve.services.auth.purchaseNumberAuth.IPurchaseNumberAuthResult>(url, args).toPromise();
-    }
-
-    /**
-     * ムビチケ座席指定情報連携
-     * @param {mvtkReserve.services.seat.seatInfoSync.ISeatInfoSyncIn} args
-     */
-    public async mvtksSeatInfoSync(
-        args: mvtkReserve.services.seat.seatInfoSync.ISeatInfoSyncIn
-    ) {
-        const url = `${environment.API_ENDPOINT}/api/purchase/mvtksSeatInfoSync`;
-
-
-        return this.http.post<mvtkReserve.services.seat.seatInfoSync.ISeatInfoSyncResult>(url, args).toPromise();
-    }
-
-    /**
-     * 座席ステータス取得
-     * @param { eventId: string } args
-     */
-    public async getSeatState(
-        args: { eventId: string }
-    ) {
-        const url = `${environment.API_ENDPOINT}/api/purchase/getSeatState`;
-
-        return this.http.get<cinerino.factory.chevre.event.screeningEvent.IScreeningRoomSectionOffer[]>(url, {
-            params: <any>args
-        }).toPromise();
-    }
-
-    public async findMovieTheaterByBranchCode(args: { branchCode: string } ) {
-        const url = `${environment.API_ENDPOINT}/api/purchase/findMovieTheaterByBranchCode`;
-
-        return this.http.get<cinerino.factory.chevre.place.movieTheater.IPlace>(url, {
-            params: <any>args
-        }).toPromise();
-    }
-
-    /**
-     * ムビチケ券種取得
-     * @param {ticketCode: string} args
-     */
-    public async mvtkTicket(
-        args: { ticketCode: string }
-    ) {
-        const url = `${environment.API_ENDPOINT}/api/purchase/mvtkTicket`;
-        return this.http.get<{ name: string; code: string }>(url, {
-            params: args
-        }).toPromise();
-    }
-
-    /**
-     * 券種取得
-     * @method getSalesTickets
-     * @param {cinerino.factory.chevre.services.reserve.ISalesTicketArgs} args
-     */
-    /*public async getSalesTickets(
-        args: cinerino.factory.chevre.services.reserve.ISalesTicketArgs
-    ) {
-        const url = `${environment.API_ENDPOINT}/api/master/getSalesTickets`;
-        return this.http.get<cinerino.factory.chevre.services.reserve.ISalesTicketResult[]>(url, {
-            params: <any>args
-        }).toPromise();
-    }*/
-
-    /**
-     * 券種マスター一覧取得
-     * @method getTickets
-     * @param {cinerino.factory.chevre.services.reserve.ITicketArgs} args
-     */
-    /*public async getTickets(
-        args: cinerino.factory.chevre.services.master.ITicketArgs
-    ) {
-        const url = `${environment.API_ENDPOINT}/api/master/getTickets`;
-        return this.http.get<cinerino.factory.chevre.services.master.ITicketResult[]>(url, {
-            params: <any>args
-        }).toPromise();
-    }*/
 
 }

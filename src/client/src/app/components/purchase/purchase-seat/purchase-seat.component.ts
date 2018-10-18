@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { environment } from '../../../../environments/environment';
 import { CinerinoService } from '../../../services/cinerino/cinerino.service';
 import { ErrorService } from '../../../services/error/error.service';
-import { ISalesTicketResult, IScreeningEvent, PurchaseService } from '../../../services/purchase/purchase.service';
+import { PurchaseService } from '../../../services/purchase/purchase.service';
 // import { FlgMember, UserService } from '../../../services/user/user.service';
 import { IInputScreenData, ISeat } from '../../parts/screen/screen.component';
 
@@ -79,16 +79,11 @@ export class PurchaseSeatComponent implements OnInit, AfterViewInit {
      * @method getSalesTickets
      */
     public async fitchSalesTickets() {
-        const screeningEvent = <IScreeningEvent>this.purchase.data.screeningEvent;
+        if (this.purchase.data.screeningEvent === undefined) {
+            return [];
+        }
+        const screeningEvent = this.purchase.data.screeningEvent;
         await this.cinerino.getServices();
-        /*const salesTicketArgs = {
-            theaterCode: screeningEvent.location.branchCode,
-            dateJouei: screeningEvent.info.dateJouei,
-            titleCode: screeningEvent.info.titleCode,
-            // titleBranchNum: screeningEvent.info.titleBranchNum,
-            timeBegin: screeningEvent.info.timeBegin
-            // flgMember: (this.user.isMember()) ? FlgMember.Member : FlgMember.NonMember
-        };*/
         const salesTickets = await this.cinerino.event.searchScreeningEventTicketOffers({
             eventId: screeningEvent.id
         });
@@ -122,37 +117,7 @@ export class PurchaseSeatComponent implements OnInit, AfterViewInit {
             return;
         }
         try {
-            if (this.purchase.data.salesTickets.length === 0) {
-                this.purchase.data.salesTickets = await this.fitchSalesTickets();
-            }
 
-            const offers = this.seats.map((seat) => {
-                const salesTicket = (<ISalesTicketResult[]>this.purchase.data.salesTickets)[0];
-                return {
-                    seatSection: seat.section,
-                    seatNumber: seat.code,
-                    price: 0,
-                    priceCurrency: '',
-                    selected: false,
-                    validation: false,
-                    ticketInfo: {
-                        ticketId: salesTicket.id,
-                        ticketName: salesTicket.name,
-                        ticketCount: 1,
-                        description: salesTicket.description,
-                        charge: (salesTicket.price === undefined) ? 0 : salesTicket.price,
-                        seatNum: seat.code,
-                        mvtkNum: '',
-                        mvtkAppPrice: 0,
-                        mvtkSalesPrice: 0,
-                        mvtkKbnDenshiken: '00',
-                        mvtkKbnKensyu: '00',
-                        kbnEisyahousiki: '00',
-                        mvtkKbnMaeuriken: '00'
-                    }
-                };
-            });
-            await this.purchase.seatRegistrationProcess(offers);
             this.router.navigate(['/purchase/ticket']);
         } catch (err) {
             this.error.redirect(err);

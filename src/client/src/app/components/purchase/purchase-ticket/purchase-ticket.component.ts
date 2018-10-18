@@ -1,23 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { factory } from '@toei-jp/cinerino-api-javascript-client/lib/abstract';
+import { IMovieTicket } from '@toei-jp/cinerino-factory/lib/factory/paymentMethod/paymentCard/movieTicket';
 // import { environment } from '../../../../environments/environment';
 import { ErrorService } from '../../../services/error/error.service';
-import { IMvtkTicket, IOffer, ISalesTicketResult, PurchaseService } from '../../../services/purchase/purchase.service';
+import { IOffer, ISalesTicketResult, PurchaseService } from '../../../services/purchase/purchase.service';
 import { UserService } from '../../../services/user/user.service';
-
-interface ISalesMvtkTicket extends IMvtkTicket {
-    id: string;
-    selected: boolean;
-    // addGlasses: number;
-    salePrice: number;
-    ticketName: string;
-}
-
-/*interface ISalesPointTicket extends ISalesTicketResult {
-    id: string;
-    selected: boolean;
-}*/
 
 @Component({
     selector: 'app-purchase-ticket',
@@ -29,16 +18,15 @@ export class PurchaseTicketComponent implements OnInit {
     public totalPrice: number;
     public selectOffer: IOffer;
     public ticketsModal: boolean;
-    // public originalSaleTickets: ISalesTicketResult[];
-    // public ltdSelected: Ioffer | undefined;
     public isLoading: boolean;
     public discountConditionsModal: boolean;
     public notSelectModal: boolean;
-    public salesTickets: ISalesTicketResult[];
-    public salesMvtkTickets: ISalesMvtkTicket[];
-    // public salesPointTickets: ISalesPointTicket[];
     public ticketForm: FormGroup;
     public disable: boolean;
+    public tickets: {
+        ticketOffer: factory.chevre.event.screeningEvent.ITicketOffer;
+        movieTicket?: IMovieTicket;
+    };
 
     constructor(
         public purchase: PurchaseService,
@@ -59,198 +47,11 @@ export class PurchaseTicketComponent implements OnInit {
         this.ticketForm = this.formBuilder.group({});
         this.disable = false;
         try {
-            this.salesTickets = this.createSalesTickets();
-            this.salesMvtkTickets = this.createSalesMvtkTickets();
-            // this.salesPointTickets = this.createSalesPointTickets();
-            this.setOffers();
             this.totalPrice = this.getTotalPrice();
-            // this.upDateSalesTickets();
-            // this.originalSaleTickets = [ ...this.salesTickets];
         } catch (err) {
             this.error.redirect(err);
         }
     }
-
-    /**
-     * 販売可能チケット生成
-     * @method createSalesTickets
-     */
-    private createSalesTickets() {
-        // if (this.purchase.data.screeningEvent === undefined) {
-        //     throw new Error('screeningEvent is undefined');
-        // }
-        // const screeningEvent = this.purchase.data.screeningEvent;
-        // const pointInfo = environment.POINT_TICKET.find((ticket) => {
-        //     return ticket.THEATER === screeningEvent.location.branchCode;
-        // });
-        const results = [];
-        for (const salesTicket of this.purchase.data.salesTickets) {
-            /*if (pointInfo !== undefined) {
-                // ポイント券種除外
-                const pointTicketCodeList = pointInfo.TICKET_CODE;
-                const ticketCode = pointTicketCodeList.find((pointTicketcode) => {
-                    return pointTicketcode === salesTicket.ticketCode;
-                });
-                if (ticketCode !== undefined) {
-                    continue;
-                }
-            }*/
-
-            const noGlassesBase = {};
-            const noGlasses = Object.assign(noGlassesBase, salesTicket);
-            // noGlasses.addGlasses = 0;
-            results.push(noGlasses);
-            /*if (salesTicket.addGlasses > 0) {
-                // メガネあり券種作成
-                const glassesBase = {};
-                const glasses = Object.assign(glassesBase, salesTicket);
-                glasses.salePrice = glasses.salePrice + glasses.addGlasses;
-                glasses.ticketName = `${glasses.ticketName}メガネ込み`;
-                results.push(glasses);
-            }*/
-        }
-
-        return results;
-    }
-
-    /**
-     * ムビチケ券種リスト生成
-     * @method createSalesMvtkTickets
-     */
-    private createSalesMvtkTickets() {
-        const results = [];
-        for (const mvtkTicket of this.purchase.data.mvtkTickets) {
-            for (let i = 0; i < Number(mvtkTicket.ykknInfo.ykknKnshbtsmiNum); i++) {
-                const DIGITS = -2;
-                const count = `00${i}`.slice(DIGITS);
-                const noGlassesBase = {
-                    id: `${mvtkTicket.knyknrNoInfo.knyknrNo}${mvtkTicket.ykknInfo.ykknshTyp}${count}`,
-                    selected: false,
-                    // addGlasses: 0,
-                    salePrice: Number(mvtkTicket.ykknInfo.knshknhmbiUnip),
-                    ticketName: mvtkTicket.mvtkTicketcodeResult.name
-                };
-                const noGlasses = Object.assign(noGlassesBase, mvtkTicket);
-                results.push(noGlasses);
-                /*if (mvtkTicket.mvtkTicketcodeResult.addPriceGlasses > 0) {
-                    // メガネあり券種作成
-                    const glassesBase = {
-                        id: `${mvtkTicket.knyknrNoInfo.knyknrNo}${mvtkTicket.ykknInfo.ykknshTyp}${count}`,
-                        selected: false,
-                        addGlasses: Number(mvtkTicket.mvtkTicketcodeResult.addPriceGlasses),
-                        salePrice:
-                            Number(mvtkTicket.mvtkTicketcodeResult.addPriceGlasses) + Number(mvtkTicket.mvtkTicketcodeResult.addPrice),
-                        ticketName: `${mvtkTicket.mvtkTicketcodeResult.ticketName} メガネ込み`
-                    };
-                    const glasses = Object.assign(glassesBase, mvtkTicket);
-                    results.push(glasses);
-                }*/
-            }
-        }
-
-        return results;
-    }
-
-    /**
-     * ポイントチケット生成
-     * @method createSalesPointTickets
-     */
-    /*private createSalesPointTickets() {
-        const results = [];
-        let count = 0;
-        for (const pointTicket of this.purchase.data.pointTickets) {
-            const salesTicket = this.purchase.data.salesTickets.find((ticket) => {
-                return ticket.ticketCode === pointTicket.ticketCode;
-            });
-            if (salesTicket === undefined) {
-                throw new Error('salesTicket is not found');
-            }
-            const data = {
-                ticketCode: salesTicket.ticketCode,
-                ticketName: salesTicket.ticketName,
-                ticketNameKana: salesTicket.ticketNameKana,
-                ticketNameEng: salesTicket.ticketNameEng,
-                stdPrice: salesTicket.salePrice,
-                addPrice: salesTicket.addPrice,
-                salePrice: salesTicket.salePrice,
-                limitCount: salesTicket.limitCount,
-                limitUnit: salesTicket.limitUnit,
-                ticketNote: salesTicket.ticketNote,
-                addGlasses: salesTicket.addGlasses,
-                selected: false,
-                id: `${salesTicket.ticketCode}${count}`
-            };
-            const noGlassesBase = {};
-            const noGlasses = Object.assign(noGlassesBase, data);
-            noGlasses.addGlasses = 0;
-            results.push(noGlasses);
-            if (data.addGlasses > 0) {
-                // メガネあり券種作成
-                const glassesBase = {};
-                const glasses = Object.assign(glassesBase, data);
-                glasses.salePrice = glasses.salePrice + glasses.addGlasses;
-                glasses.ticketName = `${glasses.ticketName}メガネ込み`;
-                results.push(glasses);
-            }
-            count++;
-        }
-
-        return results;
-    }*/
-
-    /**
-     * 券種リスト更新
-     * @method upDateSalesTickets
-     */
-    /*public upDateSalesTickets() {
-        // ムビチケ券種
-        for (const ticket of this.salesMvtkTickets) {
-            ticket.selected = false;
-        }
-        for (const offer of this.offers) {
-            if (offer.ticketInfo.mvtkNum === '') {
-                continue;
-            }
-            // 選択済みへ変更
-            const sameTicket = this.salesMvtkTickets.find((ticket) => {
-                return (offer.ticketInfo.mvtkNum === ticket.knyknrNoInfo.knyknrNo
-                    && offer.ticketInfo.ticketCode === ticket.mvtkTicketcodeResult.ticketCode
-                    && !ticket.selected);
-            });
-            if (sameTicket !== undefined) {
-                sameTicket.selected = true;
-                const sameGlassesTicket = this.salesMvtkTickets.find((ticket) => {
-                    return (sameTicket.id === ticket.id && !ticket.selected);
-                });
-                if (sameGlassesTicket !== undefined) {
-                    sameGlassesTicket.selected = true;
-                }
-            }
-        }
-        // ポイント券種
-        for (const ticket of this.salesPointTickets) {
-            ticket.selected = false;
-        }
-        for (const offer of this.offers) {
-            if (offer.ticketInfo.usePoint === 0) {
-                continue;
-            }
-            // 選択済みへ変更
-            const sameTicket = this.salesPointTickets.find((ticket) => {
-                return (offer.ticketInfo.ticketCode === ticket.ticketCode
-                    && !ticket.selected);
-            });
-            if (sameTicket !== undefined) {
-                sameTicket.selected = true;
-                const sameGlassesTicket = this.salesPointTickets.find((ticket) => {
-                    return (sameTicket.id === ticket.id && !ticket.selected);
-                });
-                if (sameGlassesTicket !== undefined) {
-                    sameGlassesTicket.selected = true;
-                }
-            }
-        }
-    }*/
 
     /**
      * 次へ
@@ -265,12 +66,7 @@ export class PurchaseTicketComponent implements OnInit {
 
             return;
         }
-        /*if (this.ticketValidation()) {
-            window.scrollTo(0, 0);
-            this.discountConditionsModal = true;
 
-            return;
-        }*/
         if (this.disable) {
             return;
         }
@@ -296,102 +92,6 @@ export class PurchaseTicketComponent implements OnInit {
             this.error.redirect(err);
         }
     }
-
-    /**
-     * オファーを登録
-     * @method setOffers
-     */
-    private setOffers() {
-        if (this.purchase.data.seatReservationAuthorization === undefined
-            && this.purchase.data.reservationAuthorizationArgs !== undefined) {
-            this.offers = this.purchase.data.offers;
-        } else if (this.purchase.data.seatReservationAuthorization !== undefined) {
-            this.offers = this.purchase.data.offers.map((offer) => {
-                /*if (offer.ticketInfo.mvtkNum !== '') {
-                    // ムビチケ
-                    return {
-                        price: offer.price,
-                        priceCurrency: offer.priceCurrency,
-                        seatNumber: offer.seatNumber,
-                        seatSection: offer.seatSection,
-                        mvtkNum: offer.ticketInfo.mvtkNum,
-                        selected: true,
-                        limitCount: 1,
-                        limitUnit: '001',
-                        validation: false,
-                        ticketInfo: offer.ticketInfo
-                    };
-                } else if (offer.ticketInfo.usePoint > 0) {
-                    // ポイント
-                    const ticket = this.salesPointTickets.find((salesTicket) => {
-                        return (offer.ticketInfo.ticketCode === salesTicket.ticketCode
-                            && offer.ticketInfo.addGlasses === salesTicket.addGlasses);
-                    });
-
-                    if (ticket === undefined) {
-                        throw new Error('ticket is not found');
-                    }
-
-                    return {
-                        price: offer.price,
-                        priceCurrency: offer.priceCurrency,
-                        seatNumber: offer.seatNumber,
-                        seatSection: offer.seatSection,
-                        mvtkNum: offer.ticketInfo.mvtkNum,
-                        selected: true,
-                        limitCount: ticket.limitCount,
-                        limitUnit: ticket.limitUnit,
-                        validation: false,
-                        ticketInfo: offer.ticketInfo
-                    };
-                } else {*/
-                    // 通常
-                    const ticket = this.salesTickets.find((salesTicket) => {
-                        return (offer.ticketInfo.ticketId === salesTicket.id
-                            /*&& offer.ticketInfo.addGlasses === salesTicket.addGlasses*/);
-                    });
-
-                    if (ticket === undefined) {
-                        throw new Error('ticket is not found');
-                    }
-
-                    return {
-                        price: offer.price,
-                        priceCurrency: offer.priceCurrency,
-                        seatNumber: offer.seatNumber,
-                        seatSection: offer.seatSection,
-                        // mvtkNum: offer.ticketInfo.mvtkNum,
-                        selected: true,
-                        // limitCount: ticket.limitCount,
-                        // limitUnit: ticket.limitUnit,
-                        validation: false,
-                        ticketInfo: offer.ticketInfo
-                    };
-                // }
-            });
-        }
-    }
-
-    /**
-     * 制限単位、人数制限判定
-     * @method ticketValidation
-     */
-    /*public ticketValidation(): boolean {
-        let result = false;
-        for (const offer of this.offers) {
-            if (offer.limitUnit === '001') {
-                const unitLimitTickets = this.offers.filter((targetOffer) => {
-                    return (targetOffer.limitUnit === '001' && targetOffer.limitCount === offer.limitCount);
-                });
-                if (unitLimitTickets.length % offer.limitCount !== 0) {
-                    offer.validation = true;
-                    result = true;
-                }
-            }
-        }
-
-        return result;
-    }*/
 
     /**
      * 合計金額計算

@@ -9,7 +9,6 @@ import authorizeRouter from './authorize';
 import inquiryRouter from './inquiry';
 // import masterRouter from './master';
 import methodRouter from './method';
-import purchaseRouter from './purchase';
 
 function defaultSetting(req: Request, res: Response, next: NextFunction) {
     res.locals.NODE_ENV = process.env.NODE_ENV;
@@ -54,7 +53,6 @@ function error(err: Error, _req: Request, res: Response, _next: NextFunction) {
 export default (app: Application) => {
     app.set('layout', 'layouts/layout');
     app.use(defaultSetting);
-    app.use('/api/purchase', purchaseRouter);
     // app.use('/api/master', masterRouter);
     app.use('/api/authorize', authorizeRouter);
     app.use('/inquiry', inquiryRouter);

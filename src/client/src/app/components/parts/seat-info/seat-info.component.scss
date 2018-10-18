@@ -1,7 +1,7 @@
 $tablet: 1024px;
 $mobile: 767px;
 .seat-info {
-    padding: 0 20px 20px;
+    padding: 0 10px 10px;
     @media screen and (max-width: $mobile) {
         padding: 0 20px 10px;
     }

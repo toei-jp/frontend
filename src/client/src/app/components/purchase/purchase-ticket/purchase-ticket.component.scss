@@ -11,6 +11,16 @@ $mobile: 767px;
     }
 }
 
+.total {
+    font-weight: bold;
+    p {
+        color: #989898;
+    }
+    .border-bottom {
+        border-bottom: 1px solid #989898;
+    }
+}
+
 .mvtk {
     dt {
         @media screen and (max-width: $mobile){

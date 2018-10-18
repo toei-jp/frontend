@@ -1,8 +1,35 @@
 $tablet: 1024px;
 $mobile: 767px;
 .form-layout {
+    .box {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+    li {
+        margin-bottom: 0;
+        &:last-child {
+            dl {
+                border-bottom: none;
+            }
+        }
+    }
     dl {
         position: relative;
+        display: flex;
+        border-bottom: 1px solid #FFF;
+        padding: 20px 0;
+        @media screen and (max-width: $mobile) {
+            display: block;
+        }
+        dt {
+            width: 180px;
+        }
+        dd {
+            width: calc(100% - 180px);
+            @media screen and (max-width: $mobile) {
+                width: 100%;
+            }
+        }
         dd {
             position: relative;
             @media screen and (max-width: $mobile){

@@ -8,27 +8,69 @@ $mobile: 767px;
 }
 
 .film-info {
-    background-color: #3e3a39;
+    background-color: #595757;
     color: #FFF;
-    padding: 20px;
+    padding: 0;
     @media screen and (max-width: $mobile) {
         padding: 15px;
     }
-    dl {
-        dt {
-            color: #f0e205;
-            margin-bottom: 10px;
+    p {
+        text-align: center;
+        color: #e1dd00;
+        padding-top: 15px;
+        @media screen and (max-width: $mobile) {
+            text-align: left;
         }
-        dd {
-            color: #FFF;
-            padding: 0 0 10px;
-            margin-bottom: 10px;
-            &:last-child {
-                padding: 0;
-                margin: 0;
-                border: none;
+    }
+    .film-info-contents {
+        line-height: 1.6;
+    }
+    img {
+        width: 25px;
+        margin-right: 25px;
+        @media screen and (max-width: $mobile) {
+            margin-right: 15px;
+        }
+    }
+    .title {
+        padding: 0 25px 20px 25px;
+        display: flex;
+        align-items: center;
+        @media screen and (max-width: $mobile) {
+            padding: 0 10px 20px 10px;
+        }
+    }
+    .film-info-inner {
+        display: flex;
+        @media screen and (max-width: $mobile) {
+            display: block;
+        }
+        .date {
+            width: 50%;
+            border-right: 1px solid #FFF;
+            padding: 20px 25px 20px 25px;
+            display: flex;
+            align-items: center;
+            @media screen and (max-width: $mobile) {
+                border-right: none;
+                border-bottom: 1px solid #FFF;
+                width: 100%;
+                padding: 20px 10px 20px 10px;
             }
         }
+        .screen-name {
+            width: 50%;
+            padding: 20px 25px 20px 25px;
+            display: flex;
+            align-items: center;
+            @media screen and (max-width: $mobile) {
+                width: 100%;
+                padding: 20px 10px 10px 10px;
+            }
+        }
+    }
+    .border-bottom {
+        border-bottom: 1px solid #FFF;
     }
 }
 

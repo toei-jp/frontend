@@ -18,6 +18,7 @@
                 </div>
             </div>
         </h2>
+
         <ul class="box radius bg-light-gray mb-large">
             <li>
                 <dl>
@@ -37,7 +38,8 @@
                     <dd>
                         <div class="mb-xx-small">
                             <strong class="red-text">
-                                {{ purchase.getAppreciationDate() }} {{ purchase.getStartDate() }} - {{ purchase.getEndDate() }}
+                                {{ purchase.getAppreciationDate() }} {{ purchase.getStartDate() }} - {{
+                                purchase.getEndDate() }}
                             </strong>
                         </div>
                         <p class="small-x-text red-text">※鑑賞日時を必ずご確認ください。</p>
@@ -95,8 +97,10 @@
             <li *ngIf="purchase.getTotalPrice() > 0">
                 <dl>
                     <dt>カード番号</dt>
-                    <dd *ngIf="purchase.data.gmoTokenObject !== undefined">{{ purchase.data.gmoTokenObject?.maskedCardNo }}</dd>
-                    <dd *ngIf="purchase.data.gmoTokenObject === undefined && user.data.creditCards !== undefined">{{ user.data.creditCards[0].cardNo }}</dd>
+                    <dd *ngIf="purchase.data.gmoTokenObject !== undefined">{{
+                        purchase.data.gmoTokenObject?.maskedCardNo }}</dd>
+                    <dd *ngIf="purchase.data.gmoTokenObject === undefined && user.data.creditCards !== undefined">{{
+                        user.data.creditCards[0].cardNo }}</dd>
                 </dl>
             </li>
 
@@ -104,8 +108,8 @@
 
         <h2 class="section-ttl">注意事項(重要)</h2>
         <p class="mb-small">下記項目をご確認いただきチェックを入れて「購入完了」ボタンを押してください。</p>
-        
-        <app-purchase-note class="mb-middle" [theaterCode]="purchase.data.screeningEvent?.superEvent.location.branchCode.slice(-2)"></app-purchase-note>
+
+        <app-purchase-note class="mb-middle bg-light-gray" [theaterCode]="purchase.data.screeningEvent?.superEvent.location.branchCode.slice(-2)"></app-purchase-note>
 
         <form [formGroup]="confirmForm" (ngSubmit)="onSubmit()">
             <div class="mb-x-large text-center">

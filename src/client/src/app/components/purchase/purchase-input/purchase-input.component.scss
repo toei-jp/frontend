@@ -47,7 +47,7 @@ dl {
             }
         }
         dd {
-            width: calc(100% - 4em);
+            width: calc(100% - 0.5em);
             @media screen and (max-width: $mobile){
                 width: 100%;
             }
@@ -80,7 +80,7 @@ dl {
             }
         }
         dd {
-            width: 300px;
+            width: 100%;
             @media screen and (max-width: $mobile) {
                 width: auto;
             }
@@ -91,6 +91,15 @@ dl {
             dt {
                 line-height: 1;
             }
+        }
+    }
+    .credit-card-details {
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px solid #FFF;
+        @media screen and (max-width: $mobile) {
+            display: block;
+            padding-bottom: 15px;
         }
     }
 }

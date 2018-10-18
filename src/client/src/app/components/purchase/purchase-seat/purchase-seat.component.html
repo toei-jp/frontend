@@ -92,7 +92,7 @@
         <strong>予約座席数が上限です</strong>
     </div>
     <p class="text-center">予約座席数は最大
-        <span class="seat-limit-text">{{ purchase.data.screeningEvent?.remainingAttendeeCapacity }}</span>席までとなります。</p>
+        <span class="seat-limit-text">{{ purchase.data.screeningEvent?.maxSeatNumber }}</span>席までとなります。</p>
 </app-modal>
 
 <app-loading [show]="isLoading"></app-loading>

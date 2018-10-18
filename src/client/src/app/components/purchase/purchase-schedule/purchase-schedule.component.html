@@ -8,7 +8,13 @@
     </div>
 
     <div class="mb-middle">
-        <dl>
+        <div *ngIf="!isPreSaleSchedules && preSaleDateList.length > 0" class="blue-button center-button button">
+            <button (click)="isPreSaleSchedules = true">先行販売スケジュール</button>
+        </div>
+        <div *ngIf="isPreSaleSchedules && preSaleDateList.length > 0" class="gray-button center-button button">
+            <button (click)="isPreSaleSchedules = false">普通スケジュール</button>
+        </div>
+        <dl *ngIf="showTheaterList">
             <dt class="mb-x-small">劇場</dt>
             <dd class="mb-small">
                 <select [(ngModel)]="conditions.theater" (change)="changeConditions()">
@@ -16,18 +22,20 @@
                 </select>
             </dd>
         </dl>
-        <dl>
-            <dt class="mb-x-small">鑑賞日</dt>
-            <dd class="mb-small">
-                <select [(ngModel)]="conditions.date" (change)="changeConditions()">
-                    <option *ngFor="let date of dateList" value="{{ date.value }}">{{ date.label }}</option>
-                </select>
-            </dd>
-        </dl>
+        <div *ngIf="!isPreSaleSchedules" class="date-list">
+            <div *ngFor="let date of dateList" class="date-btn" (click)="changeDate(date.value)">{{ date.label.month }}/{{ date.label.date }}{{ date.label.day }}</div>
+        </div>
+        <div *ngIf="isPreSaleSchedules" class="date-list">
+            <div *ngFor="let date of preSaleDateList" class="date-btn" (click)="changePreSaleDate(date.value)">{{ date.label.month }}/{{ date.label.date }}{{ date.label.day }}</div>
+        </div>
     </div>
 
-    <ul class="film-order">
+    <ul *ngIf="!isPreSaleSchedules" class="film-order">
         <app-purchase-film-order *ngFor="let film of filmOrder" [data]="film"></app-purchase-film-order>
+    </ul>
+    
+    <ul *ngIf="isPreSaleSchedules" class="film-order">
+        <app-purchase-film-order *ngFor="let film of preSaleFilmOrder" [data]="film"></app-purchase-film-order>
     </ul>
 
 </div>

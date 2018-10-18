@@ -2,7 +2,7 @@ import { PRODUCTION_MEMBER_TICKET, PRODUCTION_POINT_TICKET } from './ticket';
 
 export const environment = {
     production: true,
-    PORTAL_SITE_URL: 'http://theaters.toei.co.jp',
+    PORTAL_SITE_URL: '/',
     APP_SITE_URL: 'https://smpapp.ticket-toei.co.jp',
     API_ENDPOINT: '',
     FRONTEND_ENDPOINT: '',

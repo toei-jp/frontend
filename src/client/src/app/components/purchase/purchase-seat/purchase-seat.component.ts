@@ -2,11 +2,12 @@ import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { environment } from '../../../../environments/environment';
+import { IReservationSeat, Reservation } from '../../../models';
 import { CinerinoService } from '../../../services/cinerino/cinerino.service';
 import { ErrorService } from '../../../services/error/error.service';
 import { PurchaseService } from '../../../services/purchase/purchase.service';
 // import { FlgMember, UserService } from '../../../services/user/user.service';
-import { IInputScreenData, ISeat } from '../../parts/screen/screen.component';
+import { IInputScreenData } from '../../parts/screen/screen.component';
 
 @Component({
     selector: 'app-purchase-seat',
@@ -18,7 +19,6 @@ export class PurchaseSeatComponent implements OnInit, AfterViewInit {
     public seatForm: FormGroup;
     public notSelectSeatModal: boolean;
     public upperLimitModal: boolean;
-    public seats: ISeat[];
     public disable: boolean;
     public screenData: IInputScreenData;
     public environment = environment;
@@ -36,7 +36,6 @@ export class PurchaseSeatComponent implements OnInit, AfterViewInit {
         window.scrollTo(0, 0);
         this.isLoading = true;
         this.notSelectSeatModal = false;
-        this.seats = [];
         this.seatForm = this.formBuilder.group({
             terms: [false, [Validators.requiredTrue]]
         });
@@ -69,9 +68,8 @@ export class PurchaseSeatComponent implements OnInit, AfterViewInit {
      * @method loadScreen
      * @param {ISeat[]} seats
      */
-    public loadScreen(seats: ISeat[]) {
+    public loadScreen() {
         this.isLoading = false;
-        this.seats = seats;
     }
 
     /**
@@ -97,7 +95,7 @@ export class PurchaseSeatComponent implements OnInit, AfterViewInit {
      * @method onSubmit
      */
     public async onSubmit() {
-        if (this.seats.length === 0) {
+        if (this.purchase.data.reservations.length === 0) {
             this.notSelectSeatModal = true;
             return;
         }
@@ -117,7 +115,7 @@ export class PurchaseSeatComponent implements OnInit, AfterViewInit {
             return;
         }
         try {
-
+            await this.purchase.seatRegistrationProcess();
             this.router.navigate(['/purchase/ticket']);
         } catch (err) {
             this.error.redirect(err);
@@ -129,8 +127,12 @@ export class PurchaseSeatComponent implements OnInit, AfterViewInit {
      * @method seatSelect
      * @param {Iseat[]} seats
      */
-    public seatSelect(seats: ISeat[]) {
-        this.seats = seats;
+    public seatSelect(seats: IReservationSeat[]) {
+        this.purchase.data.reservations = seats.map((seat) => {
+            const ticket = { ticketOffer: this.purchase.data.salesTickets[0] };
+            return new Reservation({ seat, ticket });
+        });
+        this.purchase.save();
     }
 
     /**

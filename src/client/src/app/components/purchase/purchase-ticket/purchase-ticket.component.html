@@ -15,30 +15,18 @@
         </dl>
     </div>
 
-    <!--<div *ngIf="user.isMember() && purchase.isUsedPoint() && purchase.data.pointTickets.length === 0" class="box radius bg-ultra-light-gray mb-middle point">
-        <dl class="d-table">
-            <dt class="d-td">会員ポイントを利用される方</dt>
-            <dd class="d-td width-medium">
-                <div class="ghost-button point-button">
-                    <a routerLink="/purchase/point">
-                        <strong>会員ポイント</strong>を利用する
-                    </a>
-                </div>
-            </dd>
-        </dl>
-    </div>-->
-
-    <ul class="box radius bg-light-gray mb-middle seats">
-        <li *ngFor="let offer of offers">
+    <ul class="mb-middle seats">
+        <li *ngFor="let reservation of purchase.data.reservations" class="box radius bg-light-gray mb-small">
             <dl class="d-table">
-                <dt class="d-td seat-code">{{ offer.seatNumber }}</dt>
-                <dd class="d-td width-medium" [class.validation]="offer.validation">
-                    <div *ngIf="!offer.selected" class="button blue-button">
-                        <button type="button" (click)="ticketSelect(offer)">券種を選択してください</button>
+                <dt class="d-td seat-code">{{ reservation.seat.seatNumber }}</dt>
+                <dd class="d-td width-medium">
+                    
+                    <div *ngIf="reservation.ticket === undefined" class="button blue-button">
+                        <button type="button" (click)="openTicketList(reservation)">券種を選択してください</button>
                     </div>
-                    <div *ngIf="offer.selected" class="blue-button ghost-button">
-                        <button type="button" (click)="ticketSelect(offer)">
-                            {{ offer.ticketInfo.ticketName.ja }} ￥{{ offer.ticketInfo.charge }}
+                    <div *ngIf="reservation.ticket !== undefined" class="blue-button ghost-button">
+                        <button type="button" (click)="openTicketList(reservation)">
+                            {{ reservation.ticket.ticketOffer.name.ja }}  {{ reservation.getTicketPrice().total | currency : 'JPY' }}
                         </button>
                     </div>
                 </dd>
@@ -46,17 +34,17 @@
         </li>
     </ul>
 
-    <div class="box radius bg-light-gray mb-large total">
-        <div class="text-right mb-small">
+    <div class="box radius mb-large total">
+        <div class="text-right">
             <div class="length mb-x-small">購入枚数
-                <strong class="red-text large-text">{{ offers.length }}枚</strong>
+                <strong class="red-text large-text">{{ purchase.data.reservations.length }}枚</strong>
             </div>
             <div class="price">合計金額
                 <strong class="red-text large-text">
                     <span>{{ totalPrice }}</span>円</strong>
             </div>
         </div>
-        <div class="border-bottom-dot mb-small"></div>
+        <div class="border-bottom mb-small"></div>
         <!-- 4DX -->
         <!--<p *ngIf="(purchase.data.screeningEvent?.superEvent.coaInfo.kbnJoueihousiki?.kubunCode === '002')" class="small-x-text mb-xx-small">
             ※[４DXをご鑑賞のお客様へ]
@@ -64,10 +52,10 @@
             <br> また、妊娠されている方、ご高齢の方、心臓・背中・腰・首などに障害のある方、特別な疾病のある方、乗り物酔いしやすい方、体調に不安のある方はご利用になれません。
             <br> 上映中のホットドリンク・アルコールはご遠慮ください。
         </p>-->
-        <!--<p class="small-x-text">※メンバーズカード提示による割引やその他割引券などのご利用はできません。
+        <p class="small-x-text">※メンバーズカード提示による割引やその他割引券などのご利用はできません。
             <br>※車椅子席をご希望の方は、お手数ですが通常のお席をご購入の上、対象の劇場にご連絡ください。
             <br>※ムビチケ券によっては別途追加料金が発生する場合がありますのでご了承ください。
-        </p>-->
+        </p>
     </div>
     <form [formGroup]="ticketForm" (ngSubmit)="onSubmit()">
         <app-buttons nextLabel="次へ" prevLabel="戻る" prevLink="/purchase/seat"></app-buttons>
@@ -76,50 +64,19 @@
 </div>
 
 <app-modal [open]="ticketsModal" [layout]="false" (close)="ticketsModal = false">
-    <ul inner class="not-layout box radius bg-light-gray">
-        <li *ngFor="let mvtkTicket of salesMvtkTickets" [class.disabled]="mvtkTicket.selected">
+    <ul inner class="not-layout box radius bg-white">
+        <li *ngFor="let ticket of tickets">
             <dl class="d-table">
                 <dt class="d-td">
                     <div class="mb-xx-small">
-                        <strong>
-                            {{ mvtkTicket.ticketName }} ￥{{ mvtkTicket.salePrice }}
-                        </strong>
+                        <strong>{{ ticket.ticketOffer.name.ja }} {{ getTicketPrice(ticket.ticketOffer).total | currency : 'JPY' }}</strong>
                     </div>
-                    <p class="small-x-text">ムビチケ購入番号 {{ mvtkTicket.knyknrNoInfo.knyknrNo }}</p>
+                    <p *ngIf="ticket.movieTicket" class="small-x-text">購入管理番号{{ ticket.movieTicket.identifier
+                    }}</p>
                 </dt>
                 <dd class="d-td width-small">
                     <div class="button blue-button ticket-type-select">
-                        <button type="button" (click)="selectMvtkTicket(mvtkTicket)">選択</button>
-                    </div>
-                </dd>
-            </dl>
-        </li>
-        <!--<li *ngFor="let pointTicket of salesPointTickets" [class.disabled]="pointTicket.selected">
-                <dl class="d-table">
-                    <dt class="d-td">
-                        <div class="mb-xx-small">
-                            <strong>{{ pointTicket.ticketName }} ￥{{ pointTicket.salePrice }}</strong>
-                        </div>
-                        <p class="small-x-text">{{ pointTicket.ticketNote }}</p>
-                    </dt>
-                    <dd class="d-td width-small">
-                        <div class="button blue-button ticket-type-select">
-                            <button type="button" (click)="selectSalesTicket(pointTicket)">選択</button>
-                        </div>
-                    </dd>
-                </dl>
-            </li>-->
-        <li *ngFor="let ticket of salesTickets">
-            <dl class="d-table">
-                <dt class="d-td">
-                    <div class="mb-xx-small">
-                        <strong>{{ ticket.name.ja }} ￥{{ purchase.getTicketPrice(ticket).total }}</strong>
-                    </div>
-                    <p class="small-x-text">{{ ticket.description.ja }}</p>
-                </dt>
-                <dd class="d-td width-small">
-                    <div class="button blue-button ticket-type-select">
-                        <button type="button" (click)="selectSalesTicket(ticket)">選択</button>
+                        <button type="button" (click)="selectTicket(ticket)">選択</button>
                     </div>
                 </dd>
             </dl>

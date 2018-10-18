@@ -105,7 +105,7 @@ export class PurchaseTransactionComponent implements OnInit {
                 // アプリなら購入情報削除
                 this.purchase.reset();
             }
-            if (this.purchase.data.offers.length > 0) {
+            if (this.purchase.data.reservations.length > 0) {
                 // 重複確認へ
                 this.storage.save('screeningEvent', screeningEvent, SaveType.Session);
                 this.router.navigate([`/purchase/overlap`]);

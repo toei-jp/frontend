@@ -4,7 +4,7 @@ $mobile: 767px;
     position: absolute;
     right: 30px;
     top: 50%;
-    width: 300px;
+    width: 400px;
     height: 1px;
     background-color: #ccc;
     margin-top: 10px;
@@ -47,15 +47,18 @@ $mobile: 767px;
         left: 0;
     }
     .step-02 {
-        left: 25%;
+        left: 20%;
     }
     .step-03 {
-        left: 50%;
+        left: 40%;
     }
     .step-04 {
-        left: 75%;
+        left: 60%;
     }
     .step-05 {
+        left: 80%;
+    }
+    .step-06 {
         left: 100%;
     }
     .active {

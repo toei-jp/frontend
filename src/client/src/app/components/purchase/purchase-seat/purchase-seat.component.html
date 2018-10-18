@@ -2,34 +2,46 @@
     <h1 class="page-ttl">座席選択</h1>
     <p class="read">ご希望の座席を選択して「次へ」ボタンを押してください。
         <br>選択できる座席数は最大
-        <span class="seat-limit-text">{{ purchase.data.screeningEvent?.remainingAttendeeCapacity }}</span>席までとなります。
+        <span class="seat-limit-text">{{ purchase.data.screeningEvent?.maxSeatNumber }}</span>席までとなります。
         <br>
         <span class="sp-text">画面をタッチすると画面がズームしますので座席を選択してください。
             <br>
         </span>
         <span class="small-x-text">※車椅子席をご希望の方は、お手数ですが通常のお席をご購入の上、対象の劇場にご連絡ください。</span>
     </p>
-    <div class="mb-middle">
-        <app-screen [inputData]="screenData" [test]="false" (select)="seatSelect($event)" (alert)="seatSelectionAlert()" (load)="loadScreen($event)">
-            <!-- <app-seat-info type="{{ purchase.data.screeningEvent?.superEvent.coaInfo.kbnJoueihousiki?.kubunCode }}"></app-seat-info> -->
-            <app-seat-info></app-seat-info>
-        </app-screen>
+
+    <div class="film-info mb-small">
+        <p class="mb-small">現在、選択されているチケットは下記のとおりです。</p>
+        <div class="border-bottom title">
+            <div><img src="/assets/images/common/title-icon.svg"></div>
+            <div class="film-info-contents">{{ purchase.getTitle() }}</div>
+        </div>
+        <div class="film-info-inner">
+            <div class="date">
+                <div><img src="/assets/images/common/date-icon.svg"></div>
+                <div class="film-info-contents">
+                    {{ purchase.getAppreciationDate() }} {{ purchase.getStartDate() }} - {{ purchase.getEndDate() }}
+                </div>
+            </div>
+            <div class="screen-name">
+                <div><img src="/assets/images/common/screen-name-icon.svg"></div>
+                <div class="film-info-contents">
+                    {{ purchase.getTheaterName() }} / {{ purchase.getScreenName() }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <app-seat-info></app-seat-info>
     </div>
 
-    <div class="film-info radius mb-large">
-        <p class="mb-small">現在、選択されているチケットは下記のとおりです。</p>
-        <dl>
-            <dt>劇場 / スクリーン</dt>
-            <dd class="border-bottom-dot">
-                {{ purchase.getTheaterName() }} / {{ purchase.getScreenName() }}
-            </dd>
-            <dt>鑑賞日時</dt>
-            <dd class="border-bottom-dot">
-                {{ purchase.getAppreciationDate() }} {{ purchase.getStartDate() }} - {{ purchase.getEndDate() }}
-            </dd>
-            <dt>作品名</dt>
-            <dd>{{ purchase.getTitle() }}</dd>
-        </dl>
+
+
+    <div class="mb-middle">
+        <app-screen [inputData]="screenData" [test]="false" (select)="seatSelect($event)" (alert)="seatSelectionAlert()"
+            (load)="loadScreen()">
+            <!-- <app-seat-info type="{{ purchase.data.screeningEvent?.superEvent.coaInfo.kbnJoueihousiki?.kubunCode }}"></app-seat-info> -->
+        </app-screen>
     </div>
 
     <h2 class="section-ttl">利用規約</h2>
@@ -50,15 +62,18 @@
         <div class="button-area">
             <div class="button next-button blue-button">
                 <button type="submit">
-                    <app-icon iconName="next-white" width="15" height="15"></app-icon>次へ</button>
+                    <app-icon iconName="next-white" width="15" height="15"></app-icon>次へ
+                </button>
             </div>
             <div class="prev-link ticket-app-hide">
                 <a href="{{ purchase.data.movieTheaterOrganization?.url }}">
-                    <app-icon iconName="prev-black" width="15" height="15"></app-icon>戻る</a>
+                    <app-icon iconName="prev-black" width="15" height="15"></app-icon>戻る
+                </a>
             </div>
             <div class="prev-link ticket-app-show">
                 <a href="{{ environment.APP_SITE_URL }}/#/purchase">
-                    <app-icon iconName="prev-black" width="15" height="15"></app-icon>戻る</a>
+                    <app-icon iconName="prev-black" width="15" height="15"></app-icon>戻る
+                </a>
             </div>
         </div>
     </form>

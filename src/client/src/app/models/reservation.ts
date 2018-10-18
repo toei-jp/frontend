@@ -36,6 +36,7 @@ export class Reservation {
                 unitPriceSpecification: 0,
                 videoFormatCharge: 0,
                 soundFormatCharge: 0,
+                movieTicketTypeCharge: 0,
                 total: 0
             };
         }

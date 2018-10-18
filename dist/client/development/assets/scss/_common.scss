@@ -333,7 +333,7 @@ p {
 
 
 .width-medium {
-    width: 380px;
+    width: 320px;
     @media screen and (max-width: $mobile){
         width: 190px;
     }
@@ -409,6 +409,10 @@ p {
     &:last-child {
         margin-bottom: 0;
     }
+    .border-bottom {
+        border-bottom: 1px solid #FFF;
+        padding-bottom: 15px;
+    }
     .box-ttl {
         background-color: #B2B2B2;
         color: #FFF;
@@ -419,28 +423,29 @@ p {
         }
     }
     li {
-        padding: 0 0 20px;
-        margin-bottom: 20px;
+        margin-bottom: 13px;
         position: relative;
-        &:after {
-            content: '';
-            display: block;
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background-image: url(/assets/images/common/line_dotte.png);
-            background-size: contain;
-        }
-        &:last-child {
-            border: none;
-            margin: 0;
-            padding: 0;
-            &:after {
-                background-image: none;
-            }
-        }
+        background-color: #eeeef0;
+        padding: 15px 20px;
+        // &:after {
+        //     content: '';
+        //     display: block;
+        //     position: absolute;
+        //     bottom: 0;
+        //     left: 0;
+        //     width: 100%;
+        //     height: 3px;
+        //     background-image: url(/assets/images/common/line_dotte.png);
+        //     background-size: contain;
+        // }
+        // &:last-child {
+        //     border: none;
+        //     margin: 0;
+        //     padding: 0;
+        //     &:after {
+        //         background-image: none;
+        //     }
+        // }
     }
     dl {
         margin-bottom: 10px;
@@ -461,11 +466,13 @@ p {
 }
 
 .form-layout {
+    
+    li {
+        padding: 0;
+    }
     dl {
         margin-bottom: 0;
-        display: flex;
         @media screen and (max-width: $mobile) {
-            display: block;
             width: auto;
             max-width: 100%;
             margin-bottom: 10px;
@@ -475,19 +482,13 @@ p {
         }
         dt {
             margin-bottom: 0;
-            width: 180px;
             font-weight: bold;
             @media screen and (max-width: $mobile) {
                 line-height: 1;
-                width: auto;
                 margin-bottom: 10px;
             }
         }
         dd {
-            width: calc(100% - 180px);
-            @media screen and (max-width: $mobile){
-                width: auto;      
-            }
         }
     }
 }
@@ -502,12 +503,11 @@ p {
 }
 
 .text-icon-red {
-    background-color: #C30D23;
     display: inline-block;
     vertical-align: middle;
     padding: 5px;
-    color: #FFF;
-    font-weight: normal;
+    color: #C30D23;
+    font-weight: bold;
 }
 
 
@@ -542,7 +542,7 @@ p {
     a, button, label {
         line-height: 1;
         display: block;
-        padding: 15px 0;
+        padding: 12px 0;
         text-align: center;
         width: 100%;
         border-radius: 5px;
@@ -558,14 +558,14 @@ p {
     }
     &.blue-button {
         a, button, label {
-            background-color: #019fe8;
+            background-color: #ffa806;
             color: #FFF;
-            box-shadow: 0 3px 0 #0084b2;
+            box-shadow: 0 3px 0 #ffa806;
         }
     }
     &.dark-blue-button {
         a, button, label {
-            background-color: #036db7;
+            background-color: #ffa806;
             color: #FFF;
         }
     }
@@ -601,6 +601,7 @@ p {
         color: #FFF;
         position: relative;
         cursor: pointer;
+        font-weight: bold;
         &:hover {
             transition: opacity 0.25s;
             opacity: 0.75;
@@ -611,8 +612,8 @@ p {
     }
     &.blue-button {
         a, button, label {
-            border-color: #019fe8;
-            color: #019fe8;
+            border-color: #7b7b7b;
+            color: #7b7b7b;
             background-color: #FFF;
         }
     }
@@ -658,13 +659,13 @@ p {
     line-height: 1;
     font-weight: bold;
     font-size: 20px;
-    margin-bottom: 20px; 
+    margin-bottom: 25px; 
     text-align: center;
     position: relative;
 }
 
 .read {
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     text-align: center;
     @media screen and (max-width: $mobile){
         text-align: left;

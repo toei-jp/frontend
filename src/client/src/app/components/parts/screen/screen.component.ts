@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import * as factory from '@toei-jp/chevre-factory';
 import 'rxjs/add/operator/toPromise';
+import { IReservationSeat } from '../../../models';
 import { CinerinoService } from '../../../services/cinerino/cinerino.service';
 import { ErrorService } from '../../../services/error/error.service';
 import { PurchaseService } from '../../../services/purchase/purchase.service';
@@ -15,9 +16,9 @@ export class ScreenComponent implements OnInit, AfterViewInit {
     public static ZOOM_SCALE = 1;
     @Input() public inputData: IInputScreenData;
     @Input() public test: boolean;
-    @Output() public select = new EventEmitter<ISeat[]>();
+    @Output() public select = new EventEmitter<IReservationSeat[]>();
     @Output() public alert = new EventEmitter();
-    @Output() public load = new EventEmitter<ISeat[]>();
+    @Output() public load = new EventEmitter<IReservationSeat[]>();
     public data: IData;
     public zoomState: boolean;
     public scale: number;
@@ -82,11 +83,17 @@ export class ScreenComponent implements OnInit, AfterViewInit {
     /**
      * 選択座席取得
      * @method getSelectSeats
-     * @returns {Iseat[]}
      */
-    public getSelectSeats(): ISeat[] {
-        return this.data.seats.filter((seat) => {
+    public getSelectSeats(): IReservationSeat[] {
+        const activeSeats = this.data.seats.filter((seat) => {
             return (seat.status === 'active');
+        });
+
+        return activeSeats.map((seat) => {
+            return {
+                seatNumber: seat.code,
+                seatSection: seat.section
+            };
         });
     }
 
@@ -107,7 +114,7 @@ export class ScreenComponent implements OnInit, AfterViewInit {
         }
         const screeningEvent = this.purchase.data.screeningEvent;
         if (screeningEvent !== undefined
-            && screeningEvent.maxSeatNumber <= this.getSelectSeats().length
+            && screeningEvent.maxSeatNumber < this.getSelectSeats().length
         ) {
             seat.status = 'default';
             this.alert.emit();
@@ -201,7 +208,7 @@ export class ScreenComponent implements OnInit, AfterViewInit {
         await this.cinerino.getServices();
         let seatStatus: factory.event.screeningEvent.IScreeningRoomSectionOffer[];
         if (this.test) {
-            seatStatus = (<any>{ listSeat: [] });
+            seatStatus = [];
         } else {
             if (this.purchase.data.screeningEvent === undefined) {
                 throw new Error('screeningEvent is undefined');
@@ -224,7 +231,7 @@ export class ScreenComponent implements OnInit, AfterViewInit {
         screen: IScreen,
         status: factory.event.screeningEvent.IScreeningRoomSectionOffer[]
     }): IData {
-        // console.log(data.screen);
+        console.log('-------------------', data);
         const screenData = data.screen;
         const seatStatus = data.status;
         // y軸ラベル
@@ -241,11 +248,6 @@ export class ScreenComponent implements OnInit, AfterViewInit {
         // 座席リスト
         const seats: ISeat[] = [];
 
-        /*const toFullWidth = (value: string) => {
-            return value.replace(/./g, (s: string) => {
-                return String.fromCharCode(s.charCodeAt(0) + 0xFEE0);
-            });
-        };*/
         const pos = { x: 0, y: 0 };
         let labelCount = 0;
         for (let y = 0; y < screenData.map.length; y++) {
@@ -335,12 +337,12 @@ export class ScreenComponent implements OnInit, AfterViewInit {
                         }
                     }
                     // 選択中
-                    if (this.purchase.data.offers !== undefined) {
-                        const targetOffer = this.purchase.data.offers.find((offer) => {
-                            return (offer.seatNumber === code);
+                    if (this.purchase.data.reservations.length > 0) {
+                        const findReservationResult = this.purchase.data.reservations.find((reservation) => {
+                            return (reservation.seat.seatNumber === code);
                         });
-                        if (targetOffer !== undefined) {
-                            section = targetOffer.seatSection;
+                        if (findReservationResult !== undefined) {
+                            section = findReservationResult.seat.seatSection;
                             status = 'active';
                         }
                     }

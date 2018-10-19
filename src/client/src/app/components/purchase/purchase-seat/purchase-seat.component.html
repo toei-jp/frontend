@@ -59,23 +59,7 @@
                 class="validation-text">利用規約に同意してください</div>
         </div>
 
-        <div class="button-area">
-            <div class="button next-button blue-button">
-                <button type="submit">
-                    <app-icon iconName="next-white" width="15" height="15"></app-icon>次へ
-                </button>
-            </div>
-            <div class="prev-link ticket-app-hide">
-                <a href="{{ purchase.data.movieTheaterOrganization?.url }}">
-                    <app-icon iconName="prev-black" width="15" height="15"></app-icon>戻る
-                </a>
-            </div>
-            <div class="prev-link ticket-app-show">
-                <a href="{{ environment.APP_SITE_URL }}/#/purchase">
-                    <app-icon iconName="prev-black" width="15" height="15"></app-icon>戻る
-                </a>
-            </div>
-        </div>
+        <app-buttons nextLabel="次へ" prevLabel="戻る" prevLink="/purchase/schedule"></app-buttons>
     </form>
     <app-site-seal></app-site-seal>
 </div>

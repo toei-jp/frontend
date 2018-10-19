@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import * as factory from '@toei-jp/chevre-factory';
+import { factory } from '@toei-jp/cinerino-api-javascript-client';
 import 'rxjs/add/operator/toPromise';
 import { IReservationSeat } from '../../../models';
 import { CinerinoService } from '../../../services/cinerino/cinerino.service';
@@ -194,7 +194,7 @@ export class ScreenComponent implements OnInit, AfterViewInit {
      */
     public async getData(): Promise<{
         screen: IScreen,
-        status: factory.event.screeningEvent.IScreeningRoomSectionOffer[]
+        status: factory.chevre.event.screeningEvent.IScreeningRoomSectionOffer[]
     }> {
         const DIGITS = {
             '02': -2,
@@ -206,7 +206,7 @@ export class ScreenComponent implements OnInit, AfterViewInit {
         const setting = await this.http.get<IScreen>('/assets/json/theater/setting.json').toPromise();
 
         await this.cinerino.getServices();
-        let seatStatus: factory.event.screeningEvent.IScreeningRoomSectionOffer[];
+        let seatStatus: factory.chevre.event.screeningEvent.IScreeningRoomSectionOffer[];
         if (this.test) {
             seatStatus = [];
         } else {
@@ -229,7 +229,7 @@ export class ScreenComponent implements OnInit, AfterViewInit {
      */
     public createScreen(data: {
         screen: IScreen,
-        status: factory.event.screeningEvent.IScreeningRoomSectionOffer[]
+        status: factory.chevre.event.screeningEvent.IScreeningRoomSectionOffer[]
     }): IData {
         console.log('-------------------', data);
         const screenData = data.screen;
@@ -321,7 +321,7 @@ export class ScreenComponent implements OnInit, AfterViewInit {
                         : `${labels[labelCount]}${String(screenData.map[y].length - x)}`;
                     let section = '';
                     let status = 'disabled';
-                    const inStock = factory.itemAvailability.InStock;
+                    const inStock = factory.chevre.itemAvailability.InStock;
                     for (const listSeatSection of seatStatus) {
                         const targetSeat = listSeatSection.containsPlace.find((s) => {
                             return (

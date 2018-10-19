@@ -87,7 +87,9 @@ export class PurchaseSeatComponent implements OnInit, AfterViewInit {
         });
         // console.log('salesTickets', salesTicketArgs, salesTickets);
 
-        return salesTickets;
+        return salesTickets.filter((ticket) => {
+            return ticket.isOnlineTicket !== false;
+        });
     }
 
     /**

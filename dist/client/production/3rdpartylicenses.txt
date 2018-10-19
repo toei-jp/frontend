@@ -306,7 +306,7 @@ If the Work includes a "NOTICE" text file as part of its distribution, then any 
 
 END OF TERMS AND CONDITIONS
 
-@toei-jp/cinerino-factory@1.0.1-alpha.1
+@toei-jp/cinerino-factory@1.0.1-alpha.2
 ISC
 ISC
 
@@ -362,11 +362,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ISC
 ISC
 
-@toei-jp/chevre-factory@1.0.0-alpha.14
-ISC
-ISC
-
-@waiter/factory@1.0.0
+@toei-jp/chevre-factory@1.0.0-alpha.17
 ISC
 ISC
 
@@ -386,7 +382,7 @@ WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION
 OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
 CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-@toei-jp/cinerino-api-javascript-client@1.0.0-alpha.21
+@toei-jp/cinerino-api-javascript-client@1.0.0-alpha.24
 ISC
 ISC
 
@@ -656,7 +652,7 @@ Address all questions regarding this license to:
   Tom Wu
   tjw@cs.Stanford.EDU
 
-@toei-jp/cinerino-api-abstract-client@1.0.0-alpha.29
+@toei-jp/cinerino-api-abstract-client@1.0.0-alpha.31
 ISC
 ISC
 

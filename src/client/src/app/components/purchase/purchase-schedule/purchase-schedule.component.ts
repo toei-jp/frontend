@@ -220,7 +220,8 @@ export class PurchaseScheduleComponent implements OnInit {
         schedules.forEach((screeningEvent) => {
             // 販売可能時間判定
             if (
-                !this.purchase.isSales(screeningEvent)
+                !this.purchase.isSales(screeningEvent) ||
+                !this.purchase.isOnlineDisplay(screeningEvent)
             ) {
                 return;
             }

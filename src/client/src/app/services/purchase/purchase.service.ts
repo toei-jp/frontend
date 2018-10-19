@@ -223,6 +223,20 @@ export class PurchaseService {
     }
 
     /**
+     * オンライン表示判定
+     * @method isOnlineDisplay
+     * @param {factory.chevre.event.screeningEvent.IEvent} screeningEvent
+     * @returns {boolean}
+     */
+    public isOnlineDisplay(screeningEvent: factory.chevre.event.screeningEvent.IEvent): boolean {
+        if (screeningEvent.onlineDisplayStartDate === undefined) {
+            // 一旦true
+            return true;
+        }
+        return moment(screeningEvent.onlineDisplayStartDate).unix() <= moment().unix();
+    }
+
+    /**
      * 劇場名取得
      * @method getTheaterName
      * @returns {string}

@@ -2,7 +2,7 @@
     <h1 class="page-ttl">券種選択</h1>
     <p class="read">ご希望の券種を選択して「次へ」ボタンを押してください。</p>
 
-    <div *ngIf="purchase.isUsedMvtk() && purchase.data.mvtkTickets.length === 0" class="box radius bg-ultra-light-gray mb-middle mvtk">
+    <div class="box radius bg-ultra-light-gray mb-middle mvtk">
         <dl class="d-table">
             <dt class="d-td">ムビチケ券を利用される方</dt>
             <dd class="d-td width-medium">
@@ -20,13 +20,14 @@
             <dl class="d-table">
                 <dt class="d-td seat-code">{{ reservation.seat.seatNumber }}</dt>
                 <dd class="d-td width-medium">
-                    
+
                     <div *ngIf="reservation.ticket === undefined" class="button blue-button">
                         <button type="button" (click)="openTicketList(reservation)">券種を選択してください</button>
                     </div>
                     <div *ngIf="reservation.ticket !== undefined" class="blue-button ghost-button">
                         <button type="button" (click)="openTicketList(reservation)">
-                            {{ reservation.ticket.ticketOffer.name.ja }}  {{ reservation.getTicketPrice().total | currency : 'JPY' }}
+                            {{ reservation.ticket.ticketOffer.name.ja }} {{ reservation.getTicketPrice().total |
+                            currency : 'JPY' }}
                         </button>
                     </div>
                 </dd>
@@ -64,15 +65,20 @@
 </div>
 
 <app-modal [open]="ticketsModal" [layout]="false" (close)="ticketsModal = false">
-    <ul inner class="not-layout box radius bg-white">
+    {{ tickets.length }}
+    <div *ngIf="tickets.length === 0" inner class="not-layout box radius bg-white">
+        <p>販売可能券種がありません</p>
+    </div>
+    <ul *ngIf="tickets.length > 0" inner class="not-layout box radius bg-white">
         <li *ngFor="let ticket of tickets">
             <dl class="d-table">
                 <dt class="d-td">
                     <div class="mb-xx-small">
-                        <strong>{{ ticket.ticketOffer.name.ja }} {{ getTicketPrice(ticket.ticketOffer).total | currency : 'JPY' }}</strong>
+                        <strong>{{ ticket.ticketOffer.name.ja }} {{ getTicketPrice(ticket.ticketOffer).total | currency
+                            : 'JPY' }}</strong>
                     </div>
                     <p *ngIf="ticket.movieTicket" class="small-x-text">購入管理番号{{ ticket.movieTicket.identifier
-                    }}</p>
+                        }}</p>
                 </dt>
                 <dd class="d-td width-small">
                     <div class="button blue-button ticket-type-select">

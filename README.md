@@ -13,17 +13,10 @@
 | `REDIS_PORT`                        | true     |                  | REDISポート                             |
 | `REDIS_KEY`                         | true     |                  | REDISキー                              |
 | `CINERINO_API_ENDPOINT`             | true     |                  | CINERINO API エンドポイント              |
-| `CHEVRE_API_ENDPOINT`               | true     |                  | CHEVRE API エンドポイント               |
-| `CHEVRE_REFRESH_TOKEN`              | true     |                  | CHEVRE API リフレッシュトークン          |
-| `MVTK_RESERVE_ENDPOINT`             | true     |                  | ムビチケ API エンドポイント               |
 | `CIERINO_CLIENT_ID`                 | true     |                  | クライアントID                           |
 | `CINERINO_CLIENT_SECRET`            | true     |                  | クライアントSECRET                       |
 | `CINERINO_AUTHORIZE_SERVER_DOMAIN`  | true     |                  | 認可サーバードメイン                     |
 | `CINERINO_RESOURCE_SERVER_URL`      | true     |                  | リソースサーバーURL                    |
-| `CHEVRE_CLIENT_ID`                  | true     |                  | クライアントID                           |
-| `CHEVRE_CLIENT_SECRET`              | true     |                  | クライアントSECRET                       |
-| `CHEVRE_AUTHORIZE_SERVER_DOMAIN`    | true     |                  | 認可サーバードメイン                     |
-| `CHEVRE_RESOURCE_SERVER_URL`        | true     |                  | リソースサーバーURL                    |
 | `PORTAL_SITE_URL`                   | true     |                  | ポータルサイトURL                        |
 | `APP_SITE_URL`                      | true     |                  | スマホアプリURL                          |
 | `ALLOWED_IPS`                       | false    |                  | IP制限IPリスト(カンマ区切り)              |

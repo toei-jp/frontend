@@ -50,8 +50,8 @@
                 <dl>
                     <dt>座席</dt>
                     <dd>
-                        <p *ngFor="let offer of purchase.data.offers">
-                            {{ offer.seatNumber }} {{ offer.ticketInfo.ticketName.jp }} ￥{{ offer.ticketInfo.charge }}
+                        <p *ngFor="let reservation of purchase.data.reservations">
+                            {{ reservation.seat.seatNumber }} {{ reservation.ticket.ticketOffer.name.ja }} {{ reservation.getTicketPrice().total | currency : 'JPY' }}
                         </p>
                     </dd>
                 </dl>

@@ -6,11 +6,11 @@
     </p>
     <ul class="box radius bg-light-gray mb-middle mvtk-lists">
 
-        <li *ngFor="let mvtkTicket of purchase.data.mvtkTickets">
+        <li *ngFor="let mvtkTicket of movieTickets">
             <dl class="d-table">
-                <dt class="d-td">ムビチケ購入番号 {{ mvtkTicket.input.knyknrNo }}</dt>
+                <dt class="d-td">ムビチケ購入番号 {{ mvtkTicket.identifier }}</dt>
                 <dd class="d-td width-medium">
-                    <strong>{{ mvtkTicket.mvtkTicketcodeResult.ticketName }} × {{ mvtkTicket.ykknInfo.ykknKnshbtsmiNum }}</strong>
+                    <strong>{{ mvtkTicket.name }} × {{ mvtkTicket.num }}</strong>
                 </dd>
             </dl>
         </li>

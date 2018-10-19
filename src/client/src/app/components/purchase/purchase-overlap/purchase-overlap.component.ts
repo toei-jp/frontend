@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { factory } from '@toei-jp/cinerino-api-javascript-client';
 import * as moment from 'moment';
 // import { environment } from '../../../../environments/environment';
 // import { TimeFormatPipe } from '../../../pipes/time-format/time-format.pipe';
 import { ErrorService } from '../../../services/error/error.service';
-import { IScreeningEvent, PurchaseService } from '../../../services/purchase/purchase.service';
+import { PurchaseService } from '../../../services/purchase/purchase.service';
 import { SaveType, StorageService } from '../../../services/storage/storage.service';
 
 @Component({
@@ -13,7 +14,7 @@ import { SaveType, StorageService } from '../../../services/storage/storage.serv
     styleUrls: ['./purchase-overlap.component.scss']
 })
 export class PurchaseOverlapComponent implements OnInit {
-    public screeningEvent: IScreeningEvent;
+    public screeningEvent: factory.chevre.event.screeningEvent.IEvent;
 
     constructor(
         private storage: StorageService,
@@ -26,7 +27,7 @@ export class PurchaseOverlapComponent implements OnInit {
         window.scrollTo(0, 0);
         try {
             // イベント情報取得
-            this.screeningEvent = <IScreeningEvent>this.storage.load('screeningEvent', SaveType.Session);
+            this.screeningEvent = <factory.chevre.event.screeningEvent.IEvent>this.storage.load('screeningEvent', SaveType.Session);
             if (this.screeningEvent === null) {
                 throw new Error('screeningEvent is null');
             }

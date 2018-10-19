@@ -7,7 +7,6 @@ const authorize_1 = require("./authorize");
 const inquiry_1 = require("./inquiry");
 // import masterRouter from './master';
 const method_1 = require("./method");
-const purchase_1 = require("./purchase");
 function defaultSetting(req, res, next) {
     res.locals.NODE_ENV = process.env.NODE_ENV;
     res.locals.PORTAL_SITE_URL = process.env.PORTAL_SITE_URL;
@@ -46,7 +45,6 @@ function error(err, _req, res, _next) {
 exports.default = (app) => {
     app.set('layout', 'layouts/layout');
     app.use(defaultSetting);
-    app.use('/api/purchase', purchase_1.default);
     // app.use('/api/master', masterRouter);
     app.use('/api/authorize', authorize_1.default);
     app.use('/inquiry', inquiry_1.default);

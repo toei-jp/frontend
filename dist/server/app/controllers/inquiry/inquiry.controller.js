@@ -32,9 +32,9 @@ function login(req, res) {
         try {
             const inquiryModel = new inquiry_model_1.InquiryModel(req.session.inquiry);
             const options = base_controller_1.getOptions(req);
-            const args = { branchCode: req.query.theater };
+            const args = { location: { branchCodes: [req.query.theater] } };
             log('findMovieTheaterByBranchCode', args);
-            inquiryModel.movieTheater = (yield new cinerino.service.Organization(options).findMovieTheaterByBranchCode(args)).data[0];
+            inquiryModel.movieTheater = (yield new cinerino.service.Organization(options).searchMovieTheaters(args)).data[0];
             inquiryModel.input.reserveNum = (req.query.reserve !== undefined) ? req.query.reserve : '';
             inquiryModel.save(req.session);
             res.locals.inquiryModel = inquiryModel;

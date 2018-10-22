@@ -391,8 +391,8 @@ export class PurchaseService {
         this.data.screeningEvent = args.screeningEvent;
         await this.cinerino.getServices();
         // 劇場のショップを検索
-        this.data.movieTheaterOrganization = (await this.cinerino.organization.findMovieTheaterByBranchCode({
-            branchCode: this.data.screeningEvent.superEvent.location.branchCode
+        this.data.movieTheaterOrganization = (await this.cinerino.organization.searchMovieTheaters({
+            location: { branchCodes: [this.data.screeningEvent.superEvent.location.branchCode] }
         })).data[0];
         // 取引期限
         const VALID_TIME = 15;
@@ -626,6 +626,7 @@ export class PurchaseService {
                 await this.cinerino.transaction.placeOrder.authorizeMovieTicketPayment({
                     transactionId: transaction.id,
                     typeOf: factory.paymentMethodType.MovieTicket,
+                    amount: 0,
                     movieTickets: this.createMovieTicketsFromAuthorizeSeatReservation({
                         authorizeSeatReservation, reservations
                     })

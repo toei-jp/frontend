@@ -146,8 +146,8 @@ export class PurchaseCompleteComponent implements OnInit {
      */
     /*public async mailSendProcess(count: number) {
         try {
-            const movieTheaterPlace = await this.cinerino.findMovieTheaterByBranchCode({
-                branchCode: this.data.movieTheaterOrganization.location.branchCode
+            const movieTheaterPlace = await this.cinerino.searchMovieTheaters({
+                location: branchCodes: [this.data.movieTheaterOrganization.location.branchCode]
             });
             const text = (this.user.isNative())
                 ? this.getAppMailText(movieTheaterPlace.telephone)

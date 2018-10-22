@@ -1,9 +1,9 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([["main"],{
 
 /***/ "../../node_modules/moment/locale sync recursive ^\\.\\/.*$":
-/*!******************************************************************************************!*\
-  !*** /Users/phi.nt/source/toei-ticket/frontend/node_modules/moment/locale sync ^\.\/.*$ ***!
-  \******************************************************************************************/
+/*!***********************************************************************************!*\
+  !*** C:/projects/toei-cinerino-frontend/node_modules/moment/locale sync ^\.\/.*$ ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3597,7 +3597,7 @@ var PurchaseCompleteComponent = /** @class */ (function () {
      */
     /*public async mailSendProcess(count: number) {
         try {
-            const movieTheaterPlace = await this.cinerino.findMovieTheaterByBranchCode({
+            const movieTheaterPlace = await this.cinerino.searchMovieTheaters({
                 branchCode: this.data.movieTheaterOrganization.location.branchCode
             });
             const text = (this.user.isNative())
@@ -8252,8 +8252,8 @@ var PurchaseService = /** @class */ (function () {
                         _c.sent();
                         // 劇場のショップを検索
                         _a = this.data;
-                        return [4 /*yield*/, this.cinerino.organization.findMovieTheaterByBranchCode({
-                                branchCode: this.data.screeningEvent.superEvent.location.branchCode
+                        return [4 /*yield*/, this.cinerino.organization.searchMovieTheaters({
+                                location: { branchCodes: [this.data.screeningEvent.superEvent.location.branchCode] }
                             })];
                     case 2:
                         // 劇場のショップを検索
@@ -8570,6 +8570,7 @@ var PurchaseService = /** @class */ (function () {
                         return [4 /*yield*/, this.cinerino.transaction.placeOrder.authorizeMovieTicketPayment({
                                 transactionId: transaction.id,
                                 typeOf: _toei_jp_cinerino_factory__WEBPACK_IMPORTED_MODULE_0__["paymentMethodType"].MovieTicket,
+                                amount: 0,
                                 movieTickets: this.createMovieTicketsFromAuthorizeSeatReservation({
                                     authorizeSeatReservation: authorizeSeatReservation, reservations: reservations
                                 })
@@ -9261,7 +9262,7 @@ _angular_platform_browser__WEBPACK_IMPORTED_MODULE_4__["platformBrowser"]().boot
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/phi.nt/source/toei-ticket/frontend/src/client/src/main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! C:\projects\toei-cinerino-frontend\src\client\src\main.ts */"./src/main.ts");
 
 
 /***/ }),

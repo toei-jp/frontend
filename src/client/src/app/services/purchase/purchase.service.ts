@@ -375,7 +375,9 @@ export class PurchaseService {
      * @returns {boolean}
      */
     public isReserveMvtk(): boolean {
-        return (this.getMvtkTotalPrice() > 0);
+        const movieTickets = this.data.reservations.filter(reservation => reservation.isMovieTicket());
+
+        return (movieTickets.length > 0);
     }
 
     /**

@@ -1,9 +1,9 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([["main"],{
 
 /***/ "../../node_modules/moment/locale sync recursive ^\\.\\/.*$":
-/*!**********************************************************************************************!*\
-  !*** C:/Users/user/Desktop/workspace/TOEI/frontend/node_modules/moment/locale sync ^\.\/.*$ ***!
-  \**********************************************************************************************/
+/*!*****************************************************************************************************************!*\
+  !*** C:/Users/hataguchi/Desktop/workspace/motionpicture/TOEI/frontend/node_modules/moment/locale sync ^\.\/.*$ ***!
+  \*****************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -7079,8 +7079,7 @@ var Reservation = /** @class */ (function () {
         if (this.ticket === undefined) {
             return false;
         }
-        var movieTicketTypeChargeSpecification = this.ticket.ticketOffer.priceSpecification.priceComponent.find(function (component) { return component.typeOf === _toei_jp_cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_0__["factory"].chevre.priceSpecificationType.MovieTicketTypeChargeSpecification; });
-        return (movieTicketTypeChargeSpecification !== undefined);
+        return (this.ticket.movieTicket !== undefined);
     };
     /**
      * 券種金額取得
@@ -8229,7 +8228,8 @@ var PurchaseService = /** @class */ (function () {
      * @returns {boolean}
      */
     PurchaseService.prototype.isReserveMvtk = function () {
-        return (this.getMvtkTotalPrice() > 0);
+        var movieTickets = this.data.reservations.filter(function (reservation) { return reservation.isMovieTicket(); });
+        return (movieTickets.length > 0);
     };
     /**
      * 取引開始処理
@@ -9259,7 +9259,7 @@ _angular_platform_browser__WEBPACK_IMPORTED_MODULE_4__["platformBrowser"]().boot
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Users\user\Desktop\workspace\TOEI\frontend\src\client\src\main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! C:\Users\hataguchi\Desktop\workspace\motionpicture\TOEI\frontend\src\client\src\main.ts */"./src/main.ts");
 
 
 /***/ }),

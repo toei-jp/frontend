@@ -5,82 +5,115 @@
         <br>ご入場方法に関しましてはページ下部をご確認ください。
         <br>※購入完了メールの送信に時間がかかる事がありますのでご注意ください。</p>
 
-    <ul class="box radius bg-light-gray info mb-large form-layout">
-        <li class="purchase-number">
-            <dl>
-                <dt>予約番号</dt>
-                <dd>
-                    <strong class="red-text large-x-text">{{ data.order.confirmationNumber }}</strong>
-                    <p class="small-x-text">※チケットの発行等に必要な番号となりますので必ず忘れないようにしてください。</p>
-                </dd>
-            </dl>
-        </li>
-        <li>
-            <dl>
-                <dt>劇場 / スクリーン</dt>
-                <dd>{{ getTheaterName() }} / {{ getScreenName() }}</dd>
-            </dl>
-        </li>
-        <li>
-            <dl>
-                <dt>作品名</dt>
-                <dd>{{ getTitle() }}</dd>
-            </dl>
-        </li>
-        <li>
-            <dl>
-                <dt>鑑賞日時</dt>
-                <dd>
-                    {{ getAppreciationDate() }} {{ getStartDate() }} - {{ getEndDate() }}
-                </dd>
-            </dl>
-        </li>
-        <li>
-            <dl>
-                <dt>座席</dt>
-                <dd>
-                    <p *ngFor="let offer of data.order.acceptedOffers">
-                        {{ offer.itemOffered.reservedTicket.ticketedSeat.seatNumber }} {{ offer.itemOffered.reservedTicket.ticketType.name.ja
-                        }} ￥{{ offer.itemOffered.reservedTicket.totalPrice }}
-                    </p>
-                </dd>
-            </dl>
-        </li>
-        <li>
-            <dl>
-                <dt>ご利用金額</dt>
-                <dd>￥{{ data.order.price }}</dd>
-            </dl>
-        </li>
-        <li>
-            <dl>
-                <dt>メールアドレス</dt>
-                <dd>{{ data.order.customer.email }}</dd>
-            </dl>
-        </li>
-        <li *ngIf="user.isMember()">
-            <dl>
-                <dt>獲得ポイント</dt>
-                <dd>
-                    <strong class="red-text">{{ data.incentive }}ポイント</strong>
-                </dd>
-            </dl>
-        </li>
-    </ul>
+    <div class="form-layout">
+        <ul class="box radius bg-light-gray info mb-large">
+            <li class="purchase-number">
+                <dl>
+                    <dt>予約番号</dt>
+                    <dd>
+                        <strong class="red-text large-x-text">{{ data.order.confirmationNumber }}</strong>
+                        <p class="small-x-text">※チケットの発行等に必要な番号となりますので必ず忘れないようにしてください。</p>
+                    </dd>
+                </dl>
+            </li>
+            <li>
+                <dl>
+                    <dt>劇場 / スクリーン</dt>
+                    <dd>{{ getTheaterName() }} / {{ getScreenName() }}</dd>
+                </dl>
+            </li>
+            <li>
+                <dl>
+                    <dt>作品名</dt>
+                    <dd>{{ getTitle() }}</dd>
+                </dl>
+            </li>
+            <li>
+                <dl>
+                    <dt>鑑賞日時</dt>
+                    <dd>
+                        {{ getAppreciationDate() }} {{ getStartDate() }} - {{ getEndDate() }}
+                    </dd>
+                </dl>
+            </li>
+            <li>
+                <dl>
+                    <dt>座席</dt>
+                    <dd>
+                        <p *ngFor="let offer of data.order.acceptedOffers">
+                            {{ offer.itemOffered.reservedTicket.ticketedSeat.seatNumber }} {{
+                            offer.itemOffered.reservedTicket.ticketType.name.ja
+                            }} ￥{{ offer.itemOffered.reservedTicket.totalPrice }}
+                        </p>
+                    </dd>
+                </dl>
+            </li>
+            <li>
+                <dl>
+                    <dt>ご利用金額</dt>
+                    <dd>￥{{ data.order.price }}</dd>
+                </dl>
+            </li>
+            <li>
+                <dl>
+                    <dt>メールアドレス</dt>
+                    <dd>{{ data.order.customer.email }}</dd>
+                </dl>
+            </li>
+            <li *ngIf="user.isMember()">
+                <dl>
+                    <dt>獲得ポイント</dt>
+                    <dd>
+                        <strong class="red-text">{{ data.incentive }}ポイント</strong>
+                    </dd>
+                </dl>
+            </li>
+        </ul>
+    </div>
 
     <div class="ticket-app-hide">
         <div class="mb-x-large">
+            <p><strong>&lt;購入完了メールが届かない場合のご確認事項&gt;</strong></p>
             <p class="mb-middle small-x-text">
-                <strong>&lt;購入完了メールが届かない場合のご確認事項&gt;</strong>
                 <br>購入完了後、購入完了メールが届かない場合は下記2点をご確認ください。
                 <br>また、購入完了メールは自動送信のため再送信は致しかねます。
                 <br>購入できているかのご確認は「予約番号」をお控えのうえ
                 <a class="inquiry-login-link" href="{{ getInquiryUrl() }}" target="_blank">チケット照会ページ</a>よりご確認ください。
                 <br>・ご入力いただいたメールアドレスに不備があった場合やメールの着信を拒否されている場合は購入完了メールが受け取れない場合があります。
-                <br>・プロバイダのメール設定、携帯キャリア会社のメール設定のフィルタリング機能を有効にしている方は「削除フォルダ」または「迷惑メールフォルダ」をご確認ください。</p>
-            <div class="button dark-blue-button print-button center-button not-print">
+                <br>・プロバイダのメール設定、携帯キャリア会社のメール設定のフィルタリング機能を有効にしている方は「削除フォルダ」または「迷惑メールフォルダ」をご確認ください。
+            </p>
+            <!-- <div class="button dark-blue-button print-button center-button not-print">
                 <a class="icon-print-white" (click)="print()">印刷する</a>
-            </div>
+            </div> -->
+        </div>
+
+        <div class="not-print mb-x-large">
+            <h2 class="page-ttl">発券方法</h2>
+
+            <ul class="ticketing-method">
+                <li>
+                    <dl class="box radius bg-light-gray">
+                        <dt class="mb-small text-center large-text">
+                            <strong>QRコード付きチケットをあなたのスマホから</strong>
+                        </dt>
+                        <dd>
+                            <p class="mb-small">チケット発券は以下の照会ページから行えます。
+                                <br>『予約番号』と購入時に入力した『電話番号』でチケット発券して頂けます。
+                                <br>※QRコードは上映開始の24時間前から取得できます。</p>
+                            <div class="image mb-x-small">
+                                <img src="/assets/images/purchase/complete/qr_ticket.svg" alt="">
+                            </div>
+                            <div class="button blue-button inquiry-button mb-middle center-button">
+                                <a class="icon-new-tab-white" href="{{ getInquiryUrl() }}" target="_blank">照会ページへ</a>
+                            </div>
+                            <p>
+                                <a class="icon-new-tab-blue" href="{{ environment.FRONTEND_ENDPOINT }}/method/ticketing"
+                                    target="_blank">※お連れ様と別々で入場する場合のご案内</a>
+                            </p>
+                        </dd>
+                    </dl>
+                </li>
+            </ul>
         </div>
 
         <div class="not-print">
@@ -89,22 +122,21 @@
             <ul class="entry-method">
                 <li>
                     <dl class="box radius bg-light-gray">
-                        <dt class="mb-x-small text-center">
+                        <dt class="mb-x-small text-center large-text">
                             <strong>QRコードでスマート入場</strong>
                         </dt>
                         <dd>
-                            <p class="mb-small">当日チケット発券不要！
-                                <br>スマートフォンで入場用QRコードを提示するだけでスムーズに入場！
-                                <br>入場用QRコードの確認は下記「チケット情報確認」ボタンを押してください。</p>
-                            <div class="image mb-x-small bg-white">
+                            <p class="mb-small">
+                                発券したQRコード付きチケットを提示してスムーズに入場！
+                            </p>
+                            <div class="image mb-x-small">
                                 <img src="/assets/images/purchase/complete/qr.svg" alt="">
                             </div>
-                            <div class="button blue-button inquiry-button mb-small center-button">
-                                <a class="icon-new-tab-white" href="{{ getInquiryUrl() }}" target="_blank">チケット情報確認</a>
-                            </div>
-                            <p>スマートフォンをお持ちでない方は当日チケット発券/入場も可能です。
+                            <p>
+                                スマートフォンをお持ちでない方は当日チケット発券/入場も可能です。
                                 <br>発券方法は
-                                <a class="icon-new-tab-blue" href="{{ environment.FRONTEND_ENDPOINT }}/method/ticketing" target="_blank">こちら</a>
+                                <a class="icon-new-tab-blue" href="{{ environment.FRONTEND_ENDPOINT }}/method/ticketing"
+                                    target="_blank">こちら</a>
                             </p>
                         </dd>
                     </dl>
@@ -114,7 +146,8 @@
             <div class="button-area">
                 <div class="prev-link">
                     <a href="{{ environment.PORTAL_SITE_URL }}">
-                        <app-icon iconName="prev-black" width="15" height="15"></app-icon>戻る</a>
+                        <app-icon iconName="prev-black" width="15" height="15"></app-icon>劇場ページへ
+                    </a>
                 </div>
             </div>
         </div>

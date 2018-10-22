@@ -8,9 +8,12 @@ $mobile: 767px;
     .box {
         display: flex;
         justify-content: center;
+        @media screen and (max-width: $mobile) {
+            justify-content: space-between;
+        }
     }
     .seat {
-        margin: 0 10px;
+        margin: 0 30px;
         position: relative;
         padding-left: 24px;
         @media screen and (max-width: $mobile) {

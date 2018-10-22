@@ -4,7 +4,7 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 const i18n = require("i18n");
-const directory = `${__dirname}/../../locales`;
+const directory = `${__dirname}/../../../../../locales`;
 i18n.configure({
     locales: ['ja'],
     defaultLocale: 'ja',

@@ -115,7 +115,8 @@ export class PurchaseTransactionComponent implements OnInit {
 
             await this.purchase.transactionStartProcess({
                 passportToken: <string>this.parameters.passportToken,
-                screeningEvent: screeningEvent
+                screeningEvent: screeningEvent,
+                customerContact: this.purchase.data.customerContact
             });
             this.storage.remove('parameters', SaveType.Session);
             this.router.navigate(['/purchase/seat'], { replaceUrl: true });

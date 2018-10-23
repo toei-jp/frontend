@@ -5,12 +5,12 @@ import { factory } from '@toei-jp/cinerino-api-javascript-client';
 import * as libphonenumber from 'libphonenumber-js';
 import * as moment from 'moment';
 import { LibphonenumberFormatPipe } from '../../../pipes/libphonenumber-format/libphonenumber-format.pipe';
-import { AwsCognitoService } from '../../../services/aws-cognito/aws-cognito.service';
+// import { AwsCognitoService } from '../../../services/aws-cognito/aws-cognito.service';
 import { CinerinoService } from '../../../services/cinerino/cinerino.service';
 import { ErrorService } from '../../../services/error/error.service';
 import { IGmoTokenObject, PurchaseService } from '../../../services/purchase/purchase.service';
 import { UserService } from '../../../services/user/user.service';
-import { UtilService } from '../../../services/util/util.service';
+// import { UtilService } from '../../../services/util/util.service';
 
 /**
  * クレジットカードタイプ
@@ -44,9 +44,9 @@ export class PurchaseInputComponent implements OnInit {
         private formBuilder: FormBuilder,
         private router: Router,
         private error: ErrorService,
-        private awsCognito: AwsCognitoService,
+        // private awsCognito: AwsCognitoService,
         private cinerino: CinerinoService,
-        private utill: UtilService
+        // private utill: UtilService
 
     ) { }
 
@@ -72,7 +72,7 @@ export class PurchaseInputComponent implements OnInit {
             this.validationScroll();
         }
         this.securityCodeModal = false;
-        try {
+        /* try {
             if (this.user.isNative() && !this.user.isMember()) {
                 // アプリ非会員ならCognitoから取得
                 const records = await this.awsCognito.getRecords({
@@ -115,7 +115,7 @@ export class PurchaseInputComponent implements OnInit {
             }
         } catch (err) {
             this.error.redirect(err);
-        }
+        } */
 
     }
 

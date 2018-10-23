@@ -76,4 +76,9 @@ export class PurchaseConfirmComponent implements OnInit {
         }
     }
 
+    public changeScreeningEvent() {
+        this.purchase.data.reservations = [];
+        this.purchase.save();
+        this.router.navigate(['/purchase/schedule']);
+    }
 }

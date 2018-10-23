@@ -386,10 +386,12 @@ export class PurchaseService {
      */
     public async transactionStartProcess(args: {
         passportToken: string;
-        screeningEvent: factory.chevre.event.screeningEvent.IEvent
+        screeningEvent: factory.chevre.event.screeningEvent.IEvent;
+        customerContact?: ICustomerContact;
     }) {
         // 購入データ削除
         this.reset();
+        this.data.customerContact = args.customerContact;
         this.data.screeningEvent = args.screeningEvent;
         await this.cinerino.getServices();
         // 劇場のショップを検索

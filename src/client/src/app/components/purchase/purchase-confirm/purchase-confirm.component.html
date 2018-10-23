@@ -9,14 +9,14 @@
             作品情報
             <div class="right ticket-app-hide">
                 <div class="button light-gray-button change-button">
-                    <a href="{{ purchase.data.movieTheaterOrganization?.url }}">変更</a>
+                    <a (click)="changeScreeningEvent()">変更</a>
                 </div>
             </div>
-            <div class="right ticket-app-show">
+            <!-- <div class="right ticket-app-show">
                 <div class="button light-gray-button change-button">
                     <a href="{{ environment.APP_SITE_URL }}/#/purchase">変更</a>
                 </div>
-            </div>
+            </div> -->
         </h2>
 
         <ul class="box radius bg-light-gray mb-large">

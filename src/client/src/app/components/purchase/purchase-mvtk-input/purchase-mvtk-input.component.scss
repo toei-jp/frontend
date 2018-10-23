@@ -7,7 +7,7 @@
         right: 0;
         a {
             width: 70px;
-            padding: 5px 0;
+            padding: 8px 0;
             font-size: 12px;
             box-shadow: 0 0 0 transparent;
             font-weight: 500;
@@ -15,6 +15,26 @@
     }
     &.active {
         display: block
+    }
+    .box {
+        padding-top: 0;
+        padding-bottom: 0;
+        li {
+            margin-bottom: 0 !important;
+        }
+    }
+    dl {
+        display: flex;
+        border-bottom: 1px solid #FFF;
+        padding: 20px 0;
+        align-items: center;
+    }
+    dt {
+        width: 180px;
+        justify-content: ce;
+    }
+    dd {
+        width: calc(100% - 180px);
     }
 }
 
@@ -25,4 +45,13 @@
 .zoom {
     -webkit-animation: zoom 0.2s;
     animation: zoom 0.2s;
+}
+
+.selected-seat {
+    font-size: 16px;
+    font-weight: bold;
+    display: flex;
+    .seat {
+        margin-left: auto;
+    }
 }

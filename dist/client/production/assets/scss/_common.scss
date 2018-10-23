@@ -35,7 +35,6 @@ body {
     font-family: $font-family;
     font-size: 16px;
     color: #333;
-    background-color: #E2E1E0;
     @media screen and (max-width: $tablet){
         font-weight: normal;
         -webkit-touch-callout: none;
@@ -355,7 +354,7 @@ p {
 }
 
 .bg-light-gray {
-    background-color: #eeeef0;
+    background-color: #eeeeef;
 }
 
 .bg-gray {
@@ -425,7 +424,7 @@ p {
     li {
         margin-bottom: 13px;
         position: relative;
-        background-color: #eeeef0;
+        background-color: #eeeeef;
         padding: 15px 20px;
         // &:after {
         //     content: '';
@@ -556,14 +555,14 @@ p {
             }
         }
     }
-    &.blue-button {
+    &.orange-button {
         a, button, label {
             background-color: #ffa806;
             color: #FFF;
             box-shadow: 0 3px 0 #ffa806;
         }
     }
-    &.dark-blue-button {
+    &.dark-orange-button {
         a, button, label {
             background-color: #ffa806;
             color: #FFF;
@@ -610,14 +609,14 @@ p {
             }
         }
     }
-    &.blue-button {
+    &.orange-button {
         a, button, label {
             border-color: #7b7b7b;
             color: #7b7b7b;
             background-color: #FFF;
         }
     }
-    &.dark-blue-button {
+    &.dark-orange-button {
         a, button, label {
             border-color: #036db7;
             color: #036db7;
@@ -695,16 +694,10 @@ p {
 }
 
 .wrapper {
-    width: 940px;
+    width: 840px;
     margin: 0 auto;
-    padding: 30px 0;
-    @media screen and (max-width: $tablet){
-        width: auto;
-        padding: 15px;
-    }
-    @media screen and (max-width: $mobile){
-        width: auto;
-        padding: 10px;
+    @media screen and (max-width: $mobile) {
+        width: 100%;
     }
 }
 
@@ -714,7 +707,7 @@ p {
 
 .contents {
     background-color: #FFF;
-    padding: 40px 120px 60px;
+    padding: 40px 0;
     @media screen and (max-width: $tablet){
         padding: 40px 60px 60px;
     }

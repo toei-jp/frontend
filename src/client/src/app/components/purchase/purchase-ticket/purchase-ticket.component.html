@@ -1,4 +1,4 @@
-<div class="contents">
+<div class="contents wrapper">
     <h1 class="page-ttl">券種選択</h1>
     <p class="read">ご希望の券種を選択して「次へ」ボタンを押してください。</p>
 
@@ -21,10 +21,10 @@
                 <dt class="d-td seat-code">{{ reservation.seat.seatNumber }}</dt>
                 <dd class="d-td width-medium">
 
-                    <div *ngIf="reservation.ticket === undefined" class="button blue-button">
+                    <div *ngIf="reservation.ticket === undefined" class="button orange-button">
                         <button type="button" (click)="openTicketList(reservation)">券種を選択してください</button>
                     </div>
-                    <div *ngIf="reservation.ticket !== undefined" class="blue-button ghost-button">
+                    <div *ngIf="reservation.ticket !== undefined" class="orange-button ghost-button">
                         <button type="button" (click)="openTicketList(reservation)">
                             {{ reservation.ticket.ticketOffer.name.ja }} {{ reservation.getTicketPrice().total |
                             currency : 'JPY' }}
@@ -81,7 +81,7 @@
                         }}</p>
                 </dt>
                 <dd class="d-td width-small">
-                    <div class="button blue-button ticket-type-select">
+                    <div class="button orange-button ticket-type-select">
                         <button type="button" (click)="selectTicket(ticket)">選択</button>
                     </div>
                 </dd>

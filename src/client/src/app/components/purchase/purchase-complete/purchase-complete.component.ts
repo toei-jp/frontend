@@ -21,6 +21,7 @@ export class PurchaseCompleteComponent implements OnInit {
         // sendEmailNotification?: factory.task.sendEmailMessage.ITask
     };
     public environment = environment;
+    public entryExplanationModal: boolean;
 
     constructor(
         private storage: StorageService,
@@ -31,6 +32,7 @@ export class PurchaseCompleteComponent implements OnInit {
 
     public ngOnInit() {
         window.scrollTo(0, 0);
+        this.entryExplanationModal = false;
         this.data = this.storage.load('complete', SaveType.Session);
         if (this.data === null) {
             this.error.redirect(new Error('complete data is null'));

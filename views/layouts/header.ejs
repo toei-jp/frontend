@@ -3,9 +3,12 @@
     <div class="close"><a href="<%- appSiteUrl %>/#/purchase"><%= __('common.close') %></a></div>
 </header>
 <% } else { %>
-<header class="header clearfix">
+<header class="header clearfix bg-light-gray">
     <div class="inner">
-        <div class="logo"><a href="<%- PORTAL_SITE_URL %>"><img src="/assets/images/common/logo.svg" alt="<%- __('header.logo') %>"></a></div>
+        <div class="logo">
+            <a href="<%- PORTAL_SITE_URL %>"><img src="/assets/images/common/logo.svg" alt="<%- __('header.logo') %>"></a>
+            <a href="<%- PORTAL_SITE_URL %>"><div class="company-name">TOEI&nbsp;THEATERS</div></a>
+        </div>
     </div>
 </header>
 <% } %>

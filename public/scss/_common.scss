@@ -24,13 +24,13 @@ html {
 }
 
 body {
+    margin: 0;
     font-weight: 500;
     -webkit-text-size-adjust: 100%;
     width: 100%;
     font-family: $font-family;
     font-size: 16px;
     color: #333;
-    background-color: #E2E1E0;
     @media screen and (max-width: $tablet){
         font-weight: normal;
     }
@@ -347,7 +347,7 @@ p {
 }
 
 .bg-light-gray {
-    background-color: #eeeef0;
+    background-color: #eeeeef;
 }
 
 .bg-gray {
@@ -548,14 +548,13 @@ p {
             }
         }
     }
-    &.blue-button {
+    &.orange-button {
         a, button, label {
-            background-color: #019fe8;
+            background-color: #ffa806;
             color: #FFF;
-            box-shadow: 0 3px 0 #0084b2;
         }
     }
-    &.dark-blue-button {
+    &.dark-orange-button {
         a, button, label {
             background-color: #036db7;
             color: #FFF;
@@ -601,14 +600,14 @@ p {
             }
         }
     }
-    &.blue-button {
+    &.orange-button {
         a, button, label {
-            border-color: #019fe8;
-            color: #019fe8;
+            border-color: #ffa806;
+            color: #ffa806;
             background-color: #FFF;
         }
     }
-    &.dark-blue-button {
+    &.dark-orange-button {
         a, button, label {
             border-color: #036db7;
             color: #036db7;
@@ -740,16 +739,10 @@ p {
 }
 
 .wrapper {
-    width: 940px;
+    width: 840px;
     margin: 0 auto;
-    padding: 30px 0;
-    @media screen and (max-width: $tablet){
-        width: auto;
-        padding: 15px;
-    }
-    @media screen and (max-width: $mobile){
-        width: auto;
-        padding: 10px;
+    @media screen and (max-width: $mobile) {
+        width: 100%;
     }
 }
 
@@ -762,20 +755,33 @@ p {
     padding: 25px 40px;
     border-bottom: 1px solid #E2E1E0;
     border-radius: 4px 4px 0 0;
-    background-color: #FFF;
+    border-top: 10px solid #000;
     @media screen and (max-width: $mobile){
         padding: 10px 15px;
     }
     .inner {
         position: relative;
+        width: 940px;
+        margin: 0 auto;
     }
     .logo {
-        width: 70px;
+        display: flex;
         @media screen and (max-width: $mobile){
-            width: 60px;
+            width: 50px;
         }
         img {
             width: 100%;
+            width: 60px;
+        }
+        a {
+            color: #333;
+        }
+    }
+    .company-name {
+        line-height: 55px;
+        padding-left: 5px;
+        @media screen and (max-width: $mobile) {
+            display: none;
         }
     }
 }
@@ -818,12 +824,12 @@ p {
 
 .contents {
     background-color: #FFF;
-    padding: 40px 120px 60px;
+    padding: 40px 0;
     @media screen and (max-width: $tablet){
-        padding: 40px 60px 60px;
+        padding: 40px 0;
     }
     @media screen and (max-width: $mobile){
-        padding: 20px 15px 50px;
+        padding: 20px 0;
     }
 }
 

@@ -67,3 +67,15 @@
         }
     }
 }
+
+.box {
+    dl {
+        margin: 0;
+        dd {
+            margin-left: 0;
+            input {
+                border: none;
+            }
+        }
+    }
+}

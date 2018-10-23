@@ -1,4 +1,4 @@
-<div class="contents">
+<div class="contents wrapper">
     <h1 class="page-ttl">購入完了</h1>
     <p class="read">ご購入ありがとうございました。
         <br>購入者情報入力画面で入力していただいたメールアドレス宛に購入完了メールを送信しました。
@@ -82,7 +82,7 @@
                 <br>・ご入力いただいたメールアドレスに不備があった場合やメールの着信を拒否されている場合は購入完了メールが受け取れない場合があります。
                 <br>・プロバイダのメール設定、携帯キャリア会社のメール設定のフィルタリング機能を有効にしている方は「削除フォルダ」または「迷惑メールフォルダ」をご確認ください。
             </p>
-            <!-- <div class="button dark-blue-button print-button center-button not-print">
+            <!-- <div class="button dark-orange-button print-button center-button not-print">
                 <a class="icon-print-white" (click)="print()">印刷する</a>
             </div> -->
         </div>
@@ -103,12 +103,11 @@
                             <div class="image mb-x-small">
                                 <img src="/assets/images/purchase/complete/qr_ticket.svg" alt="">
                             </div>
-                            <div class="button blue-button inquiry-button mb-middle center-button">
+                            <div class="button orange-button inquiry-button mb-middle center-button">
                                 <a class="icon-new-tab-white" href="{{ getInquiryUrl() }}" target="_blank">照会ページへ</a>
                             </div>
                             <p>
-                                <a class="icon-new-tab-blue" href="{{ environment.FRONTEND_ENDPOINT }}/method/ticketing"
-                                    target="_blank">※お連れ様と別々で入場する場合のご案内</a>
+                                <a class="icon-new-tab-blue" (click)="entryExplanationModal = true">※お連れ様と別々で入場する場合のご案内</a>
                             </p>
                         </dd>
                     </dl>
@@ -166,9 +165,21 @@
             </dd>
         </dl>
 
-        <div class="button blue-button center-button">
+        <div class="button orange-button center-button">
             <a href="{{ environment.APP_SITE_URL }}/#/ticket">チケットホルダーに戻る</a>
         </div>
     </div>
 
 </div>
+
+<app-modal class="entry-explanation-modal" [open]="entryExplanationModal" [layout]="false" (close)="entryExplanationModal = false">
+    <div inner class="box radius bg-light-gray">
+        <h2 class="text-center">お連れ様と別々で入場する場合</h2>
+        <div class="number-1"><img src="/assets/images/purchase/complete/no.1.svg" alt=""></div>
+        <div class="number-1-details box radius bg-white">『チケット情報照会』ページのURLをお連れ様に送信、『予約番号』と購入時に入力した『電話番号』もお伝えする。</div>
+        <div class="text-center"><img src="/assets/images/purchase/complete/▼.svg" alt=""></div>
+        <div class="number-2"><img src="/assets/images/purchase/complete/no.2.svg" alt=""></div>
+        <div class="number-2-details box radius bg-white">お連れ様は、受取った情報を『チケット情報照会』ページ内に入力し、QRコードを照会して入場</div>
+        <p class="small-x-text">※各QRコードに席番号が割り当てられています。どちらの座席で入場するかはお連れ様とご相談してください。</p>
+    </div>
+</app-modal>

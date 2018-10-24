@@ -6243,7 +6243,7 @@ var PurchaseSeatComponent = /** @class */ (function () {
      */
     PurchaseSeatComponent.prototype.fitchSalesTickets = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var screeningEvent, seller, salesTickets;
+            var screeningEvent, transaction, salesTickets;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -6254,18 +6254,21 @@ var PurchaseSeatComponent = /** @class */ (function () {
                         return [4 /*yield*/, this.cinerino.getServices()];
                     case 1:
                         _a.sent();
-                        seller = this.purchase.data.movieTheaterOrganization;
-                        if (seller === undefined) {
-                            throw new Error('Seller not found');
+                        transaction = this.purchase.data.transaction;
+                        if (transaction === undefined) {
+                            throw new Error('Transaction not found');
+                        }
+                        if (transaction.object.clientUser === undefined) {
+                            throw new Error('ClientUser not found');
                         }
                         return [4 /*yield*/, this.cinerino.event.searchScreeningEventTicketOffers({
                                 event: { id: screeningEvent.id },
                                 seller: {
-                                    typeOf: seller.typeOf,
-                                    id: seller.id
+                                    typeOf: transaction.seller.typeOf,
+                                    id: transaction.seller.id
                                 },
                                 store: {
-                                    id: this.cinerino.auth.options.clientId
+                                    id: transaction.object.clientUser.client_id
                                 }
                             })];
                     case 2:

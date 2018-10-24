@@ -82,14 +82,23 @@ export class PurchaseSeatComponent implements OnInit, AfterViewInit {
         }
         const screeningEvent = this.purchase.data.screeningEvent;
         await this.cinerino.getServices();
+        const seller = this.purchase.data.movieTheaterOrganization;
+        if (seller === undefined) {
+            throw new Error('Seller not found');
+        }
         const salesTickets = await this.cinerino.event.searchScreeningEventTicketOffers({
-            eventId: screeningEvent.id
+            event: { id: screeningEvent.id },
+            seller: {
+                typeOf: seller.typeOf,
+                id: seller.id
+            },
+            store: {
+                id: this.cinerino.auth.options.clientId
+            }
         });
         // console.log('salesTickets', salesTicketArgs, salesTickets);
 
-        return salesTickets.filter((ticket) => {
-            return ticket.isOnlineTicket !== false;
-        });
+        return salesTickets;
     }
 
     /**

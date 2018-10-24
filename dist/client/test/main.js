@@ -1,9 +1,9 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([["main"],{
 
 /***/ "../../node_modules/moment/locale sync recursive ^\\.\\/.*$":
-/*!**********************************************************************************************!*\
-  !*** C:/Users/user/Desktop/workspace/TOEI/frontend/node_modules/moment/locale sync ^\.\/.*$ ***!
-  \**********************************************************************************************/
+/*!***********************************************************************************!*\
+  !*** C:/projects/toei-cinerino-frontend/node_modules/moment/locale sync ^\.\/.*$ ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6243,7 +6243,7 @@ var PurchaseSeatComponent = /** @class */ (function () {
      */
     PurchaseSeatComponent.prototype.fitchSalesTickets = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var screeningEvent, salesTickets;
+            var screeningEvent, seller, salesTickets;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -6254,15 +6254,24 @@ var PurchaseSeatComponent = /** @class */ (function () {
                         return [4 /*yield*/, this.cinerino.getServices()];
                     case 1:
                         _a.sent();
+                        seller = this.purchase.data.movieTheaterOrganization;
+                        if (seller === undefined) {
+                            throw new Error('Seller not found');
+                        }
                         return [4 /*yield*/, this.cinerino.event.searchScreeningEventTicketOffers({
-                                eventId: screeningEvent.id
+                                event: { id: screeningEvent.id },
+                                seller: {
+                                    typeOf: seller.typeOf,
+                                    id: seller.id
+                                },
+                                store: {
+                                    id: this.cinerino.auth.options.clientId
+                                }
                             })];
                     case 2:
                         salesTickets = _a.sent();
                         // console.log('salesTickets', salesTicketArgs, salesTickets);
-                        return [2 /*return*/, salesTickets.filter(function (ticket) {
-                                return ticket.isOnlineTicket !== false;
-                            })];
+                        return [2 /*return*/, salesTickets];
                 }
             });
         });
@@ -9319,7 +9328,7 @@ _angular_platform_browser__WEBPACK_IMPORTED_MODULE_4__["platformBrowser"]().boot
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Users\user\Desktop\workspace\TOEI\frontend\src\client\src\main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! C:\projects\toei-cinerino-frontend\src\client\src\main.ts */"./src/main.ts");
 
 
 /***/ }),

@@ -30,7 +30,7 @@ body {
     width: 100%;
     font-family: $font-family;
     font-size: 16px;
-    color: #333;
+    color: #595757;
     @media screen and (max-width: $tablet){
         font-weight: normal;
     }
@@ -622,13 +622,13 @@ p {
     &.yellow-button {
         a, button, label {
             border-color: #C4C43A;
-            color: #333;
+            color: #595757;
         }
     }
     &.black-button {
         a, button, label {
-            border-color: #333;
-            color: #333;
+            border-color: #595757;
+            color: #595757;
         }
     }
 }
@@ -679,7 +679,7 @@ p {
     a, button {
         font-size: 16px;
         font-weight: bold;
-        color: #333;
+        color: #595757;
         position: relative;
         padding-left: 20px;
         text-decoration: underline;
@@ -692,7 +692,7 @@ p {
     a, button {
         font-size: 16px;
         font-weight: bold;
-        color: #333;
+        color: #595757;
         position: relative;
         padding-left: 20px;
         text-decoration: underline;
@@ -739,7 +739,7 @@ p {
 }
 
 .wrapper {
-    width: 840px;
+    max-width: 840px;
     margin: 0 auto;
     @media screen and (max-width: $mobile) {
         width: 100%;
@@ -761,7 +761,7 @@ p {
     }
     .inner {
         position: relative;
-        width: 940px;
+        max-width: 940px;
         margin: 0 auto;
     }
     .logo {
@@ -774,7 +774,7 @@ p {
             width: 60px;
         }
         a {
-            color: #333;
+            color: #595757;
         }
     }
     .company-name {

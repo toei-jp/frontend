@@ -1,46 +1,61 @@
 $tablet: 1024px;
 $mobile: 767px;
 :host {
-    width: 25%;
+    width: 20%;
     padding: 0 0 0 10px;
     margin: 0 0 20px;
     @media screen and (max-width: $tablet){
-        width: 33.3%;
+        width: 25%;
     }
     @media screen and (max-width: $mobile){
-        width: 50%;
+        width: 100%;
         margin: 0 0 10px;
     }
 }
 li {
-    &.disabled {
-        opacity: 0.5;
+    cursor: pointer;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #dbdcdc;
+    @media screen and (max-width: $mobile){
+        display: flex;
+        align-items: center;
+        padding: 12px 10px;
     }
-    dl {
-        border: 2px solid #AFAFAF;
-        cursor: pointer;
-        dt {
-            padding: 10px 15px;
-            border-bottom: 1px solid #777777;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #515151;
-            @media screen and (max-width: $mobile){
-                padding: 10px;
-            }
-            .status {
-                width: 60px;
-                .image {
-                    width: 30px;
-                    height: 30px;
-                    background-size: 30px;
-                    margin: 0 auto;
-                }
-            }
-        }   
-        dd {
-            padding: 10px 0;
+    &.end-of-sale,
+    &.vacancy-full {
+        background-color: #9e9e9f;
+        border: 1px solid #9e9e9f;
+        color: #c8c9ca;
+        cursor: default;
+    }
+    .screen-name {
+        @media screen and (max-width: $mobile){
+            margin-bottom: 0 !important;
+            width: 65px;
+            text-align: left;
+        }
+    }
+    .date {
+        @media screen and (max-width: $mobile){
+            margin-bottom: 0 !important;
+            width: calc(100% - 65px - 60px);
+            text-align: left;
+            padding-left: 15px;
+        }
+        strong {
+            vertical-align: middle;
+        }
+    }
+    .status {
+        @media screen and (max-width: $mobile){
+            width: 60px;
+        }
+        .image {
+            width: 30px;
+            height: 30px;
+            background-size: 30px;
+            margin: 0 auto;
         }
     }
 }
@@ -56,3 +71,19 @@ li {
 .vacancy-large .status .image {
     background-image: url(/assets/images/common/status_01.svg);
 }
+
+.text {
+    display: none;
+    height: 30px;
+    line-height: 30px;
+}
+
+.end-of-sale {
+    .image {
+        display: none;
+    }
+    .text {
+        display: block;
+    }
+}
+

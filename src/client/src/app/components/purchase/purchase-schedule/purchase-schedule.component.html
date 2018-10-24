@@ -1,27 +1,26 @@
 <div class="contents wrapper">
 
     <h1 class="page-ttl">スケジュール選択</h1>
-    <p class="read">こちらからチケットの購入をする事が出来ます。
-        <br>ご希望の鑑賞作品、鑑賞日時を選択してください。</p>
-    <div *ngFor="let theater of theaters" class="mb-middle button orange-button center-button inquiry-button">
+    <p class="read">鑑賞希望作品の上映時間を選択してください。</p>
+    <!-- <div *ngFor="let theater of theaters" class="mb-middle button orange-button center-button inquiry-button">
         <a href="{{ environment.FRONTEND_ENDPOINT }}/inquiry/login?theater={{ theater.location.branchCode }}">{{ theater.name.ja }}照会</a>
-    </div>
+    </div> -->
 
     <div class="mb-middle">
         <div *ngIf="!isPreSaleSchedules && preSaleDateList.length > 0" class="orange-button center-button button">
             <button (click)="isPreSaleSchedules = true">先行販売スケジュール</button>
         </div>
         <div *ngIf="isPreSaleSchedules && preSaleDateList.length > 0" class="gray-button center-button button">
-            <button (click)="isPreSaleSchedules = false">普通スケジュール</button>
+            <button (click)="isPreSaleSchedules = false">通常スケジュール</button>
         </div>
-        <dl *ngIf="showTheaterList">
+        <!-- <dl *ngIf="showTheaterList">
             <dt class="mb-x-small">劇場</dt>
             <dd class="mb-small">
                 <select [(ngModel)]="conditions.theater" (change)="changeConditions()">
                     <option *ngFor="let theater of theaters" value="{{ theater.location.branchCode }}">{{ theater.name.ja }}</option>
                 </select>
             </dd>
-        </dl>
+        </dl> -->
         <div *ngIf="!isPreSaleSchedules" class="date-list">
             <div *ngFor="let date of dateList" class="date-btn" (click)="changeDate(date.value)">{{ date.label.month }}/{{ date.label.date }}{{ date.label.day }}</div>
         </div>
@@ -38,6 +37,18 @@
         <app-purchase-film-order *ngFor="let film of preSaleFilmOrder" [data]="film"></app-purchase-film-order>
     </ul>
 
+    <div class="small-x-text">
+        <p>
+        《注意事項》
+        <br>※チケット購入に際し、下記の事項を予めご了承ください。
+        <br>・チケットご購入後、お客様のご都合による変更・払い戻しは、いかなる場合におきましても行っておりません。
+        <br>・3歳以上有料／3歳未満で座席が必要な場合は有料となります。
+        <br>・予約可能期間は、鑑賞日2日前0時から上映開始1時間前までです。
+        <br>　また、クレジット決済後のキャンセル・変更・払い戻しは一切致しません。
+        <br>・学生料金やシニア料金・ハンディキャップ料金をご利用のお客様は、ご鑑賞当日、規約所定の証明書をお持ちください。
+    </p>
+    </div>
+    <app-site-seal></app-site-seal>
 </div>
 
 <app-loading [show]="isLoading"></app-loading>

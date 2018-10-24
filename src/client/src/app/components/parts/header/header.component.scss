@@ -10,7 +10,7 @@ $mobile: 767px;
     }
     .inner {
         position: relative;
-        width: 940px;
+        max-width: 940px;
         margin: 0 auto;
         a {
             color: #000;

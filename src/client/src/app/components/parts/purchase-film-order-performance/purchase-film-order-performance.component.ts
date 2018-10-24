@@ -54,7 +54,7 @@ export class PurchaseFilmOrderPerformanceComponent implements OnInit {
             },
             {
                 text: '販売終了',
-                className: 'vacancy-full'
+                className: 'end-of-sale'
             }
         ];
 

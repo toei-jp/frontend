@@ -6,6 +6,7 @@ import { ErrorComponent } from './components/error/error.component';
 import { ExpiredComponent } from './components/expired/expired.component';
 import { InquiryConfirmComponent } from './components/inquiry/inquiry-confirm/inquiry-confirm.component';
 import { InquiryLoginComponent } from './components/inquiry/inquiry-login/inquiry-login.component';
+import { LawComponent } from './components/law/law.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { PurchaseBaseComponent } from './components/purchase/purchase-base/purchase-base.component';
 import { PurchaseCompleteComponent } from './components/purchase/purchase-complete/purchase-complete.component';
@@ -32,10 +33,16 @@ const routes: Routes = [
         path: '',
         component: BaseComponent,
         children: [
-            { path: 'purchase/schedule', component: PurchaseScheduleComponent },
             { path: 'purchase/overlap', component: PurchaseOverlapComponent },
             { path: 'inquiry/login/:theater', component: InquiryLoginComponent },
             { path: 'inquiry/confirm', component: InquiryConfirmComponent }
+        ]
+    },
+    {
+        path: 'purchase',
+        component: PurchaseBaseComponent,
+        children: [
+            { path: 'schedule', component: PurchaseScheduleComponent },
         ]
     },
     {
@@ -70,6 +77,7 @@ const routes: Routes = [
         path: '',
         component: BaseComponent,
         children: [
+            { path: 'law', component: LawComponent },
             { path: 'error', component: ErrorComponent },
             { path: 'expired', component: ExpiredComponent },
             { path: '**', component: NotFoundComponent }

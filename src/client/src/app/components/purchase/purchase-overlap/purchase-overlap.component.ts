@@ -48,7 +48,11 @@ export class PurchaseOverlapComponent implements OnInit {
      */
     public async newTransaction() {
         try {
-            await this.purchase.cancelSeatRegistrationProcess();
+            if (this.purchase.data.seatReservationAuthorization === undefined) {
+                await this.purchase.transactionCancelProcess();
+            } else {
+                await this.purchase.cancelSeatRegistrationProcess();
+            }
         } catch (err) {
             console.error(err);
         }

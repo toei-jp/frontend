@@ -1,9 +1,9 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([["main"],{
 
 /***/ "../../node_modules/moment/locale sync recursive ^\\.\\/.*$":
-/*!***********************************************************************************!*\
-  !*** C:/projects/toei-cinerino-frontend/node_modules/moment/locale sync ^\.\/.*$ ***!
-  \***********************************************************************************/
+/*!******************************************************************************************!*\
+  !*** /Users/phi.nt/source/toei-ticket/frontend/node_modules/moment/locale sync ^\.\/.*$ ***!
+  \******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -5510,16 +5510,22 @@ var PurchaseOverlapComponent = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.purchase.cancelSeatRegistrationProcess()];
+                        _a.trys.push([0, 5, , 6]);
+                        if (!(this.purchase.data.seatReservationAuthorization === undefined)) return [3 /*break*/, 2];
+                        return [4 /*yield*/, this.purchase.transactionCancelProcess()];
                     case 1:
                         _a.sent();
-                        return [3 /*break*/, 3];
-                    case 2:
+                        return [3 /*break*/, 4];
+                    case 2: return [4 /*yield*/, this.purchase.cancelSeatRegistrationProcess()];
+                    case 3:
+                        _a.sent();
+                        _a.label = 4;
+                    case 4: return [3 /*break*/, 6];
+                    case 5:
                         err_1 = _a.sent();
                         console.error(err_1);
-                        return [3 /*break*/, 3];
-                    case 3:
+                        return [3 /*break*/, 6];
+                    case 6:
                         this.storage.remove('screeningEvent', _services_storage_storage_service__WEBPACK_IMPORTED_MODULE_5__["SaveType"].Session);
                         this.storage.save('parameters', {
                             passportToken: '',
@@ -8353,6 +8359,35 @@ var PurchaseService = /** @class */ (function () {
         });
     };
     /**
+     * 取引開始処理
+     * @method transactionStartProcess
+     */
+    PurchaseService.prototype.transactionCancelProcess = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var transaction;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (this.data.transaction === undefined) {
+                            throw new Error('status is different');
+                        }
+                        transaction = this.data.transaction;
+                        return [4 /*yield*/, this.cinerino.getServices()];
+                    case 1:
+                        _a.sent();
+                        return [4 /*yield*/, this.cinerino.transaction.placeOrder.cancel({
+                                transactionId: transaction.id
+                            })];
+                    case 2:
+                        _a.sent();
+                        // 購入データ削除
+                        this.reset();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    /**
      * 座席開放処理
      * @method cancelSeatRegistrationProcess
      */
@@ -9331,7 +9366,7 @@ _angular_platform_browser__WEBPACK_IMPORTED_MODULE_4__["platformBrowser"]().boot
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\projects\toei-cinerino-frontend\src\client\src\main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! /Users/phi.nt/source/toei-ticket/frontend/src/client/src/main.ts */"./src/main.ts");
 
 
 /***/ }),

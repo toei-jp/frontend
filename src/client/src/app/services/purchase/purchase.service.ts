@@ -418,6 +418,23 @@ export class PurchaseService {
     }
 
     /**
+     * 取引開始処理
+     * @method transactionStartProcess
+     */
+    public async transactionCancelProcess() {
+        if (this.data.transaction === undefined) {
+            throw new Error('status is different');
+        }
+        const transaction = this.data.transaction;
+        await this.cinerino.getServices();
+        await this.cinerino.transaction.placeOrder.cancel({
+            transactionId: transaction.id
+        });
+        // 購入データ削除
+        this.reset();
+    }
+
+    /**
      * 座席開放処理
      * @method cancelSeatRegistrationProcess
      */

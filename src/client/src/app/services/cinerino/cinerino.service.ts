@@ -15,7 +15,7 @@ export class CinerinoService {
     public personOwnershipInfo: cinerino.service.person.OwnershipInfo;
     public payment: cinerino.service.Payment;
     public transaction: {
-        placeOrder: cinerino.service.transaction.PlaceOrder
+        placeOrder: cinerino.service.txn.PlaceOrder
     };
 
     constructor(
@@ -35,7 +35,7 @@ export class CinerinoService {
             this.person = new cinerino.service.Person(option);
             this.payment = new cinerino.service.Payment(option);
             this.transaction = {
-                placeOrder: new cinerino.service.transaction.PlaceOrder(option)
+                placeOrder: new cinerino.service.txn.PlaceOrder(option)
             };
             console.log(this);
         } catch (err) {

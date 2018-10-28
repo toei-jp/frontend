@@ -95,11 +95,11 @@ ISC
 ISC
 ISC
 
-@toei-jp/cinerino-api-abstract-client@1.0.0-alpha.38
+@toei-jp/cinerino-api-abstract-client@1.0.0-alpha.39
 ISC
 ISC
 
-@toei-jp/cinerino-api-javascript-client@1.0.0-alpha.29
+@toei-jp/cinerino-api-javascript-client@1.0.0-alpha.30
 ISC
 ISC
 

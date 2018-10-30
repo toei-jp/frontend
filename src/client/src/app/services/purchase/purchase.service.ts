@@ -77,9 +77,7 @@ interface IData {
     /**
      * 決済情報（クレジット）
      */
-    creditCardAuthorization?: {
-        id: string;
-    };
+    creditCardAuthorization?: factory.action.authorize.paymentMethod.creditCard.IAction;
     /**
      * 購入者情報
      */
@@ -418,6 +416,21 @@ export class PurchaseService {
     }
 
     /**
+     * 取引開始処理
+     * @method transactionStartProcess
+     */
+    public async transactionCancelProcess() {
+        if (this.data.transaction === undefined) {
+            throw new Error('status is different');
+        }
+        const transaction = this.data.transaction;
+        await this.cinerino.getServices();
+        await this.cinerino.transaction.placeOrder.cancel(transaction);
+        // 購入データ削除
+        this.reset();
+    }
+
+    /**
      * 座席開放処理
      * @method cancelSeatRegistrationProcess
      */
@@ -426,13 +439,9 @@ export class PurchaseService {
             || this.data.seatReservationAuthorization === undefined) {
             throw new Error('status is different');
         }
-        const transaction = this.data.transaction;
         const seatReservationAuthorization = this.data.seatReservationAuthorization;
         await this.cinerino.getServices();
-        await this.cinerino.transaction.placeOrder.voidSeatReservation({
-            transactionId: transaction.id,
-            actionId: seatReservationAuthorization.id
-        });
+        await this.cinerino.transaction.placeOrder.voidSeatReservation(seatReservationAuthorization);
         this.data.seatReservationAuthorization = undefined;
         this.reset();
     }
@@ -449,32 +458,31 @@ export class PurchaseService {
         await this.cinerino.getServices();
         // 予約中なら座席削除
         if (this.data.seatReservationAuthorization !== undefined) {
-            await this.cinerino.transaction.placeOrder.voidSeatReservation({
-                transactionId: this.data.transaction.id,
-                actionId: this.data.seatReservationAuthorization.id
-            });
+            await this.cinerino.transaction.placeOrder.voidSeatReservation(this.data.seatReservationAuthorization);
             this.data.seatReservationAuthorization = undefined;
             this.save();
         }
 
         this.data.seatReservationAuthorization =
             await this.cinerino.transaction.placeOrder.authorizeSeatReservation({
-                transactionId: this.data.transaction.id,
-                event: {
-                    id: this.data.screeningEvent.id
-                },
-                notes: '',
-                clientUser: this.data.transaction.object.clientUser,
-                acceptedOffer: this.data.reservations.map((reservation) => ({
-                    ticketedSeat: {
-                        seatSection: reservation.seat.seatSection,
-                        seatNumber: reservation.seat.seatNumber,
-                        seatRow: '',
-                        seatingType: '',
-                        typeOf: factory.chevre.placeType.Seat
+                object: {
+                    event: {
+                        id: this.data.screeningEvent.id
                     },
-                    id: (<IReservationTicket>reservation.ticket).ticketOffer.id
-                }))
+                    notes: '',
+                    clientUser: this.data.transaction.object.clientUser,
+                    acceptedOffer: this.data.reservations.map((reservation) => ({
+                        ticketedSeat: {
+                            seatSection: reservation.seat.seatSection,
+                            seatNumber: reservation.seat.seatNumber,
+                            seatRow: '',
+                            seatingType: '',
+                            typeOf: factory.chevre.placeType.Seat
+                        },
+                        id: (<IReservationTicket>reservation.ticket).ticketOffer.id
+                    }))
+                },
+                purpose: this.data.transaction
             });
         this.data.reservations.forEach((reservation) => {
             reservation.ticket = undefined;
@@ -495,32 +503,31 @@ export class PurchaseService {
         await this.cinerino.getServices();
         // 予約中なら座席削除
         if (this.data.seatReservationAuthorization !== undefined) {
-            await this.cinerino.transaction.placeOrder.voidSeatReservation({
-                transactionId: this.data.transaction.id,
-                actionId: this.data.seatReservationAuthorization.id
-            });
+            await this.cinerino.transaction.placeOrder.voidSeatReservation(this.data.seatReservationAuthorization);
             this.data.seatReservationAuthorization = undefined;
             this.save();
         }
 
         this.data.seatReservationAuthorization =
             await this.cinerino.transaction.placeOrder.authorizeSeatReservation({
-                transactionId: this.data.transaction.id,
-                event: {
-                    id: this.data.screeningEvent.id
-                },
-                notes: '',
-                clientUser: this.data.transaction.object.clientUser,
-                acceptedOffer: this.data.reservations.map((reservation) => ({
-                    ticketedSeat: {
-                        seatSection: reservation.seat.seatSection,
-                        seatNumber: reservation.seat.seatNumber,
-                        seatRow: '',
-                        seatingType: '',
-                        typeOf: factory.chevre.placeType.Seat
+                object: {
+                    event: {
+                        id: this.data.screeningEvent.id
                     },
-                    id: (<IReservationTicket>reservation.ticket).ticketOffer.id
-                }))
+                    notes: '',
+                    clientUser: this.data.transaction.object.clientUser,
+                    acceptedOffer: this.data.reservations.map((reservation) => ({
+                        ticketedSeat: {
+                            seatSection: reservation.seat.seatSection,
+                            seatNumber: reservation.seat.seatNumber,
+                            seatRow: '',
+                            seatingType: '',
+                            typeOf: factory.chevre.placeType.Seat
+                        },
+                        id: (<IReservationTicket>reservation.ticket).ticketOffer.id
+                    }))
+                },
+                purpose: this.data.transaction
             });
         if (this.data.seatReservationAuthorization === undefined) {
             throw new Error('status is different');
@@ -539,8 +546,8 @@ export class PurchaseService {
         await this.cinerino.getServices();
         // 入力情報を登録
         this.data.customerContact = await this.cinerino.transaction.placeOrder.setCustomerContact({
-            transactionId: this.data.transaction.id,
-            contact: args
+            id: this.data.transaction.id,
+            object: { customerContact: args }
         });
 
         this.save();
@@ -557,11 +564,7 @@ export class PurchaseService {
         await this.cinerino.getServices();
         if (this.data.creditCardAuthorization !== undefined) {
             // クレジットカード登録済みなら削除
-            const cancelCreditCardAuthorizationArgs = {
-                transactionId: this.data.transaction.id,
-                actionId: this.data.creditCardAuthorization.id
-            };
-            await this.cinerino.transaction.placeOrder.voidCreditCardPayment(cancelCreditCardAuthorizationArgs);
+            await this.cinerino.transaction.placeOrder.voidPayment(this.data.creditCardAuthorization);
             this.data.creditCardAuthorization = undefined;
             this.save();
         }
@@ -569,12 +572,14 @@ export class PurchaseService {
         const METHOD_LUMP = '1';
         this.data.creditCardAuthorization =
             await this.cinerino.transaction.placeOrder.authorizeCreditCardPayment({
-                transactionId: this.data.transaction.id,
-                typeOf: factory.paymentMethodType.CreditCard,
-                orderId: this.createOrderId(),
-                amount: this.getTotalPrice(),
-                method: <any>METHOD_LUMP,
-                creditCard: this.data.paymentCreditCard
+                object: {
+                    typeOf: factory.paymentMethodType.CreditCard,
+                    orderId: this.createOrderId(),
+                    amount: this.getTotalPrice(),
+                    method: <any>METHOD_LUMP,
+                    creditCard: this.data.paymentCreditCard
+                },
+                purpose: this.data.transaction
             });
         this.save();
     }
@@ -620,27 +625,23 @@ export class PurchaseService {
         let order: factory.order.IOrder;
         if (this.isReserveMvtk()) {
             if (this.data.authorizeMovieTicketPayment !== undefined) {
-                await this.cinerino.transaction.placeOrder.voidMovieTicketPayment({
-                    transactionId: transaction.id,
-                    actionId: this.data.authorizeMovieTicketPayment.id
-                });
+                await this.cinerino.transaction.placeOrder.voidPayment(this.data.authorizeMovieTicketPayment);
             }
             // 決済方法として、ムビチケを追加する
             this.data.authorizeMovieTicketPayment =
                 await this.cinerino.transaction.placeOrder.authorizeMovieTicketPayment({
-                    transactionId: transaction.id,
-                    typeOf: factory.paymentMethodType.MovieTicket,
-                    amount: 0,
-                    movieTickets: this.createMovieTicketsFromAuthorizeSeatReservation({
-                        authorizeSeatReservation, reservations
-                    })
+                    object: {
+                        typeOf: factory.paymentMethodType.MovieTicket,
+                        amount: 0,
+                        movieTickets: this.createMovieTicketsFromAuthorizeSeatReservation({
+                            authorizeSeatReservation, reservations
+                        })
+                    },
+                    purpose: transaction
                 });
         }
         // 取引確定
-        order = (await this.cinerino.transaction.placeOrder.confirm({
-            transactionId: transaction.id,
-            sendEmailMessage: true
-        })).order;
+        order = (await this.cinerino.transaction.placeOrder.confirm(transaction)).order;
         const complete = {
             order,
             transaction,

@@ -82,14 +82,26 @@ export class PurchaseSeatComponent implements OnInit, AfterViewInit {
         }
         const screeningEvent = this.purchase.data.screeningEvent;
         await this.cinerino.getServices();
+        const transaction = this.purchase.data.transaction;
+        if (transaction === undefined) {
+            throw new Error('Transaction not found');
+        }
+        if (transaction.object.clientUser === undefined) {
+            throw new Error('ClientUser not found');
+        }
         const salesTickets = await this.cinerino.event.searchScreeningEventTicketOffers({
-            eventId: screeningEvent.id
+            event: { id: screeningEvent.id },
+            seller: {
+                typeOf: transaction.seller.typeOf,
+                id: transaction.seller.id
+            },
+            store: {
+                id: transaction.object.clientUser.client_id
+            }
         });
         // console.log('salesTickets', salesTicketArgs, salesTickets);
 
-        return salesTickets.filter((ticket) => {
-            return ticket.isOnlineTicket !== false;
-        });
+        return salesTickets;
     }
 
     /**

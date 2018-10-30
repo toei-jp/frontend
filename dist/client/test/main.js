@@ -5510,16 +5510,22 @@ var PurchaseOverlapComponent = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.purchase.cancelSeatRegistrationProcess()];
+                        _a.trys.push([0, 5, , 6]);
+                        if (!(this.purchase.data.seatReservationAuthorization === undefined)) return [3 /*break*/, 2];
+                        return [4 /*yield*/, this.purchase.transactionCancelProcess()];
                     case 1:
                         _a.sent();
-                        return [3 /*break*/, 3];
-                    case 2:
+                        return [3 /*break*/, 4];
+                    case 2: return [4 /*yield*/, this.purchase.cancelSeatRegistrationProcess()];
+                    case 3:
+                        _a.sent();
+                        _a.label = 4;
+                    case 4: return [3 /*break*/, 6];
+                    case 5:
                         err_1 = _a.sent();
                         console.error(err_1);
-                        return [3 /*break*/, 3];
-                    case 3:
+                        return [3 /*break*/, 6];
+                    case 6:
                         this.storage.remove('screeningEvent', _services_storage_storage_service__WEBPACK_IMPORTED_MODULE_5__["SaveType"].Session);
                         this.storage.save('parameters', {
                             passportToken: '',
@@ -6243,7 +6249,7 @@ var PurchaseSeatComponent = /** @class */ (function () {
      */
     PurchaseSeatComponent.prototype.fitchSalesTickets = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var screeningEvent, salesTickets;
+            var screeningEvent, transaction, salesTickets;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -6254,15 +6260,27 @@ var PurchaseSeatComponent = /** @class */ (function () {
                         return [4 /*yield*/, this.cinerino.getServices()];
                     case 1:
                         _a.sent();
+                        transaction = this.purchase.data.transaction;
+                        if (transaction === undefined) {
+                            throw new Error('Transaction not found');
+                        }
+                        if (transaction.object.clientUser === undefined) {
+                            throw new Error('ClientUser not found');
+                        }
                         return [4 /*yield*/, this.cinerino.event.searchScreeningEventTicketOffers({
-                                eventId: screeningEvent.id
+                                event: { id: screeningEvent.id },
+                                seller: {
+                                    typeOf: transaction.seller.typeOf,
+                                    id: transaction.seller.id
+                                },
+                                store: {
+                                    id: transaction.object.clientUser.client_id
+                                }
                             })];
                     case 2:
                         salesTickets = _a.sent();
                         // console.log('salesTickets', salesTicketArgs, salesTickets);
-                        return [2 /*return*/, salesTickets.filter(function (ticket) {
-                                return ticket.isOnlineTicket !== false;
-                            })];
+                        return [2 /*return*/, salesTickets];
                 }
             });
         });
@@ -7746,7 +7764,7 @@ var CinerinoService = /** @class */ (function () {
                         this.person = new _toei_jp_cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_1__["service"].Person(option);
                         this.payment = new _toei_jp_cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_1__["service"].Payment(option);
                         this.transaction = {
-                            placeOrder: new _toei_jp_cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_1__["service"].transaction.PlaceOrder(option)
+                            placeOrder: new _toei_jp_cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_1__["service"].txn.PlaceOrder(option)
                         };
                         console.log(this);
                         return [3 /*break*/, 3];
@@ -8341,12 +8359,39 @@ var PurchaseService = /** @class */ (function () {
         });
     };
     /**
+     * 取引開始処理
+     * @method transactionStartProcess
+     */
+    PurchaseService.prototype.transactionCancelProcess = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var transaction;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (this.data.transaction === undefined) {
+                            throw new Error('status is different');
+                        }
+                        transaction = this.data.transaction;
+                        return [4 /*yield*/, this.cinerino.getServices()];
+                    case 1:
+                        _a.sent();
+                        return [4 /*yield*/, this.cinerino.transaction.placeOrder.cancel(transaction)];
+                    case 2:
+                        _a.sent();
+                        // 購入データ削除
+                        this.reset();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    /**
      * 座席開放処理
      * @method cancelSeatRegistrationProcess
      */
     PurchaseService.prototype.cancelSeatRegistrationProcess = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var transaction, seatReservationAuthorization;
+            var seatReservationAuthorization;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -8354,15 +8399,11 @@ var PurchaseService = /** @class */ (function () {
                             || this.data.seatReservationAuthorization === undefined) {
                             throw new Error('status is different');
                         }
-                        transaction = this.data.transaction;
                         seatReservationAuthorization = this.data.seatReservationAuthorization;
                         return [4 /*yield*/, this.cinerino.getServices()];
                     case 1:
                         _a.sent();
-                        return [4 /*yield*/, this.cinerino.transaction.placeOrder.voidSeatReservation({
-                                transactionId: transaction.id,
-                                actionId: seatReservationAuthorization.id
-                            })];
+                        return [4 /*yield*/, this.cinerino.transaction.placeOrder.voidSeatReservation(seatReservationAuthorization)];
                     case 2:
                         _a.sent();
                         this.data.seatReservationAuthorization = undefined;
@@ -8390,10 +8431,7 @@ var PurchaseService = /** @class */ (function () {
                     case 1:
                         _b.sent();
                         if (!(this.data.seatReservationAuthorization !== undefined)) return [3 /*break*/, 3];
-                        return [4 /*yield*/, this.cinerino.transaction.placeOrder.voidSeatReservation({
-                                transactionId: this.data.transaction.id,
-                                actionId: this.data.seatReservationAuthorization.id
-                            })];
+                        return [4 /*yield*/, this.cinerino.transaction.placeOrder.voidSeatReservation(this.data.seatReservationAuthorization)];
                     case 2:
                         _b.sent();
                         this.data.seatReservationAuthorization = undefined;
@@ -8402,22 +8440,24 @@ var PurchaseService = /** @class */ (function () {
                     case 3:
                         _a = this.data;
                         return [4 /*yield*/, this.cinerino.transaction.placeOrder.authorizeSeatReservation({
-                                transactionId: this.data.transaction.id,
-                                event: {
-                                    id: this.data.screeningEvent.id
-                                },
-                                notes: '',
-                                clientUser: this.data.transaction.object.clientUser,
-                                acceptedOffer: this.data.reservations.map(function (reservation) { return ({
-                                    ticketedSeat: {
-                                        seatSection: reservation.seat.seatSection,
-                                        seatNumber: reservation.seat.seatNumber,
-                                        seatRow: '',
-                                        seatingType: '',
-                                        typeOf: _toei_jp_cinerino_factory__WEBPACK_IMPORTED_MODULE_0__["chevre"].placeType.Seat
+                                object: {
+                                    event: {
+                                        id: this.data.screeningEvent.id
                                     },
-                                    id: reservation.ticket.ticketOffer.id
-                                }); })
+                                    notes: '',
+                                    clientUser: this.data.transaction.object.clientUser,
+                                    acceptedOffer: this.data.reservations.map(function (reservation) { return ({
+                                        ticketedSeat: {
+                                            seatSection: reservation.seat.seatSection,
+                                            seatNumber: reservation.seat.seatNumber,
+                                            seatRow: '',
+                                            seatingType: '',
+                                            typeOf: _toei_jp_cinerino_factory__WEBPACK_IMPORTED_MODULE_0__["chevre"].placeType.Seat
+                                        },
+                                        id: reservation.ticket.ticketOffer.id
+                                    }); })
+                                },
+                                purpose: this.data.transaction
                             })];
                     case 4:
                         _a.seatReservationAuthorization =
@@ -8450,10 +8490,7 @@ var PurchaseService = /** @class */ (function () {
                     case 1:
                         _b.sent();
                         if (!(this.data.seatReservationAuthorization !== undefined)) return [3 /*break*/, 3];
-                        return [4 /*yield*/, this.cinerino.transaction.placeOrder.voidSeatReservation({
-                                transactionId: this.data.transaction.id,
-                                actionId: this.data.seatReservationAuthorization.id
-                            })];
+                        return [4 /*yield*/, this.cinerino.transaction.placeOrder.voidSeatReservation(this.data.seatReservationAuthorization)];
                     case 2:
                         _b.sent();
                         this.data.seatReservationAuthorization = undefined;
@@ -8462,22 +8499,24 @@ var PurchaseService = /** @class */ (function () {
                     case 3:
                         _a = this.data;
                         return [4 /*yield*/, this.cinerino.transaction.placeOrder.authorizeSeatReservation({
-                                transactionId: this.data.transaction.id,
-                                event: {
-                                    id: this.data.screeningEvent.id
-                                },
-                                notes: '',
-                                clientUser: this.data.transaction.object.clientUser,
-                                acceptedOffer: this.data.reservations.map(function (reservation) { return ({
-                                    ticketedSeat: {
-                                        seatSection: reservation.seat.seatSection,
-                                        seatNumber: reservation.seat.seatNumber,
-                                        seatRow: '',
-                                        seatingType: '',
-                                        typeOf: _toei_jp_cinerino_factory__WEBPACK_IMPORTED_MODULE_0__["chevre"].placeType.Seat
+                                object: {
+                                    event: {
+                                        id: this.data.screeningEvent.id
                                     },
-                                    id: reservation.ticket.ticketOffer.id
-                                }); })
+                                    notes: '',
+                                    clientUser: this.data.transaction.object.clientUser,
+                                    acceptedOffer: this.data.reservations.map(function (reservation) { return ({
+                                        ticketedSeat: {
+                                            seatSection: reservation.seat.seatSection,
+                                            seatNumber: reservation.seat.seatNumber,
+                                            seatRow: '',
+                                            seatingType: '',
+                                            typeOf: _toei_jp_cinerino_factory__WEBPACK_IMPORTED_MODULE_0__["chevre"].placeType.Seat
+                                        },
+                                        id: reservation.ticket.ticketOffer.id
+                                    }); })
+                                },
+                                purpose: this.data.transaction
                             })];
                     case 4:
                         _a.seatReservationAuthorization =
@@ -8510,8 +8549,8 @@ var PurchaseService = /** @class */ (function () {
                         // 入力情報を登録
                         _a = this.data;
                         return [4 /*yield*/, this.cinerino.transaction.placeOrder.setCustomerContact({
-                                transactionId: this.data.transaction.id,
-                                contact: args
+                                id: this.data.transaction.id,
+                                object: { customerContact: args }
                             })];
                     case 2:
                         // 入力情報を登録
@@ -8527,7 +8566,7 @@ var PurchaseService = /** @class */ (function () {
      */
     PurchaseService.prototype.creditCardPaymentProcess = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var cancelCreditCardAuthorizationArgs, METHOD_LUMP, _a;
+            var METHOD_LUMP, _a;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -8539,12 +8578,10 @@ var PurchaseService = /** @class */ (function () {
                     case 1:
                         _b.sent();
                         if (!(this.data.creditCardAuthorization !== undefined)) return [3 /*break*/, 3];
-                        cancelCreditCardAuthorizationArgs = {
-                            transactionId: this.data.transaction.id,
-                            actionId: this.data.creditCardAuthorization.id
-                        };
-                        return [4 /*yield*/, this.cinerino.transaction.placeOrder.voidCreditCardPayment(cancelCreditCardAuthorizationArgs)];
+                        // クレジットカード登録済みなら削除
+                        return [4 /*yield*/, this.cinerino.transaction.placeOrder.voidPayment(this.data.creditCardAuthorization)];
                     case 2:
+                        // クレジットカード登録済みなら削除
                         _b.sent();
                         this.data.creditCardAuthorization = undefined;
                         this.save();
@@ -8553,12 +8590,14 @@ var PurchaseService = /** @class */ (function () {
                         METHOD_LUMP = '1';
                         _a = this.data;
                         return [4 /*yield*/, this.cinerino.transaction.placeOrder.authorizeCreditCardPayment({
-                                transactionId: this.data.transaction.id,
-                                typeOf: _toei_jp_cinerino_factory__WEBPACK_IMPORTED_MODULE_0__["paymentMethodType"].CreditCard,
-                                orderId: this.createOrderId(),
-                                amount: this.getTotalPrice(),
-                                method: METHOD_LUMP,
-                                creditCard: this.data.paymentCreditCard
+                                object: {
+                                    typeOf: _toei_jp_cinerino_factory__WEBPACK_IMPORTED_MODULE_0__["paymentMethodType"].CreditCard,
+                                    orderId: this.createOrderId(),
+                                    amount: this.getTotalPrice(),
+                                    method: METHOD_LUMP,
+                                    creditCard: this.data.paymentCreditCard
+                                },
+                                purpose: this.data.transaction
                             })];
                     case 4:
                         _a.creditCardAuthorization =
@@ -8614,10 +8653,7 @@ var PurchaseService = /** @class */ (function () {
                         _b.sent();
                         if (!this.isReserveMvtk()) return [3 /*break*/, 5];
                         if (!(this.data.authorizeMovieTicketPayment !== undefined)) return [3 /*break*/, 3];
-                        return [4 /*yield*/, this.cinerino.transaction.placeOrder.voidMovieTicketPayment({
-                                transactionId: transaction.id,
-                                actionId: this.data.authorizeMovieTicketPayment.id
-                            })];
+                        return [4 /*yield*/, this.cinerino.transaction.placeOrder.voidPayment(this.data.authorizeMovieTicketPayment)];
                     case 2:
                         _b.sent();
                         _b.label = 3;
@@ -8625,22 +8661,21 @@ var PurchaseService = /** @class */ (function () {
                         // 決済方法として、ムビチケを追加する
                         _a = this.data;
                         return [4 /*yield*/, this.cinerino.transaction.placeOrder.authorizeMovieTicketPayment({
-                                transactionId: transaction.id,
-                                typeOf: _toei_jp_cinerino_factory__WEBPACK_IMPORTED_MODULE_0__["paymentMethodType"].MovieTicket,
-                                amount: 0,
-                                movieTickets: this.createMovieTicketsFromAuthorizeSeatReservation({
-                                    authorizeSeatReservation: authorizeSeatReservation, reservations: reservations
-                                })
+                                object: {
+                                    typeOf: _toei_jp_cinerino_factory__WEBPACK_IMPORTED_MODULE_0__["paymentMethodType"].MovieTicket,
+                                    amount: 0,
+                                    movieTickets: this.createMovieTicketsFromAuthorizeSeatReservation({
+                                        authorizeSeatReservation: authorizeSeatReservation, reservations: reservations
+                                    })
+                                },
+                                purpose: transaction
                             })];
                     case 4:
                         // 決済方法として、ムビチケを追加する
                         _a.authorizeMovieTicketPayment =
                             _b.sent();
                         _b.label = 5;
-                    case 5: return [4 /*yield*/, this.cinerino.transaction.placeOrder.confirm({
-                            transactionId: transaction.id,
-                            sendEmailMessage: true
-                        })];
+                    case 5: return [4 /*yield*/, this.cinerino.transaction.placeOrder.confirm(transaction)];
                     case 6:
                         // 取引確定
                         order = (_b.sent()).order;

@@ -641,7 +641,10 @@ export class PurchaseService {
                 });
         }
         // 取引確定
-        order = (await this.cinerino.transaction.placeOrder.confirm(transaction)).order;
+        order = (await this.cinerino.transaction.placeOrder.confirm({
+            id: transaction.id,
+            options: { sendEmailMessage: true }
+        })).order;
         const complete = {
             order,
             transaction,

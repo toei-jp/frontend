@@ -213,10 +213,12 @@ export class PurchaseService {
             return true;
         }
 
-        const now = moment().unix();
+        // TODO ひとまず無条件にしているので修正
+        return true;
+        // const now = moment().unix();
 
-        return moment(screeningEvent.offers.validFrom).unix() <= now
-            && moment(screeningEvent.offers.validThrough).unix() >= now;
+        // return moment(screeningEvent.offers.validFrom).unix() <= now
+        //     && moment(screeningEvent.offers.validThrough).unix() >= now;
     }
 
     /**
@@ -230,10 +232,12 @@ export class PurchaseService {
             return true;
         }
 
-        const now = moment().unix();
+        // TODO ひとまず無条件にしているので修正
+        return true;
+        // const now = moment().unix();
 
-        return moment(screeningEvent.offers.availabilityStarts).unix() <= now
-            && moment(screeningEvent.offers.availabilityEnds).unix() >= now;
+        // return moment(screeningEvent.offers.availabilityStarts).unix() <= now
+        //     && moment(screeningEvent.offers.availabilityEnds).unix() >= now;
     }
 
     /**

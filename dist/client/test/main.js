@@ -8177,9 +8177,11 @@ var PurchaseService = /** @class */ (function () {
         if (screeningEvent.offers === undefined) {
             return true;
         }
-        var now = moment__WEBPACK_IMPORTED_MODULE_1__().unix();
-        return moment__WEBPACK_IMPORTED_MODULE_1__(screeningEvent.offers.validFrom).unix() <= now
-            && moment__WEBPACK_IMPORTED_MODULE_1__(screeningEvent.offers.validThrough).unix() >= now;
+        // TODO ひとまず無条件にしているので修正
+        return true;
+        // const now = moment().unix();
+        // return moment(screeningEvent.offers.validFrom).unix() <= now
+        //     && moment(screeningEvent.offers.validThrough).unix() >= now;
     };
     /**
      * オンライン表示判定
@@ -8191,9 +8193,11 @@ var PurchaseService = /** @class */ (function () {
         if (screeningEvent.offers === undefined) {
             return true;
         }
-        var now = moment__WEBPACK_IMPORTED_MODULE_1__().unix();
-        return moment__WEBPACK_IMPORTED_MODULE_1__(screeningEvent.offers.availabilityStarts).unix() <= now
-            && moment__WEBPACK_IMPORTED_MODULE_1__(screeningEvent.offers.availabilityEnds).unix() >= now;
+        // TODO ひとまず無条件にしているので修正
+        return true;
+        // const now = moment().unix();
+        // return moment(screeningEvent.offers.availabilityStarts).unix() <= now
+        //     && moment(screeningEvent.offers.availabilityEnds).unix() >= now;
     };
     /**
      * 劇場名取得

@@ -204,34 +204,36 @@ export class PurchaseService {
 
     /**
      * 販売可能判定
-     * @method isSales
      * @param {factory.chevre.event.screeningEvent.IEvent} screeningEvent
      * @returns {boolean}
      */
     public isSales(screeningEvent: factory.chevre.event.screeningEvent.IEvent): boolean {
-        // const PRE_SALE = '1'; // 先行販売
-
-        // return (moment(screeningEvent.info.rsvStartDate).unix() <= moment().unix()
-        //     || screeningEvent.info.flgEarlyBooking === PRE_SALE);
-        if (screeningEvent.saleStartDate === undefined) {
-            // 一旦true
+        // 万が一販売条件が見つからなければ、とりあえず販売可能
+        if (screeningEvent.offers === undefined) {
             return true;
         }
-        return moment(screeningEvent.saleStartDate).unix() <= moment().unix();
+
+        const now = moment().unix();
+
+        return moment(screeningEvent.offers.validFrom).unix() <= now
+            && moment(screeningEvent.offers.validThrough).unix() >= now;
     }
 
     /**
      * オンライン表示判定
-     * @method isOnlineDisplay
      * @param {factory.chevre.event.screeningEvent.IEvent} screeningEvent
      * @returns {boolean}
      */
     public isOnlineDisplay(screeningEvent: factory.chevre.event.screeningEvent.IEvent): boolean {
-        if (screeningEvent.onlineDisplayStartDate === undefined) {
-            // 一旦true
+        // 万が一販売条件が見つからなければ、とりあえず表示可能
+        if (screeningEvent.offers === undefined) {
             return true;
         }
-        return moment(screeningEvent.onlineDisplayStartDate).unix() <= moment().unix();
+
+        const now = moment().unix();
+
+        return moment(screeningEvent.offers.availabilityStarts).unix() <= now
+            && moment(screeningEvent.offers.availabilityEnds).unix() >= now;
     }
 
     /**
@@ -355,17 +357,28 @@ export class PurchaseService {
 
     /**
      * ムビチケ対応作品判定
-     * @method isUsedMvtk
-     * @returns {boolean}
      */
-    public isUsedMvtk(): boolean {
-        if (this.data.screeningEvent === undefined) {
-            return false;
-        }
+    // public isUsedMvtk(): boolean {
+    //     if (this.data.screeningEvent === undefined) {
+    //         return false;
+    //     }
 
-        return this.data.screeningEvent.superEvent.mvtkFlg === 1 &&
-            this.data.screeningEvent.mvtkExcludeFlg !== 1;
-    }
+    //     // 劇場作品の対応決済方法にムビチケが含まれていなければfalse
+    //     if (this.data.screeningEvent.superEvent.offers !== undefined
+    //         && Array.isArray(this.data.screeningEvent.superEvent.offers.acceptedPaymentMethod)
+    //         && this.data.screeningEvent.superEvent.offers.acceptedPaymentMethod.indexOf(factory.paymentMethodType.MovieTicket) < 0) {
+    //         return false;
+    //     }
+
+    //     // イベントの対応決済方法にムビチケが含まれていなければfalse
+    //     if (this.data.screeningEvent.offers !== undefined
+    //         && Array.isArray(this.data.screeningEvent.offers.acceptedPaymentMethod)
+    //         && this.data.screeningEvent.offers.acceptedPaymentMethod.indexOf(factory.paymentMethodType.MovieTicket) < 0) {
+    //         return false;
+    //     }
+
+    //     return true;
+    // }
 
     /**
      * ムビチケでの予約判定

@@ -91,19 +91,19 @@ MIT
 ISC
 ISC
 
-@toei-jp/chevre-factory@1.0.0-alpha.19
+@toei-jp/chevre-factory@1.0.0-alpha.20
 ISC
 ISC
 
-@toei-jp/cinerino-api-abstract-client@1.0.1-alpha.0
+@toei-jp/cinerino-api-abstract-client@1.0.1-alpha.1
 ISC
 ISC
 
-@toei-jp/cinerino-api-javascript-client@1.0.0-alpha.31
+@toei-jp/cinerino-api-javascript-client@1.0.0-alpha.32
 ISC
 ISC
 
-@toei-jp/cinerino-factory@1.0.1-alpha.14
+@toei-jp/cinerino-factory@1.0.1-alpha.15
 ISC
 ISC
 

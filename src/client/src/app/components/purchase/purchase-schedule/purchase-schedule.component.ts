@@ -88,13 +88,19 @@ export class PurchaseScheduleComponent implements OnInit {
                 theater: this.theaters[0].location.branchCode,
                 date: this.dateList[0].value
             };
+
+            // TODO 先行販売とみなす条件は？
+            // 販売開始日時が3日前以前のイベント
+            const defaultOfferValidFrom = moment(moment().add(-3, 'days').format('YYYY-MM-DDT00:00:00+09:00')).toDate();
             this.preSaleSchedules = (await this.cinerino.event.searchScreeningEvents({
                 superEvent: {
                     locationBranchCodes: [this.theaters[0].location.branchCode]
                 },
-                preSaleFlg: 1,
                 startFrom: moment().toDate(),
-                saleStartThrough: moment().toDate()
+                offers: {
+                    // validFrom: new Date(),
+                    validThrough: defaultOfferValidFrom
+                }
             })).data;
             this.preSaleDateList = this.getPreSaleDateList();
             if (this.preSaleDateList.length > 0) {

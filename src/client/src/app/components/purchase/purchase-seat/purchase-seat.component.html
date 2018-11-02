@@ -2,7 +2,7 @@
     <h1 class="page-ttl">座席選択</h1>
     <p class="read">ご希望の座席を選択して「次へ」ボタンを押してください。
         <br>選択できる座席数は最大
-        <span class="seat-limit-text">{{ purchase.data.screeningEvent?.maxSeatNumber }}</span>席までとなります。
+        <span class="seat-limit-text">{{ purchase.data.screeningEvent?.offers?.eligibleQuantity.maxValue }}</span>席までとなります。
         <br>
         <span class="sp-text">画面をタッチすると画面がズームしますので座席を選択してください。
             <br>
@@ -76,7 +76,7 @@
         <strong>予約座席数が上限です</strong>
     </div>
     <p class="text-center">予約座席数は最大
-        <span class="seat-limit-text">{{ purchase.data.screeningEvent?.maxSeatNumber }}</span>席までとなります。</p>
+        <span class="seat-limit-text">{{ purchase.data.screeningEvent?.offers?.eligibleQuantity.maxValue }}</span>席までとなります。</p>
 </app-modal>
 
 <app-loading [show]="isLoading"></app-loading>

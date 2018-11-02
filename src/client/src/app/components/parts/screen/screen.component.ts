@@ -113,9 +113,16 @@ export class ScreenComponent implements OnInit, AfterViewInit {
             seat.status = 'default';
         }
         const screeningEvent = this.purchase.data.screeningEvent;
+
+        // 最大販売可能数条件を取得(とりあえず、念のためデフォルトを4にセット)
+        let maxValue = 4;
         if (screeningEvent !== undefined
-            && screeningEvent.maxSeatNumber < this.getSelectSeats().length
-        ) {
+            && screeningEvent.offers !== undefined
+            && screeningEvent.offers.eligibleQuantity.maxValue !== undefined) {
+            maxValue = screeningEvent.offers.eligibleQuantity.maxValue;
+        }
+
+        if (maxValue < this.getSelectSeats().length) {
             seat.status = 'default';
             this.alert.emit();
 

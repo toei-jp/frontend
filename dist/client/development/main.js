@@ -1,9 +1,9 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([["main"],{
 
 /***/ "../../node_modules/moment/locale sync recursive ^\\.\\/.*$":
-/*!**********************************************************************************************!*\
-  !*** C:/Users/user/Desktop/workspace/TOEI/frontend/node_modules/moment/locale sync ^\.\/.*$ ***!
-  \**********************************************************************************************/
+/*!***********************************************************************************!*\
+  !*** C:/projects/toei-cinerino-frontend/node_modules/moment/locale sync ^\.\/.*$ ***!
+  \***********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2222,8 +2222,12 @@ var PurchaseFilmOrderPerformanceComponent = /** @class */ (function () {
     }
     PurchaseFilmOrderPerformanceComponent.prototype.ngOnInit = function () {
         var now = moment__WEBPACK_IMPORTED_MODULE_2__();
-        var start = moment__WEBPACK_IMPORTED_MODULE_2__(this.data.startDate);
-        this.isEndSale = now.add(this.data.endSaleTimeAfterScreening, 'minute') > start;
+        if (this.data.offers === undefined) {
+            this.isEndSale = false;
+        }
+        else {
+            this.isEndSale = moment__WEBPACK_IMPORTED_MODULE_2__(this.data.offers.validThrough) < now;
+        }
         this.availability = this.getAvailability(this.data.remainingAttendeeCapacity);
     };
     /**
@@ -2926,8 +2930,14 @@ var ScreenComponent = /** @class */ (function () {
             seat.status = 'default';
         }
         var screeningEvent = this.purchase.data.screeningEvent;
+        // 最大販売可能数条件を取得(とりあえず、念のためデフォルトを4にセット)
+        var maxValue = 4;
         if (screeningEvent !== undefined
-            && screeningEvent.maxSeatNumber < this.getSelectSeats().length) {
+            && screeningEvent.offers !== undefined
+            && screeningEvent.offers.eligibleQuantity.maxValue !== undefined) {
+            maxValue = screeningEvent.offers.eligibleQuantity.maxValue;
+        }
+        if (maxValue < this.getSelectSeats().length) {
             seat.status = 'default';
             this.alert.emit();
             return;
@@ -5765,7 +5775,7 @@ var PurchaseScheduleComponent = /** @class */ (function () {
      */
     PurchaseScheduleComponent.prototype.ngOnInit = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var theaterQs_1, _a, theater, _b, err_1;
+            var theaterQs_1, _a, theater, defaultOfferValidFrom, _b, err_1;
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
@@ -5796,14 +5806,17 @@ var PurchaseScheduleComponent = /** @class */ (function () {
                             theater: this.theaters[0].location.branchCode,
                             date: this.dateList[0].value
                         };
+                        defaultOfferValidFrom = moment__WEBPACK_IMPORTED_MODULE_2__(moment__WEBPACK_IMPORTED_MODULE_2__().add(-3, 'days').format('YYYY-MM-DDT00:00:00+09:00')).toDate();
                         _b = this;
                         return [4 /*yield*/, this.cinerino.event.searchScreeningEvents({
                                 superEvent: {
                                     locationBranchCodes: [this.theaters[0].location.branchCode]
                                 },
-                                preSaleFlg: 1,
                                 startFrom: moment__WEBPACK_IMPORTED_MODULE_2__().toDate(),
-                                saleStartThrough: moment__WEBPACK_IMPORTED_MODULE_2__().toDate()
+                                offers: {
+                                    // validFrom: new Date(),
+                                    validThrough: defaultOfferValidFrom
+                                }
                             })];
                     case 4:
                         _b.preSaleSchedules = (_c.sent()).data;
@@ -6097,7 +6110,7 @@ function View_PurchaseSeatComponent_0(_l) { return _angular_core__WEBPACK_IMPORT
     } return ad; }, _parts_modal_modal_component_ngfactory__WEBPACK_IMPORTED_MODULE_18__["View_ModalComponent_0"], _parts_modal_modal_component_ngfactory__WEBPACK_IMPORTED_MODULE_18__["RenderType_ModalComponent"])), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](69, 114688, null, 0, _parts_modal_modal_component__WEBPACK_IMPORTED_MODULE_19__["ModalComponent"], [], { open: [0, "open"], layout: [1, "layout"] }, { close: "close" }), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](70, 0, null, 0, 2, "div", [["class", "modal-title large-text text-center mb-middle"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](71, 0, null, null, 1, "strong", [], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](-1, null, ["\u5EA7\u5E2D\u304C\u672A\u9078\u629E\u3067\u3059"])), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](73, 0, null, 0, 1, "p", [["class", "text-center"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](-1, null, ["\u3054\u5E0C\u671B\u306E\u7A7A\u5E2D\u3092\u9078\u629E\u3057\u3066\u300C\u6B21\u3078\u300D\u30DC\u30BF\u30F3\u3092\u62BC\u3057\u3066\u304F\u3060\u3055\u3044\u3002"])), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](75, 0, null, null, 9, "app-modal", [], null, [[null, "close"]], function (_v, en, $event) { var ad = true; var _co = _v.component; if (("close" === en)) {
         var pd_0 = ((_co.upperLimitModal = false) !== false);
         ad = (pd_0 && ad);
-    } return ad; }, _parts_modal_modal_component_ngfactory__WEBPACK_IMPORTED_MODULE_18__["View_ModalComponent_0"], _parts_modal_modal_component_ngfactory__WEBPACK_IMPORTED_MODULE_18__["RenderType_ModalComponent"])), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](76, 114688, null, 0, _parts_modal_modal_component__WEBPACK_IMPORTED_MODULE_19__["ModalComponent"], [], { open: [0, "open"], layout: [1, "layout"] }, { close: "close" }), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](77, 0, null, 0, 2, "div", [["class", "modal-title large-text text-center mb-middle"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](78, 0, null, null, 1, "strong", [], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](-1, null, ["\u4E88\u7D04\u5EA7\u5E2D\u6570\u304C\u4E0A\u9650\u3067\u3059"])), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](80, 0, null, 0, 4, "p", [["class", "text-center"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](-1, null, ["\u4E88\u7D04\u5EA7\u5E2D\u6570\u306F\u6700\u5927 "])), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](82, 0, null, null, 1, "span", [["class", "seat-limit-text"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](83, null, ["", ""])), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](-1, null, ["\u5E2D\u307E\u3067\u3068\u306A\u308A\u307E\u3059\u3002"])), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](85, 0, null, null, 1, "app-loading", [], null, null, null, _parts_loading_loading_component_ngfactory__WEBPACK_IMPORTED_MODULE_20__["View_LoadingComponent_0"], _parts_loading_loading_component_ngfactory__WEBPACK_IMPORTED_MODULE_20__["RenderType_LoadingComponent"])), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](86, 114688, null, 0, _parts_loading_loading_component__WEBPACK_IMPORTED_MODULE_21__["LoadingComponent"], [], { show: [0, "show"] }, null)], function (_ck, _v) { var _co = _v.component; _ck(_v, 37, 0); var currVal_7 = _co.screenData; var currVal_8 = false; _ck(_v, 40, 0, currVal_7, currVal_8); var currVal_9 = ((_co.purchase.data.screeningEvent == null) ? null : _co.purchase.data.screeningEvent.superEvent.location.branchCode.slice((0 - 2))); _ck(_v, 46, 0, currVal_9); var currVal_17 = _co.seatForm; _ck(_v, 49, 0, currVal_17); var currVal_25 = "terms"; _ck(_v, 56, 0, currVal_25); var currVal_26 = (_co.seatForm.controls["terms"].invalid && (_co.seatForm.controls["terms"].dirty || _co.seatForm.controls["terms"].touched)); _ck(_v, 63, 0, currVal_26); var currVal_27 = "\u6B21\u3078"; var currVal_28 = "\u623B\u308B"; var currVal_29 = "/purchase/schedule"; _ck(_v, 65, 0, currVal_27, currVal_28, currVal_29); _ck(_v, 67, 0); var currVal_30 = _co.notSelectSeatModal; var currVal_31 = true; _ck(_v, 69, 0, currVal_30, currVal_31); var currVal_32 = _co.upperLimitModal; var currVal_33 = true; _ck(_v, 76, 0, currVal_32, currVal_33); var currVal_35 = _co.isLoading; _ck(_v, 86, 0, currVal_35); }, function (_ck, _v) { var _co = _v.component; var currVal_0 = ((_co.purchase.data.screeningEvent == null) ? null : _co.purchase.data.screeningEvent.maxSeatNumber); _ck(_v, 8, 0, currVal_0); var currVal_1 = _co.purchase.getTitle(); _ck(_v, 23, 0, currVal_1); var currVal_2 = _co.purchase.getAppreciationDate(); var currVal_3 = _co.purchase.getStartDate(); var currVal_4 = _co.purchase.getEndDate(); _ck(_v, 29, 0, currVal_2, currVal_3, currVal_4); var currVal_5 = _co.purchase.getTheaterName(); var currVal_6 = _co.purchase.getScreenName(); _ck(_v, 34, 0, currVal_5, currVal_6); var currVal_10 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 51).ngClassUntouched; var currVal_11 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 51).ngClassTouched; var currVal_12 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 51).ngClassPristine; var currVal_13 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 51).ngClassDirty; var currVal_14 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 51).ngClassValid; var currVal_15 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 51).ngClassInvalid; var currVal_16 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 51).ngClassPending; _ck(_v, 47, 0, currVal_10, currVal_11, currVal_12, currVal_13, currVal_14, currVal_15, currVal_16); var currVal_18 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 58).ngClassUntouched; var currVal_19 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 58).ngClassTouched; var currVal_20 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 58).ngClassPristine; var currVal_21 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 58).ngClassDirty; var currVal_22 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 58).ngClassValid; var currVal_23 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 58).ngClassInvalid; var currVal_24 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 58).ngClassPending; _ck(_v, 53, 0, currVal_18, currVal_19, currVal_20, currVal_21, currVal_22, currVal_23, currVal_24); var currVal_34 = ((_co.purchase.data.screeningEvent == null) ? null : _co.purchase.data.screeningEvent.maxSeatNumber); _ck(_v, 83, 0, currVal_34); }); }
+    } return ad; }, _parts_modal_modal_component_ngfactory__WEBPACK_IMPORTED_MODULE_18__["View_ModalComponent_0"], _parts_modal_modal_component_ngfactory__WEBPACK_IMPORTED_MODULE_18__["RenderType_ModalComponent"])), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](76, 114688, null, 0, _parts_modal_modal_component__WEBPACK_IMPORTED_MODULE_19__["ModalComponent"], [], { open: [0, "open"], layout: [1, "layout"] }, { close: "close" }), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](77, 0, null, 0, 2, "div", [["class", "modal-title large-text text-center mb-middle"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](78, 0, null, null, 1, "strong", [], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](-1, null, ["\u4E88\u7D04\u5EA7\u5E2D\u6570\u304C\u4E0A\u9650\u3067\u3059"])), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](80, 0, null, 0, 4, "p", [["class", "text-center"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](-1, null, ["\u4E88\u7D04\u5EA7\u5E2D\u6570\u306F\u6700\u5927 "])), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](82, 0, null, null, 1, "span", [["class", "seat-limit-text"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](83, null, ["", ""])), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](-1, null, ["\u5E2D\u307E\u3067\u3068\u306A\u308A\u307E\u3059\u3002"])), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](85, 0, null, null, 1, "app-loading", [], null, null, null, _parts_loading_loading_component_ngfactory__WEBPACK_IMPORTED_MODULE_20__["View_LoadingComponent_0"], _parts_loading_loading_component_ngfactory__WEBPACK_IMPORTED_MODULE_20__["RenderType_LoadingComponent"])), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](86, 114688, null, 0, _parts_loading_loading_component__WEBPACK_IMPORTED_MODULE_21__["LoadingComponent"], [], { show: [0, "show"] }, null)], function (_ck, _v) { var _co = _v.component; _ck(_v, 37, 0); var currVal_7 = _co.screenData; var currVal_8 = false; _ck(_v, 40, 0, currVal_7, currVal_8); var currVal_9 = ((_co.purchase.data.screeningEvent == null) ? null : _co.purchase.data.screeningEvent.superEvent.location.branchCode.slice((0 - 2))); _ck(_v, 46, 0, currVal_9); var currVal_17 = _co.seatForm; _ck(_v, 49, 0, currVal_17); var currVal_25 = "terms"; _ck(_v, 56, 0, currVal_25); var currVal_26 = (_co.seatForm.controls["terms"].invalid && (_co.seatForm.controls["terms"].dirty || _co.seatForm.controls["terms"].touched)); _ck(_v, 63, 0, currVal_26); var currVal_27 = "\u6B21\u3078"; var currVal_28 = "\u623B\u308B"; var currVal_29 = "/purchase/schedule"; _ck(_v, 65, 0, currVal_27, currVal_28, currVal_29); _ck(_v, 67, 0); var currVal_30 = _co.notSelectSeatModal; var currVal_31 = true; _ck(_v, 69, 0, currVal_30, currVal_31); var currVal_32 = _co.upperLimitModal; var currVal_33 = true; _ck(_v, 76, 0, currVal_32, currVal_33); var currVal_35 = _co.isLoading; _ck(_v, 86, 0, currVal_35); }, function (_ck, _v) { var _co = _v.component; var currVal_0 = ((_co.purchase.data.screeningEvent == null) ? null : ((_co.purchase.data.screeningEvent.offers == null) ? null : _co.purchase.data.screeningEvent.offers.eligibleQuantity.maxValue)); _ck(_v, 8, 0, currVal_0); var currVal_1 = _co.purchase.getTitle(); _ck(_v, 23, 0, currVal_1); var currVal_2 = _co.purchase.getAppreciationDate(); var currVal_3 = _co.purchase.getStartDate(); var currVal_4 = _co.purchase.getEndDate(); _ck(_v, 29, 0, currVal_2, currVal_3, currVal_4); var currVal_5 = _co.purchase.getTheaterName(); var currVal_6 = _co.purchase.getScreenName(); _ck(_v, 34, 0, currVal_5, currVal_6); var currVal_10 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 51).ngClassUntouched; var currVal_11 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 51).ngClassTouched; var currVal_12 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 51).ngClassPristine; var currVal_13 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 51).ngClassDirty; var currVal_14 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 51).ngClassValid; var currVal_15 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 51).ngClassInvalid; var currVal_16 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 51).ngClassPending; _ck(_v, 47, 0, currVal_10, currVal_11, currVal_12, currVal_13, currVal_14, currVal_15, currVal_16); var currVal_18 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 58).ngClassUntouched; var currVal_19 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 58).ngClassTouched; var currVal_20 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 58).ngClassPristine; var currVal_21 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 58).ngClassDirty; var currVal_22 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 58).ngClassValid; var currVal_23 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 58).ngClassInvalid; var currVal_24 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 58).ngClassPending; _ck(_v, 53, 0, currVal_18, currVal_19, currVal_20, currVal_21, currVal_22, currVal_23, currVal_24); var currVal_34 = ((_co.purchase.data.screeningEvent == null) ? null : ((_co.purchase.data.screeningEvent.offers == null) ? null : _co.purchase.data.screeningEvent.offers.eligibleQuantity.maxValue)); _ck(_v, 83, 0, currVal_34); }); }
 function View_PurchaseSeatComponent_Host_0(_l) { return _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵvid"](0, [(_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](0, 0, null, null, 1, "app-purchase-seat", [], null, null, null, View_PurchaseSeatComponent_0, RenderType_PurchaseSeatComponent)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](1, 4308992, null, 0, _purchase_seat_component__WEBPACK_IMPORTED_MODULE_22__["PurchaseSeatComponent"], [_services_purchase_purchase_service__WEBPACK_IMPORTED_MODULE_7__["PurchaseService"], _angular_router__WEBPACK_IMPORTED_MODULE_23__["Router"], _angular_forms__WEBPACK_IMPORTED_MODULE_12__["FormBuilder"], _services_cinerino_cinerino_service__WEBPACK_IMPORTED_MODULE_8__["CinerinoService"], _services_error_error_service__WEBPACK_IMPORTED_MODULE_9__["ErrorService"]], null, null)], function (_ck, _v) { _ck(_v, 1, 0); }, null); }
 var PurchaseSeatComponentNgFactory = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵccf"]("app-purchase-seat", _purchase_seat_component__WEBPACK_IMPORTED_MODULE_22__["PurchaseSeatComponent"], View_PurchaseSeatComponent_Host_0, {}, {}, []);
 
@@ -6876,7 +6889,7 @@ var PurchaseTransactionComponent = /** @class */ (function () {
      */
     PurchaseTransactionComponent.prototype.ngOnInit = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var screeningEvent, END_TIME, err_1;
+            var screeningEvent, err_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -6910,10 +6923,11 @@ var PurchaseTransactionComponent = /** @class */ (function () {
                         if (!this.purchase.isSales(screeningEvent)) {
                             throw new Error('Unable to start sales');
                         }
-                        END_TIME = screeningEvent.endSaleTimeAfterScreening || 0;
                         // 終了可能日判定
-                        if (moment__WEBPACK_IMPORTED_MODULE_2__().unix() > moment__WEBPACK_IMPORTED_MODULE_2__(screeningEvent.startDate).add(END_TIME, 'minutes').unix()) {
-                            throw new Error('unable to end sales');
+                        if (screeningEvent.offers !== undefined) {
+                            if (moment__WEBPACK_IMPORTED_MODULE_2__().unix() > moment__WEBPACK_IMPORTED_MODULE_2__(screeningEvent.offers.validThrough).unix()) {
+                                throw new Error('Already finished selling');
+                            }
                         }
                         if (this.purchase.data.transaction !== undefined && this.purchase.isExpired()) {
                             // 取引期限切れなら購入情報削除
@@ -8155,32 +8169,35 @@ var PurchaseService = /** @class */ (function () {
     };
     /**
      * 販売可能判定
-     * @method isSales
      * @param {factory.chevre.event.screeningEvent.IEvent} screeningEvent
      * @returns {boolean}
      */
     PurchaseService.prototype.isSales = function (screeningEvent) {
-        // const PRE_SALE = '1'; // 先行販売
-        // return (moment(screeningEvent.info.rsvStartDate).unix() <= moment().unix()
-        //     || screeningEvent.info.flgEarlyBooking === PRE_SALE);
-        if (screeningEvent.saleStartDate === undefined) {
-            // 一旦true
+        // 万が一販売条件が見つからなければ、とりあえず販売可能
+        if (screeningEvent.offers === undefined) {
             return true;
         }
-        return moment__WEBPACK_IMPORTED_MODULE_1__(screeningEvent.saleStartDate).unix() <= moment__WEBPACK_IMPORTED_MODULE_1__().unix();
+        // TODO ひとまず無条件にしているので修正
+        return true;
+        // const now = moment().unix();
+        // return moment(screeningEvent.offers.validFrom).unix() <= now
+        //     && moment(screeningEvent.offers.validThrough).unix() >= now;
     };
     /**
      * オンライン表示判定
-     * @method isOnlineDisplay
      * @param {factory.chevre.event.screeningEvent.IEvent} screeningEvent
      * @returns {boolean}
      */
     PurchaseService.prototype.isOnlineDisplay = function (screeningEvent) {
-        if (screeningEvent.onlineDisplayStartDate === undefined) {
-            // 一旦true
+        // 万が一販売条件が見つからなければ、とりあえず表示可能
+        if (screeningEvent.offers === undefined) {
             return true;
         }
-        return moment__WEBPACK_IMPORTED_MODULE_1__(screeningEvent.onlineDisplayStartDate).unix() <= moment__WEBPACK_IMPORTED_MODULE_1__().unix();
+        // TODO ひとまず無条件にしているので修正
+        return true;
+        // const now = moment().unix();
+        // return moment(screeningEvent.offers.availabilityStarts).unix() <= now
+        //     && moment(screeningEvent.offers.availabilityEnds).unix() >= now;
     };
     /**
      * 劇場名取得
@@ -8289,16 +8306,25 @@ var PurchaseService = /** @class */ (function () {
     };
     /**
      * ムビチケ対応作品判定
-     * @method isUsedMvtk
-     * @returns {boolean}
      */
-    PurchaseService.prototype.isUsedMvtk = function () {
-        if (this.data.screeningEvent === undefined) {
-            return false;
-        }
-        return this.data.screeningEvent.superEvent.mvtkFlg === 1 &&
-            this.data.screeningEvent.mvtkExcludeFlg !== 1;
-    };
+    // public isUsedMvtk(): boolean {
+    //     if (this.data.screeningEvent === undefined) {
+    //         return false;
+    //     }
+    //     // 劇場作品の対応決済方法にムビチケが含まれていなければfalse
+    //     if (this.data.screeningEvent.superEvent.offers !== undefined
+    //         && Array.isArray(this.data.screeningEvent.superEvent.offers.acceptedPaymentMethod)
+    //         && this.data.screeningEvent.superEvent.offers.acceptedPaymentMethod.indexOf(factory.paymentMethodType.MovieTicket) < 0) {
+    //         return false;
+    //     }
+    //     // イベントの対応決済方法にムビチケが含まれていなければfalse
+    //     if (this.data.screeningEvent.offers !== undefined
+    //         && Array.isArray(this.data.screeningEvent.offers.acceptedPaymentMethod)
+    //         && this.data.screeningEvent.offers.acceptedPaymentMethod.indexOf(factory.paymentMethodType.MovieTicket) < 0) {
+    //         return false;
+    //     }
+    //     return true;
+    // }
     /**
      * ムビチケでの予約判定
      * @method isReserveMvtk
@@ -8675,7 +8701,10 @@ var PurchaseService = /** @class */ (function () {
                         _a.authorizeMovieTicketPayment =
                             _b.sent();
                         _b.label = 5;
-                    case 5: return [4 /*yield*/, this.cinerino.transaction.placeOrder.confirm(transaction)];
+                    case 5: return [4 /*yield*/, this.cinerino.transaction.placeOrder.confirm({
+                            id: transaction.id,
+                            options: { sendEmailMessage: true }
+                        })];
                     case 6:
                         // 取引確定
                         order = (_b.sent()).order;
@@ -9354,7 +9383,7 @@ _angular_platform_browser__WEBPACK_IMPORTED_MODULE_4__["platformBrowser"]().boot
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Users\user\Desktop\workspace\TOEI\frontend\src\client\src\main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! C:\projects\toei-cinerino-frontend\src\client\src\main.ts */"./src/main.ts");
 
 
 /***/ }),

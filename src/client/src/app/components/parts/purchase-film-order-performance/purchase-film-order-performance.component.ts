@@ -28,8 +28,13 @@ export class PurchaseFilmOrderPerformanceComponent implements OnInit {
 
     public ngOnInit() {
         const now = moment();
-        const start = moment(this.data.startDate);
-        this.isEndSale = now.add(this.data.endSaleTimeAfterScreening, 'minute') > start;
+
+        if (this.data.offers === undefined) {
+            this.isEndSale = false;
+        } else {
+            this.isEndSale = moment(this.data.offers.validThrough) < now;
+        }
+
         this.availability = this.getAvailability(this.data.remainingAttendeeCapacity);
     }
 
@@ -59,9 +64,9 @@ export class PurchaseFilmOrderPerformanceComponent implements OnInit {
         ];
 
         return this.isEndSale
-                ? availabilityList[3] : (remaining === 0 || remaining === undefined)
+            ? availabilityList[3] : (remaining === 0 || remaining === undefined)
                 ? availabilityList[0] : (remaining <= 10)
-                ? availabilityList[1] : availabilityList[2];
+                    ? availabilityList[1] : availabilityList[2];
     }
 
     /**

@@ -6,20 +6,10 @@
     <h1 class="page-ttl"><%- __('inquiry.confirm.pageTitle') %></h1>
     <p class="read"><%- __('inquiry.confirm.read') %></p>
 
-    <div class="ghost-button black-button mb-large center-button ticket-scroll-button">
-        <a class="icon-ticket-black" href="#"><%- __('inquiry.confirm.ticketButton') %></a>
-    </div>
-
-    <div class="box radius bg-ultra-light-gray mb-large">
-        <div class="section-ttl text-center"><%- __('inquiry.confirm.sectionTitle') %></div>
-        <p class="small-x-text mb-small read"><%- __('inquiry.confirm.sectionText') %></p>
-        <div class="small-x-text bookmark"><img src="/assets/images/inquiry/bookmark.svg" alt=""></div>
-    </div>
-
-    <div class="box radius bg-light-gray mb-large">
+    <div class="box radius bg-light-gray mb-x-large">
         <dl>
-            <dt><%- __('common.purchaseNumber') %></dt>
-            <dd><strong class="red-text large-x-text"><%= inquiryModel.input.reserveNum %></strong></dd>
+            <dt><%- __('common.purchaseNumber') %>
+            <strong class="red-text large-x-text left-space"><%= inquiryModel.input.reserveNum %></strong></dt>
             <dd class="small-x-text"><%- __('inquiry.confirm.note') %></dd>
         </dl>
     </div>
@@ -31,17 +21,19 @@
         <% const offer = inquiryModel.order.acceptedOffers[i] %>
         <li class="ticket">
             <div class="inner bg-light-gray">
-                <div class="box radius border-bottom-dot bg-white">
-                    <div class="mb-xx-small small-text"><strong><%- __('common.seat') %></strong> [<%- __('common.ticket') %>]</div>
-                    <div class="ticket-number bg-light-gray small-text"><%- `${i + 1}/${inquiryModel.order.acceptedOffers.length}` %><%- __('common.ticketNumber') %></div>
-                    <div class="mb-xx-small">
+                <div class="box radius border-bottom-dot bg-white border-bottom">
+                    <div class="mb-x-small"><strong><%= offer.itemOffered.reservationFor.location.name.ja %></strong></div>
+                    <div class="mb-xx-small small-text">
+                        <strong>【 <%- __('common.seat') %> 】</strong>
                         <strong class="large-text"><%= offer.itemOffered.reservedTicket.ticketedSeat.seatNumber %></strong>
                     </div>
-                    <div>
-                        [<%= offer.itemOffered.reservedTicket.ticketType.name.ja %>]
+                    <div class="ticket-number small-text"><%- `${i + 1}/${inquiryModel.order.acceptedOffers.length}` %><%- __('common.ticketNumber') %></div>
+
+                    <div class="small-text">
+                            <strong>【 <%- __('common.ticket') %> 】</strong>
                     </div>
                 </div>
-                
+
                 <% if (moment(offer.itemOffered.reservationFor.endDate).add(1, 'months').unix() < moment().unix()) { %>
                 <div class="box radius border-bottom-dot not-qr-code bg-white">
                     <p class="text-center"><%- __('inquiry.confirm.qrAfter') %></p>
@@ -54,21 +46,19 @@
                 <div class="box radius border-bottom-dot qr-code bg-white text-center" data-qrcode="<%- offer.itemOffered.reservedTicket.ticketToken %>"></div>
                 <% } %>
                 <div class="box">
-                    <div class="mb-xx-small small-text"><strong><%- __('common.appreciationDate') %></strong></div>
-                    <div class="mb-x-small">
+                    <div class="small-text"><strong><%- __('common.appreciationDate') %></strong></div>
+                    <div class="mb-xx-small">
                         <%
                         moment.locale('ja');
-                        const date = moment(offer.itemOffered.reservationFor.startDate).format('YYYY年MM月DD日(ddd)');
+                        const date = moment(offer.itemOffered.reservationFor.startDate).format('YYYY MM/DD（ddd）');
                         const startTime = timeFormat(offer.itemOffered.reservationFor.startDate);
                         const endTime = timeFormat(offer.itemOffered.reservationFor.endDate);
                          %>
                         <%= date %> <%= startTime %> - <%= endTime %>
                     </div>
-                    <div class="mb-xx-small small-text"><strong><%- __('common.theater') %></strong></div>
-                    <div class="mb-x-small"><%= inquiryModel.movieTheater.location.name.ja %></div>
-                    <div class="mb-xx-small small-text"><strong><%- __('common.screen') %></strong></div>
-                    <div class="mb-x-small"><%= offer.itemOffered.reservationFor.location.name.ja %></div>
-                    <div class="mb-xx-small small-text"><strong><%- __('common.filmTitle') %></strong></div>
+                    <div class="small-text"><strong><%- __('common.theater') %></strong></div>
+                    <div class="mb-xx-small"><%= inquiryModel.movieTheater.location.name.ja %></div>
+                    <div class="small-text"><strong><%- __('common.filmTitle') %></strong></div>
                     <div><%= offer.itemOffered.reservationFor.workPerformed.name %></div>
                 </div>
             </div>
@@ -79,6 +69,7 @@
     <div class="button-area clearfix">
         <div class="prev-link"><a class="icon-prev-black" href="/inquiry/login?theater=<%= inquiryModel.movieTheater.location.branchCode %>"><%- __('inquiry.confirm.prev') %></a></div>
     </div>
+    <%- include('../layouts/siteSeal') %>
 </div>
 <div id="copy" style="display: none"></div>
 

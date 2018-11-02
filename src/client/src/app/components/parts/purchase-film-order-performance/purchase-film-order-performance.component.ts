@@ -46,15 +46,15 @@ export class PurchaseFilmOrderPerformanceComponent implements OnInit {
     public getAvailability(remaining?: number): Iavailability {
         const availabilityList = [
             {
-                text: '満席',
+                text: '完売',
                 className: 'vacancy-full'
             },
             {
-                text: '残りわずか',
+                text: '購入',
                 className: 'vacancy-little'
             },
             {
-                text: '空席あり',
+                text: '購入',
                 className: 'vacancy-large'
             },
             {

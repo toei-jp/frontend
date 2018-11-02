@@ -37,6 +37,8 @@ li {
         }
     }
     .date {
+        border-bottom: 1px solid #eeeeef;
+        padding-bottom: 10px;
         @media screen and (max-width: $mobile){
             margin-bottom: 0 !important;
             width: calc(100% - 65px - 60px);
@@ -48,6 +50,9 @@ li {
         }
     }
     .status {
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
         @media screen and (max-width: $mobile){
             width: 60px;
         }
@@ -55,30 +60,36 @@ li {
             width: 30px;
             height: 30px;
             background-size: 30px;
-            margin: 0 auto;
         }
     }
 }
 
-.vacancy-full .status .image {
-    background-image: url(/assets/images/common/status_03.svg);
+.vacancy-full .status .text {
+    color: #e61919;
 }
 
 .vacancy-little .status .image {
     background-image: url(/assets/images/common/status_02.svg);
 }
+.vacancy-little .status .text {
+    color: #ee7700;
+}
 
 .vacancy-large .status .image {
     background-image: url(/assets/images/common/status_01.svg);
 }
+.vacancy-large .status .text {
+    color: #0081cc;
+}
+
 
 .text {
-    display: none;
     height: 30px;
     line-height: 30px;
 }
 
-.end-of-sale {
+.end-of-sale,
+.vacancy-full {
     .image {
         display: none;
     }

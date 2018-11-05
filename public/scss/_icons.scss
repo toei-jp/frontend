@@ -74,12 +74,13 @@
         content: '';
         position: absolute;
         top: 50%;
-        left: 0;
+        left: -4px;
         background-image: url(/assets/images/icon/icon_prev_black.svg);
         background-size: 18px;
         width: 18px;
         height: 18px;
         margin-top: -9.5px;
+        background-repeat: no-repeat;
     }
 }
 

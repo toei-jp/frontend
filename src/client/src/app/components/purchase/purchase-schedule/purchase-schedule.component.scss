@@ -1,26 +1,43 @@
 $tablet: 1024px;
 $mobile: 767px;
-.film-order {
-    
+.selection-date {
+    color: #ee7700;
+}
+
+.date-cover {
+    background: #F0F0F2;
+    padding: 20px;
+}
+
+.large-x-text {
+    @media screen and (max-width: $mobile){
+    font-size: 20px;
+    }
 }
 
 .date-list {
-    margin: 0 -60px;
+    max-width: 840px;
+    margin: 0 auto;
     @media screen and (max-width: $mobile){
+        max-width: auto;
         margin: 0 -15px;
     }
-    height: 150px;
+    height: 105px;
     text-align: center;
-    background: #F0F0F2;
-    padding: 20px;
+    
+    .active {
+        background-color: #f9b714 !important;
+        border-bottom: 5px solid #f5a100 !important;
+        color: #FFF;
+    }
 
     .date-btn {
         width: 12%;
         height: 100%;
         display: inline-block;
         margin: 0 5px;
-        background-color: #FFE200;
-        border-bottom: 5px solid #FDD100;
+        background-color: #ffdd00;
+        border-bottom: 5px solid #fdca00;
         padding: 20px 0;
     }
 }

@@ -127,7 +127,7 @@ export class PurchaseScheduleComponent implements OnInit {
                 label: {
                     date: date.format('DD'),
                     month: date.format('MM'),
-                    day: date.format('（dd）')
+                    day: date.format('(dd)')
                 }
             });
         }

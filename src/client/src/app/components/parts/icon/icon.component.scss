@@ -18,9 +18,10 @@
 
 .next-white {
     background-image: url(/assets/images/icon/icon_next_white.svg);
-    background-size: 18px;
-    width: 18px;
+    background-size: 16px;
+    width: 16px;
     height: 18px;
+    background-repeat: no-repeat;
 }
 
 .print-white {
@@ -39,9 +40,17 @@
 
 .prev-black {
     background-image: url(/assets/images/icon/icon_prev_black.svg);
-    background-size: 18px;
-    width: 18px;
+    background-size: 16px;
+    width: 23px;
     height: 18px;
+    background-repeat: no-repeat;
+}
+.prev-next {
+    background-image: url(/assets/images/icon/icon_prev_next.svg);
+    background-size: 16px;
+    width: 22px;
+    height: 17px;
+    background-repeat: no-repeat;
 }
 
 .close-black {

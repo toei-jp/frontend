@@ -32,18 +32,22 @@ li {
     .screen-name {
         @media screen and (max-width: $mobile){
             margin-bottom: 0 !important;
-            width: 65px;
+            width: 75px;
             text-align: left;
+            font-size: 12px;
         }
     }
     .date {
         border-bottom: 1px solid #eeeeef;
         padding-bottom: 10px;
+        margin-bottom: 10px;
         @media screen and (max-width: $mobile){
+            border-bottom: none;
             margin-bottom: 0 !important;
-            width: calc(100% - 65px - 60px);
+            padding-bottom: 0 !important;
+            width: calc(100% - 75px - 70px);
             text-align: left;
-            padding-left: 15px;
+            padding-left: 10px;
         }
         strong {
             vertical-align: middle;
@@ -54,13 +58,16 @@ li {
         justify-content: space-evenly;
         align-items: center;
         @media screen and (max-width: $mobile){
-            width: 60px;
+            width: 70px;
         }
         .image {
             width: 30px;
             height: 30px;
             background-size: 30px;
         }
+    }
+    .large-text {
+        font-size: 22px !important;
     }
 }
 

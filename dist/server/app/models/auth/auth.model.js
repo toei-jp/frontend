@@ -9,7 +9,6 @@ const uuid = require("uuid");
 var ApiEndpoint;
 (function (ApiEndpoint) {
     ApiEndpoint["cinerino"] = "cinerino";
-    ApiEndpoint["chevre"] = "chevre";
 })(ApiEndpoint = exports.ApiEndpoint || (exports.ApiEndpoint = {}));
 /**
  * 認証モデル
@@ -26,19 +25,6 @@ class AuthModel {
             session = {};
         }
         this.state = (session.state !== undefined) ? session.state : uuid.v1();
-        // let resourceServerUrl: string;
-        // if (apiEndpoint === ApiEndpoint.chevre) {
-        //     resourceServerUrl = <string>process.env.CHEVRE_RESOURCE_SERVER_URL;
-        // } else {
-        //     resourceServerUrl = <string>process.env.CINERINO_RESOURCE_SERVER_URL;
-        // }
-        // this.scopes = (session.scopes !== undefined) ? session.scopes : [
-        //     `${resourceServerUrl}/transactions`,
-        //     `${resourceServerUrl}/events.read-only`,
-        //     `${resourceServerUrl}/organizations.read-only`,
-        //     `${resourceServerUrl}/orders.read-only`,
-        //     `${resourceServerUrl}/places.read-only`
-        // ];
         this.scopes = [];
         this.credentials = session.credentials;
         this.codeVerifier = session.codeVerifier;
@@ -51,14 +37,6 @@ class AuthModel {
      */
     create() {
         switch (this.apiEndpoint) {
-            case ApiEndpoint.chevre:
-                return new cinerino.auth.ClientCredentials({
-                    domain: process.env.CHEVRE_AUTHORIZE_SERVER_DOMAIN,
-                    clientId: process.env.CHEVRE_CLIENT_ID,
-                    clientSecret: process.env.CHEVRE_CLIENT_SECRET,
-                    state: this.state,
-                    scopes: this.scopes
-                });
             default:
                 return new cinerino.auth.ClientCredentials({
                     domain: process.env.CINERINO_AUTHORIZE_SERVER_DOMAIN,

@@ -14,12 +14,7 @@ const log = debug('toei-frontend:base');
  */
 function getOptions(req, apiEndpoint) {
     let endpoint;
-    if (apiEndpoint === auth_model_1.ApiEndpoint.chevre) {
-        endpoint = process.env.CHEVRE_API_ENDPOINT;
-    }
-    else {
-        endpoint = process.env.CINERINO_API_ENDPOINT;
-    }
+    endpoint = process.env.CINERINO_API_ENDPOINT;
     let authModel;
     if (req.session.auth !== undefined) {
         const authSession = req.session.auth.find((auth) => auth.api === apiEndpoint);

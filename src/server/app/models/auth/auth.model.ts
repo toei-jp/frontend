@@ -30,8 +30,7 @@ export interface IAuthSession {
  * @enum ApiEndpoint
  */
 export enum ApiEndpoint {
-    cinerino = 'cinerino',
-    chevre = 'chevre'
+    cinerino = 'cinerino'
 }
 
 /**
@@ -67,19 +66,6 @@ export class AuthModel {
             session = {};
         }
         this.state = (session.state !== undefined) ? session.state : uuid.v1();
-        // let resourceServerUrl: string;
-        // if (apiEndpoint === ApiEndpoint.chevre) {
-        //     resourceServerUrl = <string>process.env.CHEVRE_RESOURCE_SERVER_URL;
-        // } else {
-        //     resourceServerUrl = <string>process.env.CINERINO_RESOURCE_SERVER_URL;
-        // }
-        // this.scopes = (session.scopes !== undefined) ? session.scopes : [
-        //     `${resourceServerUrl}/transactions`,
-        //     `${resourceServerUrl}/events.read-only`,
-        //     `${resourceServerUrl}/organizations.read-only`,
-        //     `${resourceServerUrl}/orders.read-only`,
-        //     `${resourceServerUrl}/places.read-only`
-        // ];
         this.scopes = [];
         this.credentials = session.credentials;
         this.codeVerifier = session.codeVerifier;
@@ -93,14 +79,6 @@ export class AuthModel {
      */
     public create(): cinerino.auth.ClientCredentials {
         switch (this.apiEndpoint) {
-            case ApiEndpoint.chevre:
-                return new cinerino.auth.ClientCredentials({
-                    domain: (<string>process.env.CHEVRE_AUTHORIZE_SERVER_DOMAIN),
-                    clientId: (<string>process.env.CHEVRE_CLIENT_ID),
-                    clientSecret: (<string>process.env.CHEVRE_CLIENT_SECRET),
-                    state: this.state,
-                    scopes: this.scopes
-                });
             default:
                 return new cinerino.auth.ClientCredentials({
                     domain: (<string>process.env.CINERINO_AUTHORIZE_SERVER_DOMAIN),

@@ -21,10 +21,12 @@
               "src/client/src/favicon.ico"
             ],
             "styles": [
-              "src/client/src/styles.scss"
+              "src/client/src/styles.scss",
+              "node_modules/swiper/dist/css/swiper.css"
             ],
             "scripts": [
-              "src/client/src/assets/js/index.js"
+              "src/client/src/assets/js/index.js",
+              "node_modules/swiper/dist/js/swiper.js"
             ]
           },
           "configurations": {

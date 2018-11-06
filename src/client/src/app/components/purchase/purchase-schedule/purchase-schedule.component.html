@@ -23,20 +23,31 @@
             </dd>
         </dl> -->
 <div *ngIf="!isPreSaleSchedules" class="date-cover">
+
     <div class="date-list">
-        <div *ngFor="let date of dateList" class="date-btn active" (click)="changeDate(date.value)"><strong>{{ date.label.month }}/<span class="large-text">{{
-            date.label.date }}</span>{{ date.label.day }}</strong>
-        <br>
-        <br><span class="small-x-text">レディースデイ</span>
+        <div class="swiper-container mb-3" #swiper [swiper]="swiperConfig" (resize)="resize()">
+            <div class="swiper-wrapper">
+                <div *ngFor="let date of dateList" class="swiper-slide">
+                    <div class="date-btn " [class.active]="date.value === conditions.date" (click)="changeDate(date.value)">
+                        <strong>{{ date.label.month }}/<span class="large-text">{{ date.label.date }}</span>{{
+                            date.label.day
+                            }}</strong>
+                        <br>
+                        <br><span class="small-x-text">レディースデイ</span>
+                    </div>
+                </div>
+            </div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
         </div>
     </div>
 </div>
 
 <div class="contents wrapper">
-        <div class="selection-date large-x-text mb-x-small">
-                <strong>2018/9/10（月）</strong>
-        </div>
-        
+    <div class="selection-date large-x-text mb-x-small">
+        <strong>{{ moment(conditions.date).format('YYYY/MM/DD (ddd)') }}</strong>
+    </div>
+
 
     <div *ngIf="isPreSaleSchedules" class="date-list mb-middle">
         <div *ngFor="let date of preSaleDateList" class="date-btn" (click)="changePreSaleDate(date.value)">{{

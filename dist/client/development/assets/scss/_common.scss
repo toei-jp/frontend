@@ -723,6 +723,22 @@ p {
     transform: translate(-50%,-50%);
 }
 
+.d-flex {
+    display: flex;
+}
+
+.justify-content-end {
+    justify-content: flex-end;
+}
+
+.justify-content-center {
+    justify-content: center;
+}
+
+.align-items-center {
+    align-items: center;
+}
+
 @keyframes zoom {
     0% {
         transform: scale(.5);

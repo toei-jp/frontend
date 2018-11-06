@@ -20,7 +20,6 @@ $mobile: 767px;
     margin: 0 auto;
     @media screen and (max-width: $mobile){
         max-width: auto;
-        margin: 0 -15px;
     }
     height: 105px;
     text-align: center;
@@ -32,12 +31,17 @@ $mobile: 767px;
     }
 
     .date-btn {
-        width: 12%;
         height: 100%;
-        display: inline-block;
-        margin: 0 5px;
         background-color: #ffdd00;
         border-bottom: 5px solid #fdca00;
         padding: 20px 0;
     }
+}
+
+.swiper-button-prev {
+
+}
+
+.swiper-button-next {
+    
 }

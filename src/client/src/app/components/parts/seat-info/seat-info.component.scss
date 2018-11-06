@@ -25,7 +25,7 @@ $mobile: 767px;
             height: 20px;
             content: '';
             display: block;
-            background-image: url(/assets/images/theater/seat/normal.svg);
+            background-image: url(/images/theater/parts/seat.svg);
             background-size: 16px 20px;
             position: absolute;
             top: 50%;
@@ -35,38 +35,12 @@ $mobile: 767px;
     }
     .active {
         &:before {
-            background-image: url(/assets/images/theater/seat/normal_active.svg);
+            background-image: url(/images/theater/parts/seat_active.svg);
         }
     }
     .disabled {
         &:before {
-            background-image: url(/assets/images/theater/seat/normal_disabled.svg);
+            background-image: url(/images/theater/parts/seat_disabled.svg);
         }
     } 
 } 
-.screen-4dx {
-    .seat {
-        &:before {
-            width: 20px;
-            height: 20px;
-            content: '';
-            display: block;
-            background-image: url(/assets/images/theater/seat/4dx.svg);
-            background-size: 20px 20px;
-            position: absolute;
-            top: 50%;
-            left: 0;
-            margin-top: -10px;
-        } 
-    }
-    .active {
-        &:before {
-            background-image: url(/assets/images/theater/seat/4dx_active.svg);
-        }
-    }
-    .disabled {
-        &:before {
-            background-image: url(/assets/images/theater/seat/4dx_disabled.svg);
-        }
-    } 
-}

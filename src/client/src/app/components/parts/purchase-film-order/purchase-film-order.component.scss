@@ -8,32 +8,17 @@ li {
     dl {
         dt {
             padding: 20px 25px;
-            display: flex;
-            align-items: baseline;
             border-bottom: 1px solid #FFF;
             @media screen and (max-width: $mobile){
-                display: block;
                 padding: 10px;
             }
-            .screening-time {
-                margin-left: auto;
+            div {
+                margin-left: 10px;
+            }
+            .bage {
                 color: #FFF;
                 background-color: #727272;
-                width: 135px;
-                padding: 7px 0 6px;
-            }
-            .title {
-                line-height: 1.6;
-                width: calc(100% - 135px);
-                @media screen and (max-width: $mobile) {
-                    margin-bottom: 10px;
-                    width: 100%;
-                }
-            }
-            .rating {
-                color: #FFF;
-                background-color: #727272;
-                padding: 7px 0 6px;
+                padding: 7px 14px;
             }
         }
         dd {

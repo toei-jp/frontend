@@ -207,10 +207,10 @@ export class ScreenComponent implements OnInit, AfterViewInit {
             '02': -2,
             '03': -3
         };
-        const theaterCode = `00${this.inputData.theaterCode}`.slice(DIGITS['02']);
+        const theaterCode = `000${this.inputData.theaterCode}`.slice(DIGITS['03']);
         const screenCode = `000${this.inputData.screenCode}`.slice(DIGITS['03']);
-        const screen = await this.http.get<IScreen>(`/assets/json/theater/${theaterCode}/${screenCode}.json`).toPromise();
-        const setting = await this.http.get<IScreen>('/assets/json/theater/setting.json').toPromise();
+        const screen = await this.http.get<IScreen>(`/json/theater/${theaterCode}/${screenCode}.json`).toPromise();
+        const setting = await this.http.get<IScreen>('/json/theater/setting.json').toPromise();
 
         await this.cinerino.getServices();
         let seatStatus: factory.chevre.event.screeningEvent.IScreeningRoomSectionOffer[];

@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { factory } from '@toei-jp/cinerino-api-javascript-client';
 import * as moment from 'moment';
+import { SwiperComponent, SwiperConfigInterface, SwiperDirective } from 'ngx-swiper-wrapper';
 import { environment } from '../../../../environments/environment';
 import { CinerinoService } from '../../../services/cinerino/cinerino.service';
 import { ErrorService } from '../../../services/error/error.service';
@@ -29,6 +30,7 @@ interface IDate {
     styleUrls: ['./purchase-schedule.component.scss']
 })
 export class PurchaseScheduleComponent implements OnInit {
+    public moment: typeof moment = moment;
     public theaters: IMovieTheater[];
     public isLoading: boolean;
     public showTheaterList: boolean;
@@ -37,10 +39,13 @@ export class PurchaseScheduleComponent implements OnInit {
     public schedules: IScreeningEvent[];
     public conditions: { theater: string; date: string };
     public environment = environment;
-    private preSaleSchedules: IScreeningEvent[];
     public preSaleDateList: IDate[];
     public preSaleFilmOrder: IFilmOrder[];
     public isPreSaleSchedules: boolean;
+    private preSaleSchedules: IScreeningEvent[];
+    public swiperConfig: SwiperConfigInterface;
+    @ViewChild(SwiperComponent) public componentRef: SwiperComponent;
+    @ViewChild(SwiperDirective) public directiveRef: SwiperDirective;
 
     constructor(
         private error: ErrorService,
@@ -70,6 +75,19 @@ export class PurchaseScheduleComponent implements OnInit {
         moment.locale('ja');
         this.isLoading = true;
         this.isPreSaleSchedules = false;
+        this.swiperConfig = {
+            spaceBetween: 10,
+            slidesPerView: 7,
+            breakpoints: {
+                320: { slidesPerView: 2 },
+                767: { slidesPerView: 3 },
+                1024: { slidesPerView: 7 }
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            }
+        };
         try {
             await this.cinerino.getServices();
             const theaterQs = this.route.snapshot.queryParamMap.get('theater');
@@ -88,6 +106,8 @@ export class PurchaseScheduleComponent implements OnInit {
                 theater: this.theaters[0].location.branchCode,
                 date: this.dateList[0].value
             };
+
+            this.directiveRef.update();
 
             // TODO 先行販売とみなす条件は？
             // 販売開始日時が3日前以前のイベント
@@ -111,6 +131,14 @@ export class PurchaseScheduleComponent implements OnInit {
             this.error.redirect(err);
         }
         this.isLoading = false;
+    }
+
+    /**
+     * resize
+     */
+    public resize() {
+        this.directiveRef.update();
+        this.directiveRef.setIndex(0, 0, false);
     }
 
     /**
@@ -149,7 +177,7 @@ export class PurchaseScheduleComponent implements OnInit {
                 label: {
                     date: date.format('DD'),
                     month: date.format('MM'),
-                    day: date.format('（dd）')
+                    day: date.format('(dd)')
                 }
             };
             const duplicate = results.find((d) => d.value === data.value);
@@ -206,7 +234,7 @@ export class PurchaseScheduleComponent implements OnInit {
                     locationBranchCodes: [theater.location.branchCode]
                 },
                 startFrom: moment(this.conditions.date).toDate(),
-                startThrough: moment(this.conditions.date).add(1, 'day').toDate()
+                startThrough: moment(this.conditions.date).add(2, 'day').toDate()
             })).data;
             this.filmOrder = this.getEventFilmOrder(this.schedules);
             console.log(this.filmOrder);

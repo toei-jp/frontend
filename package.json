@@ -56,9 +56,11 @@
     "libphonenumber-js": "^1.6.4",
     "moment": "^2.22.2",
     "moment-timezone": "^0.5.23",
+    "ngx-swiper-wrapper": "^7.0.0",
     "redis": "^2.8.0",
     "rxjs": "^6.3.3",
     "rxjs-compat": "^6.3.3",
+    "swiper": "^4.4.2",
     "uuid": "^3.3.2",
     "winston": "^2.4.3",
     "zone.js": "^0.8.26"

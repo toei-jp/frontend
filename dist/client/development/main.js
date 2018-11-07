@@ -1,9 +1,9 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([["main"],{
 
 /***/ "../../node_modules/moment/locale sync recursive ^\\.\\/.*$":
-/*!**********************************************************************************************!*\
-  !*** C:/Users/user/Desktop/workspace/TOEI/frontend/node_modules/moment/locale sync ^\.\/.*$ ***!
-  \**********************************************************************************************/
+/*!*****************************************************************************************************************!*\
+  !*** C:/Users/hataguchi/Desktop/workspace/motionpicture/TOEI/frontend/node_modules/moment/locale sync ^\.\/.*$ ***!
+  \*****************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -4927,7 +4927,7 @@ __webpack_require__.r(__webpack_exports__);
  * @suppress {suspiciousCode,uselessCode,missingProperties,missingOverride,checkTypes}
  * tslint:disable
  */ 
-var styles = ["@media screen and (max-width: 767px) {\n  .mvtk-lists[_ngcontent-%COMP%]   li[_ngcontent-%COMP%]   dt[_ngcontent-%COMP%] {\n    display: block; } }\n\n@media screen and (max-width: 767px) {\n  .mvtk-lists[_ngcontent-%COMP%]   li[_ngcontent-%COMP%]   dd[_ngcontent-%COMP%] {\n    display: block;\n    width: 100%; } }"];
+var styles = [".mvtk-lists[_ngcontent-%COMP%]   li[_ngcontent-%COMP%]:last-child {\n  margin-bottom: 0; }\n\n@media screen and (max-width: 767px) {\n  .mvtk-lists[_ngcontent-%COMP%]   li[_ngcontent-%COMP%]   dt[_ngcontent-%COMP%] {\n    display: block; } }\n\n@media screen and (max-width: 767px) {\n  .mvtk-lists[_ngcontent-%COMP%]   li[_ngcontent-%COMP%]   dd[_ngcontent-%COMP%] {\n    display: block;\n    width: 100%; } }"];
 
 
 
@@ -5691,7 +5691,7 @@ __webpack_require__.r(__webpack_exports__);
  * @suppress {suspiciousCode,uselessCode,missingProperties,missingOverride,checkTypes}
  * tslint:disable
  */ 
-var styles = [".selection-date[_ngcontent-%COMP%] {\n  color: #ee7700; }\n\n.date-cover[_ngcontent-%COMP%] {\n  background: #F0F0F2;\n  padding: 20px 46px; }\n\n@media screen and (max-width: 767px) {\n  .large-x-text[_ngcontent-%COMP%] {\n    font-size: 20px; } }\n\n.date-list[_ngcontent-%COMP%] {\n  max-width: 766px;\n  margin: 0 auto;\n  height: 105px;\n  text-align: center; }\n\n@media screen and (max-width: 767px) {\n    .date-list[_ngcontent-%COMP%] {\n      max-width: auto; } }\n\n.date-list[_ngcontent-%COMP%]   .active[_ngcontent-%COMP%] {\n    background-color: #f9b714 !important;\n    border-bottom: 5px solid #f5a100 !important;\n    color: #FFF; }\n\n.date-list[_ngcontent-%COMP%]   .date-btn[_ngcontent-%COMP%] {\n    height: 100%;\n    background-color: #ffdd00;\n    border-bottom: 5px solid #fdca00;\n    padding: 20px 0; }\n\n.swiper-button-prev[_ngcontent-%COMP%] {\n  background-image: url(/assets/images/icon/icon_prev_black.svg);\n  left: -38px; }\n\n.swiper-button-next[_ngcontent-%COMP%] {\n  background-image: url(/assets/images/icon/icon_prev_next.svg);\n  right: -38px; }"];
+var styles = [".selection-date[_ngcontent-%COMP%] {\n  color: #ee7700; }\n\n.date-cover[_ngcontent-%COMP%] {\n  background: #F0F0F2;\n  padding: 20px 46px; }\n\n@media screen and (max-width: 767px) {\n  .large-x-text[_ngcontent-%COMP%] {\n    font-size: 20px; } }\n\n.date-list[_ngcontent-%COMP%] {\n  max-width: 766px;\n  margin: 0 auto;\n  height: 105px;\n  text-align: center; }\n\n@media screen and (max-width: 767px) {\n    .date-list[_ngcontent-%COMP%] {\n      max-width: auto; } }\n\n.date-list[_ngcontent-%COMP%]   .active[_ngcontent-%COMP%] {\n    background-color: #f9b714 !important;\n    border-bottom: 5px solid #f5a100 !important;\n    color: #FFF; }\n\n.date-list[_ngcontent-%COMP%]   .date-btn[_ngcontent-%COMP%] {\n    cursor: pointer;\n    height: 100%;\n    background-color: #ffdd00;\n    border-bottom: 5px solid #fdca00;\n    padding: 20px 0; }\n\n.swiper-button-prev[_ngcontent-%COMP%] {\n  background-image: url(/assets/images/icon/icon_prev_black.svg);\n  left: -38px; }\n\n.swiper-button-next[_ngcontent-%COMP%] {\n  background-image: url(/assets/images/icon/icon_prev_next.svg);\n  right: -38px; }"];
 
 
 
@@ -6683,7 +6683,10 @@ var PurchaseTicketComponent = /** @class */ (function () {
                 if (checkMovieTicketAction.result === undefined) {
                     return;
                 }
-                checkMovieTicketAction.result.movieTickets.forEach(function (movieTicket) {
+                var availabilityMovieTickets = checkMovieTicketAction.result.movieTickets.filter(function (movieTicket) {
+                    return (movieTicket.validThrough === undefined);
+                });
+                availabilityMovieTickets.forEach(function (movieTicket) {
                     if (movieTicket.serviceType === movieTicketTypeChargeSpecification.appliesToMovieTicketType) {
                         movieTickets.push(movieTicket);
                     }
@@ -9414,7 +9417,7 @@ _angular_platform_browser__WEBPACK_IMPORTED_MODULE_4__["platformBrowser"]().boot
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Users\user\Desktop\workspace\TOEI\frontend\src\client\src\main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! C:\Users\hataguchi\Desktop\workspace\motionpicture\TOEI\frontend\src\client\src\main.ts */"./src/main.ts");
 
 
 /***/ }),

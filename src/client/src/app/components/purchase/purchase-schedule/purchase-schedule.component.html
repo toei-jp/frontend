@@ -25,21 +25,24 @@
 <div *ngIf="!isPreSaleSchedules" class="date-cover">
 
     <div class="date-list">
-        <div class="swiper-container mb-3" #swiper [swiper]="swiperConfig" (resize)="resize()">
-            <div class="swiper-wrapper">
-                <div *ngFor="let date of dateList" class="swiper-slide">
-                    <div class="date-btn " [class.active]="date.value === conditions.date" (click)="changeDate(date.value)">
-                        <strong>{{ date.label.month }}/<span class="large-text">{{ date.label.date }}</span>{{
-                            date.label.day
-                            }}</strong>
-                        <br>
-                        <br><span class="small-x-text">レディースデイ</span>
+        <div style="position:relative;">
+            <div class="swiper-container mb-3" #swiper [swiper]="swiperConfig" (resize)="resize()">
+                <div class="swiper-wrapper">
+                    <div *ngFor="let date of dateList" class="swiper-slide">
+                        <div class="date-btn " [class.active]="date.value === conditions.date" (click)="changeDate(date.value)">
+                            <strong>{{ date.label.month }}/<span class="large-text">{{ date.label.date }}</span>{{
+                                date.label.day
+                                }}</strong>
+                            <br>
+                            <br><span class="small-x-text">レディースデイ</span>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="swiper-button-prev"></div>
             <div class="swiper-button-next"></div>
         </div>
+
     </div>
 </div>
 

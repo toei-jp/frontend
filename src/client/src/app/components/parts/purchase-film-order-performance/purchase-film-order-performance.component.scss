@@ -64,6 +64,9 @@ li {
             width: 30px;
             height: 30px;
             background-size: 30px;
+            @media screen and (max-width: $mobile){
+                margin-right: 10px; 
+            }
         }
     }
     .large-text {

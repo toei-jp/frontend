@@ -6,7 +6,7 @@ $mobile: 767px;
 
 .date-cover {
     background: #F0F0F2;
-    padding: 20px;
+    padding: 20px 46px;
 }
 
 .large-x-text {
@@ -16,7 +16,7 @@ $mobile: 767px;
 }
 
 .date-list {
-    max-width: 840px;
+    max-width: 766px;
     margin: 0 auto;
     @media screen and (max-width: $mobile){
         max-width: auto;
@@ -39,9 +39,12 @@ $mobile: 767px;
 }
 
 .swiper-button-prev {
-
+    background-image: url(/assets/images/icon/icon_prev_black.svg);
+    left: -38px;
+    
 }
 
 .swiper-button-next {
-    
+    background-image: url(/assets/images/icon/icon_prev_next.svg);
+    right: -38px;
 }

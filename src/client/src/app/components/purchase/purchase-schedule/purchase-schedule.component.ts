@@ -237,7 +237,6 @@ export class PurchaseScheduleComponent implements OnInit {
                 startThrough: moment(this.conditions.date).add(2, 'day').toDate()
             })).data;
             this.filmOrder = this.getEventFilmOrder(this.schedules);
-            console.log(this.filmOrder);
         } catch (err) {
             this.error.redirect(err);
         }

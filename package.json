@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "ng": "ng",
-    "build-client": "npm run build-client-development && npm run build-client-test && npm run build-client-production",
+    "build-client": "npm run build-client-production && npm run build-client-development && npm run build-client-test",
     "build-client-local": "ng build --configuration=local",
     "build-client-development": "ng build --configuration=dev",
     "build-client-test": "ng build --configuration=test",

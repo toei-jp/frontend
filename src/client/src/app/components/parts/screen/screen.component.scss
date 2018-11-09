@@ -32,6 +32,9 @@ $mobile: 767px;
                 background-image: url(/images/theater/parts/seat_disabled.svg);
                 cursor: default;
             }
+            span {
+                display: none;
+            }
         }
     }
     .seat-hc {

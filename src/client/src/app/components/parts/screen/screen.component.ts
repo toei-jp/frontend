@@ -238,7 +238,6 @@ export class ScreenComponent implements OnInit, AfterViewInit {
         screen: IScreen,
         status: factory.chevre.event.screeningEvent.IScreeningRoomSectionOffer[]
     }): IData {
-        console.log('-------------------', data);
         const screenData = data.screen;
         const seatStatus = data.status;
         // y軸ラベル
@@ -365,8 +364,8 @@ export class ScreenComponent implements OnInit, AfterViewInit {
                         section: section,
                         status: status
                     };
-                    if (screenData.hc.indexOf(label) !== -1) {
-                        seat.className = `seat-${label} seat-hc`;
+                    if (screenData.hc.indexOf(code) !== -1) {
+                        seat.className = `seat-${code} seat-hc`;
                     }
                     seats.push(seat);
                 }

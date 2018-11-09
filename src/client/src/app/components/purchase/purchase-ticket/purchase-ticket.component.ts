@@ -27,6 +27,7 @@ export class PurchaseTicketComponent implements OnInit {
     public disable: boolean;
     public selectedReservation: Reservation;
     public tickets: IReservationTicket[];
+    public isUsedMovieTicket: boolean;
 
     constructor(
         public purchase: PurchaseService,
@@ -52,6 +53,8 @@ export class PurchaseTicketComponent implements OnInit {
         } catch (err) {
             this.error.redirect(err);
         }
+
+        this.isUsedMovieTicket = this.movieTicketCheck();
     }
 
     /**
@@ -200,6 +203,21 @@ export class PurchaseTicketComponent implements OnInit {
 
         return result;
     }
+
+    /**
+     * ムビチケ対応確認
+     */
+    public movieTicketCheck() {
+        const screeningEventTicketOffers = this.purchase.data.salesTickets;
+        const movieTicketTypeOffers = screeningEventTicketOffers.filter((offer) => {
+            const movieTicketTypeChargeSpecifications = offer.priceSpecification.priceComponent.filter((priceComponent) => {
+                return (priceComponent.typeOf === factory.chevre.priceSpecificationType.MovieTicketTypeChargeSpecification);
+            });
+            return (movieTicketTypeChargeSpecifications.length > 0);
+        });
+        return (movieTicketTypeOffers.length > 0);
+    }
+
 
 
 }

@@ -109,8 +109,18 @@ export class PurchaseSeatComponent implements OnInit, AfterViewInit {
      * @method onSubmit
      */
     public async onSubmit() {
+        if (this.purchase.data.screeningEvent === undefined
+            || this.purchase.data.screeningEvent.offers.eligibleQuantity === undefined
+            || this.purchase.data.screeningEvent.offers.eligibleQuantity.maxValue === undefined) {
+            this.router.navigate(['/error']);
+            return;
+        }
         if (this.purchase.data.reservations.length === 0) {
             this.notSelectSeatModal = true;
+            return;
+        }
+        if (this.purchase.data.reservations.length > this.purchase.data.screeningEvent.offers.eligibleQuantity.maxValue) {
+            this.upperLimitModal = true;
             return;
         }
         if (this.disable) {

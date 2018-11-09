@@ -47,7 +47,7 @@
 </div>
 
 <div class="contents wrapper">
-    <div class="selection-date large-x-text mb-x-small">
+    <div *ngIf="conditions.date" class="selection-date large-x-text mb-x-small">
         <strong>{{ moment(conditions.date).format('YYYY/MM/DD (ddd)') }}</strong>
     </div>
 

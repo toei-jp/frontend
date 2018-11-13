@@ -27,6 +27,7 @@ $mobile: 767px;
     }
     img {
         width: 25px;
+        height: 25px;
         margin-right: 25px;
         @media screen and (max-width: $mobile) {
             margin-right: 15px;

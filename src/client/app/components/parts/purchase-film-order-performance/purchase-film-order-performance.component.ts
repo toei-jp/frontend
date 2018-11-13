@@ -45,22 +45,10 @@ export class PurchaseFilmOrderPerformanceComponent implements OnInit {
      */
     public getAvailability(remaining?: number): Iavailability {
         const availabilityList = [
-            {
-                text: '完売',
-                className: 'vacancy-full'
-            },
-            {
-                text: '購入',
-                className: 'vacancy-little'
-            },
-            {
-                text: '購入',
-                className: 'vacancy-large'
-            },
-            {
-                text: '販売終了',
-                className: 'end-of-sale'
-            }
+            { text: '完売', className: 'vacancy-full' },
+            { text: '購入', className: 'vacancy-little' },
+            { text: '購入', className: 'vacancy-large' },
+            { text: '販売終了', className: 'end-of-sale' }
         ];
 
         return this.isEndSale

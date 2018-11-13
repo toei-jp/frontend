@@ -9830,10 +9830,10 @@ Zone.__load_patch('PromiseRejectionEvent', function (global, Zone) {
 
 /***/ }),
 
-/***/ "./src/polyfills.ts":
-/*!**************************!*\
-  !*** ./src/polyfills.ts ***!
-  \**************************/
+/***/ "./polyfills.ts":
+/*!**********************!*\
+  !*** ./polyfills.ts ***!
+  \**********************/
 /*! no exports provided */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -9932,13 +9932,13 @@ window.global = window;
 /***/ }),
 
 /***/ 2:
-/*!********************************!*\
-  !*** multi ./src/polyfills.ts ***!
-  \********************************/
+/*!****************************!*\
+  !*** multi ./polyfills.ts ***!
+  \****************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Users\hataguchi\Desktop\workspace\TOEI Ticket System\frontend\src\client\src\polyfills.ts */"./src/polyfills.ts");
+module.exports = __webpack_require__(/*! C:\Users\hataguchi\Desktop\workspace\TOEI Ticket System\frontend\src\client\polyfills.ts */"./polyfills.ts");
 
 
 /***/ })

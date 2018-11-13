@@ -1,9 +1,9 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([["styles"],{
 
-/***/ "../../node_modules/raw-loader/index.js!../../node_modules/postcss-loader/lib/index.js??embedded!../../node_modules/sass-loader/lib/loader.js??ref--14-3!./src/styles.scss":
-/*!************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** C:/Users/hataguchi/Desktop/workspace/TOEI Ticket System/frontend/node_modules/raw-loader!C:/Users/hataguchi/Desktop/workspace/TOEI Ticket System/frontend/node_modules/postcss-loader/lib??embedded!C:/Users/hataguchi/Desktop/workspace/TOEI Ticket System/frontend/node_modules/sass-loader/lib/loader.js??ref--14-3!./src/styles.scss ***!
-  \************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ "../../node_modules/raw-loader/index.js!../../node_modules/postcss-loader/lib/index.js??embedded!../../node_modules/sass-loader/lib/loader.js??ref--14-3!./styles.scss":
+/*!********************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** C:/Users/hataguchi/Desktop/workspace/TOEI Ticket System/frontend/node_modules/raw-loader!C:/Users/hataguchi/Desktop/workspace/TOEI Ticket System/frontend/node_modules/postcss-loader/lib??embedded!C:/Users/hataguchi/Desktop/workspace/TOEI Ticket System/frontend/node_modules/sass-loader/lib/loader.js??ref--14-3!./styles.scss ***!
+  \********************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -543,15 +543,15 @@ if(false) {}
 
 /***/ }),
 
-/***/ "./src/styles.scss":
-/*!*************************!*\
-  !*** ./src/styles.scss ***!
-  \*************************/
+/***/ "./styles.scss":
+/*!*********************!*\
+  !*** ./styles.scss ***!
+  \*********************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(/*! !../../../node_modules/raw-loader!../../../node_modules/postcss-loader/lib??embedded!../../../node_modules/sass-loader/lib/loader.js??ref--14-3!./styles.scss */ "../../node_modules/raw-loader/index.js!../../node_modules/postcss-loader/lib/index.js??embedded!../../node_modules/sass-loader/lib/loader.js??ref--14-3!./src/styles.scss");
+var content = __webpack_require__(/*! !../../node_modules/raw-loader!../../node_modules/postcss-loader/lib??embedded!../../node_modules/sass-loader/lib/loader.js??ref--14-3!./styles.scss */ "../../node_modules/raw-loader/index.js!../../node_modules/postcss-loader/lib/index.js??embedded!../../node_modules/sass-loader/lib/loader.js??ref--14-3!./styles.scss");
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -565,7 +565,7 @@ var options = {"hmr":true}
 options.transform = transform
 options.insertInto = undefined;
 
-var update = __webpack_require__(/*! ../../../node_modules/style-loader/lib/addStyles.js */ "../../node_modules/style-loader/lib/addStyles.js")(content, options);
+var update = __webpack_require__(/*! ../../node_modules/style-loader/lib/addStyles.js */ "../../node_modules/style-loader/lib/addStyles.js")(content, options);
 
 if(content.locals) module.exports = content.locals;
 
@@ -574,13 +574,13 @@ if(false) {}
 /***/ }),
 
 /***/ 3:
-/*!****************************************************************************************************************************************!*\
-  !*** multi ./src/styles.scss C:/Users/hataguchi/Desktop/workspace/TOEI Ticket System/frontend/node_modules/swiper/dist/css/swiper.css ***!
-  \****************************************************************************************************************************************/
+/*!************************************************************************************************************************************!*\
+  !*** multi ./styles.scss C:/Users/hataguchi/Desktop/workspace/TOEI Ticket System/frontend/node_modules/swiper/dist/css/swiper.css ***!
+  \************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\hataguchi\Desktop\workspace\TOEI Ticket System\frontend\src\client\src\styles.scss */"./src/styles.scss");
+__webpack_require__(/*! C:\Users\hataguchi\Desktop\workspace\TOEI Ticket System\frontend\src\client\styles.scss */"./styles.scss");
 module.exports = __webpack_require__(/*! C:\Users\hataguchi\Desktop\workspace\TOEI Ticket System\frontend\node_modules\swiper\dist\css\swiper.css */"../../node_modules/swiper/dist/css/swiper.css");
 
 

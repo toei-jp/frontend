@@ -5704,13 +5704,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PurchaseScheduleComponent", function() { return PurchaseScheduleComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "../../node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/router */ "../../node_modules/@angular/router/fesm5/router.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! moment */ "../../node_modules/moment/moment.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var ngx_swiper_wrapper__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ngx-swiper-wrapper */ "../../node_modules/ngx-swiper-wrapper/dist/ngx-swiper-wrapper.es5.js");
-/* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../environments/environment */ "./environments/environment.ts");
-/* harmony import */ var _services_cinerino_cinerino_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../services/cinerino/cinerino.service */ "./app/services/cinerino/cinerino.service.ts");
-/* harmony import */ var _services_error_error_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../services/error/error.service */ "./app/services/error/error.service.ts");
-/* harmony import */ var _services_purchase_purchase_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../services/purchase/purchase.service */ "./app/services/purchase/purchase.service.ts");
+/* harmony import */ var _toei_jp_cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @toei-jp/cinerino-api-javascript-client */ "../../node_modules/@toei-jp/cinerino-api-javascript-client/lib/index.js");
+/* harmony import */ var _toei_jp_cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_toei_jp_cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! moment */ "../../node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var ngx_swiper_wrapper__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ngx-swiper-wrapper */ "../../node_modules/ngx-swiper-wrapper/dist/ngx-swiper-wrapper.es5.js");
+/* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../environments/environment */ "./environments/environment.ts");
+/* harmony import */ var _services_cinerino_cinerino_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../services/cinerino/cinerino.service */ "./app/services/cinerino/cinerino.service.ts");
+/* harmony import */ var _services_error_error_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../services/error/error.service */ "./app/services/error/error.service.ts");
+/* harmony import */ var _services_purchase_purchase_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../services/purchase/purchase.service */ "./app/services/purchase/purchase.service.ts");
 var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -5754,14 +5756,15 @@ var __generator = (undefined && undefined.__generator) || function (thisArg, bod
 
 
 
+
 var PurchaseScheduleComponent = /** @class */ (function () {
     function PurchaseScheduleComponent(error, route, purchase, cinerino) {
         this.error = error;
         this.route = route;
         this.purchase = purchase;
         this.cinerino = cinerino;
-        this.moment = moment__WEBPACK_IMPORTED_MODULE_2__;
-        this.environment = _environments_environment__WEBPACK_IMPORTED_MODULE_4__["environment"];
+        this.moment = moment__WEBPACK_IMPORTED_MODULE_3__;
+        this.environment = _environments_environment__WEBPACK_IMPORTED_MODULE_5__["environment"];
         this.showTheaterList = true;
         this.theaters = [];
         this.dateList = [];
@@ -5785,7 +5788,7 @@ var PurchaseScheduleComponent = /** @class */ (function () {
                 switch (_c.label) {
                     case 0:
                         window.scrollTo(0, 0);
-                        moment__WEBPACK_IMPORTED_MODULE_2__["locale"]('ja');
+                        moment__WEBPACK_IMPORTED_MODULE_3__["locale"]('ja');
                         this.isLoading = true;
                         this.isPreSaleSchedules = false;
                         this.swiperConfig = {
@@ -5825,13 +5828,14 @@ var PurchaseScheduleComponent = /** @class */ (function () {
                             date: this.dateList[0].value
                         };
                         this.directiveRef.update();
-                        defaultOfferValidFrom = moment__WEBPACK_IMPORTED_MODULE_2__(moment__WEBPACK_IMPORTED_MODULE_2__().add(-3, 'days').format('YYYY-MM-DDT00:00:00+09:00')).toDate();
+                        defaultOfferValidFrom = moment__WEBPACK_IMPORTED_MODULE_3__(moment__WEBPACK_IMPORTED_MODULE_3__().add(-3, 'days').format('YYYY-MM-DDT00:00:00+09:00')).toDate();
                         _b = this;
                         return [4 /*yield*/, this.cinerino.event.searchScreeningEvents({
+                                eventStatuses: [_toei_jp_cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_2__["factory"].chevre.eventStatusType.EventScheduled],
                                 superEvent: {
                                     locationBranchCodes: [this.theaters[0].location.branchCode]
                                 },
-                                startFrom: moment__WEBPACK_IMPORTED_MODULE_2__().toDate(),
+                                startFrom: moment__WEBPACK_IMPORTED_MODULE_3__().toDate(),
                                 offers: {
                                     // validFrom: new Date(),
                                     validThrough: defaultOfferValidFrom
@@ -5873,7 +5877,7 @@ var PurchaseScheduleComponent = /** @class */ (function () {
     PurchaseScheduleComponent.prototype.getDateList = function (loop) {
         var results = [];
         for (var i = 0; i < loop; i++) {
-            var date = moment__WEBPACK_IMPORTED_MODULE_2__().add(i, 'day');
+            var date = moment__WEBPACK_IMPORTED_MODULE_3__().add(i, 'day');
             results.push({
                 value: date.format('YYYYMMDD'),
                 label: {
@@ -5893,7 +5897,7 @@ var PurchaseScheduleComponent = /** @class */ (function () {
     PurchaseScheduleComponent.prototype.getPreSaleDateList = function () {
         var results = [];
         this.preSaleSchedules.forEach(function (schedule) {
-            var date = moment__WEBPACK_IMPORTED_MODULE_2__(schedule.startDate);
+            var date = moment__WEBPACK_IMPORTED_MODULE_3__(schedule.startDate);
             var data = {
                 value: date.format('YYYYMMDD'),
                 label: {
@@ -5937,7 +5941,7 @@ var PurchaseScheduleComponent = /** @class */ (function () {
      */
     PurchaseScheduleComponent.prototype.changePreSaleDate = function (date) {
         var schedules = this.preSaleSchedules.filter(function (s) {
-            return date === moment__WEBPACK_IMPORTED_MODULE_2__(s.startDate).format('YYYYMMDD');
+            return date === moment__WEBPACK_IMPORTED_MODULE_3__(s.startDate).format('YYYYMMDD');
         });
         this.preSaleFilmOrder = this.getEventFilmOrder(schedules);
     };
@@ -5969,11 +5973,12 @@ var PurchaseScheduleComponent = /** @class */ (function () {
                         }
                         _a = this;
                         return [4 /*yield*/, this.cinerino.event.searchScreeningEvents({
+                                eventStatuses: [_toei_jp_cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_2__["factory"].chevre.eventStatusType.EventScheduled],
                                 superEvent: {
                                     locationBranchCodes: [theater.location.branchCode]
                                 },
-                                startFrom: moment__WEBPACK_IMPORTED_MODULE_2__(this.conditions.date).toDate(),
-                                startThrough: moment__WEBPACK_IMPORTED_MODULE_2__(this.conditions.date).add(1, 'day').toDate()
+                                startFrom: moment__WEBPACK_IMPORTED_MODULE_3__(this.conditions.date).toDate(),
+                                startThrough: moment__WEBPACK_IMPORTED_MODULE_3__(this.conditions.date).add(1, 'day').toDate()
                             })];
                     case 3:
                         _a.schedules = (_b.sent()).data;

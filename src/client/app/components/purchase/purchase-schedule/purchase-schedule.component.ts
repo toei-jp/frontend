@@ -113,6 +113,7 @@ export class PurchaseScheduleComponent implements OnInit {
             // 販売開始日時が3日前以前のイベント
             const defaultOfferValidFrom = moment(moment().add(-3, 'days').format('YYYY-MM-DDT00:00:00+09:00')).toDate();
             this.preSaleSchedules = (await this.cinerino.event.searchScreeningEvents({
+                eventStatuses: [factory.chevre.eventStatusType.EventScheduled],
                 superEvent: {
                     locationBranchCodes: [this.theaters[0].location.branchCode]
                 },
@@ -230,6 +231,7 @@ export class PurchaseScheduleComponent implements OnInit {
                 throw new Error('theater is not found');
             }
             this.schedules = (await this.cinerino.event.searchScreeningEvents({
+                eventStatuses: [factory.chevre.eventStatusType.EventScheduled],
                 superEvent: {
                     locationBranchCodes: [theater.location.branchCode]
                 },

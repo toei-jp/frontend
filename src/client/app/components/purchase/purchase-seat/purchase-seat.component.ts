@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { environment } from '../../../../environments/environment';
@@ -14,7 +14,7 @@ import { IInputScreenData } from '../../parts/screen/screen.component';
     templateUrl: './purchase-seat.component.html',
     styleUrls: ['./purchase-seat.component.scss']
 })
-export class PurchaseSeatComponent implements OnInit, AfterViewInit {
+export class PurchaseSeatComponent implements OnInit {
     public isLoading: boolean;
     public seatForm: FormGroup;
     public notSelectSeatModal: boolean;
@@ -32,7 +32,7 @@ export class PurchaseSeatComponent implements OnInit, AfterViewInit {
         // private user: UserService
     ) { }
 
-    public ngOnInit() {
+    public async ngOnInit() {
         window.scrollTo(0, 0);
         this.isLoading = true;
         this.notSelectSeatModal = false;
@@ -46,21 +46,20 @@ export class PurchaseSeatComponent implements OnInit, AfterViewInit {
             return;
         }
 
+        if (this.purchase.data.salesTickets.length === 0) {
+            this.purchase.data.salesTickets = await this.fitchSalesTickets();
+            if (this.purchase.data.salesTickets.length === 0) {
+                this.error.redirect(new Error('salesTickets not found'));
+                return;
+            }
+        }
+
         this.screenData = {
             theaterCode: this.purchase.data.screeningEvent.superEvent.location.branchCode,
-            // dateJouei: this.purchase.data.screeningEvent.info.dateJouei,
             titleCode: this.purchase.data.screeningEvent.superEvent.workPerformed.identifier,
-            // titleBranchNum: this.purchase.data.screeningEvent.info.titleBranchNum,
-            // timeBegin: this.purchase.data.screeningEvent.info.timeBegin,
             screenCode: this.purchase.data.screeningEvent.location.branchCode
         };
 
-    }
-
-    public async ngAfterViewInit() {
-        if (this.purchase.data.salesTickets.length === 0) {
-            this.purchase.data.salesTickets = await this.fitchSalesTickets();
-        }
     }
 
     /**
@@ -113,22 +112,14 @@ export class PurchaseSeatComponent implements OnInit, AfterViewInit {
             this.router.navigate(['/error']);
             return;
         }
-        if (this.purchase.data.screeningEvent.offers.eligibleQuantity === undefined
-            || this.purchase.data.screeningEvent.offers.eligibleQuantity.maxValue === undefined) {
-            console.error('eligibleQuantity is undefined or eligibleQuantity.maxValue is undefined');
-            this.router.navigate(['/error']);
-            return;
-        }
-        if (this.purchase.data.salesTickets.length === 0) {
-            console.error('salesTickets not found');
-            this.router.navigate(['/error']);
-            return;
-        }
+
         if (this.purchase.data.reservations.length === 0) {
             this.notSelectSeatModal = true;
             return;
         }
-        if (this.purchase.data.reservations.length > this.purchase.data.screeningEvent.offers.eligibleQuantity.maxValue) {
+        if (this.purchase.data.screeningEvent.offers.eligibleQuantity !== undefined
+            && this.purchase.data.screeningEvent.offers.eligibleQuantity.maxValue !== undefined
+            && this.purchase.data.reservations.length > this.purchase.data.screeningEvent.offers.eligibleQuantity.maxValue) {
             this.upperLimitModal = true;
             return;
         }

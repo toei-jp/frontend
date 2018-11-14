@@ -38,9 +38,8 @@
 
 
     <div class="mb-middle">
-        <app-screen [inputData]="screenData" [test]="false" (select)="seatSelect($event)" (alert)="seatSelectionAlert()"
+        <app-screen *ngIf="screenData" [inputData]="screenData" [test]="false" (select)="seatSelect($event)" (alert)="seatSelectionAlert()"
             (load)="loadScreen()">
-            <!-- <app-seat-info type="{{ purchase.data.screeningEvent?.superEvent.coaInfo.kbnJoueihousiki?.kubunCode }}"></app-seat-info> -->
         </app-screen>
     </div>
 

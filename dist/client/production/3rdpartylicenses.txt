@@ -329,7 +329,7 @@ If the Work includes a "NOTICE" text file as part of its distribution, then any 
 
 END OF TERMS AND CONDITIONS
 
-@toei-jp/cinerino-factory@1.0.1-alpha.17
+@toei-jp/cinerino-factory@1.0.1-alpha.21
 ISC
 ISC
 
@@ -405,7 +405,7 @@ WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION
 OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
 CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-@toei-jp/chevre-factory@1.0.0-alpha.23
+@toei-jp/chevre-factory@1.0.0-alpha.33
 ISC
 ISC
 

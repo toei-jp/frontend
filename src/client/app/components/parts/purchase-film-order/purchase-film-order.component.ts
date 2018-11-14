@@ -14,14 +14,12 @@ interface IFilmOrder {
 })
 export class PurchaseFilmOrderComponent implements OnInit {
     @Input() public data: IFilmOrder;
-    public title: string;
-    public duration: string;
+    public info: IScreeningEvent;
 
     constructor() { }
 
     public ngOnInit() {
-        this.title = this.data.films[0].name.ja;
-        this.duration = this.data.films[0].workPerformed.duration;
+        this.info = this.data.films[0];
     }
 
 }

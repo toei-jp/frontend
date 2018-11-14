@@ -93,7 +93,7 @@ interface IData {
     /**
      * ムビチケ承認情報
      */
-    authorizeMovieTicketPayment?: factory.action.authorize.paymentMethod.movieTicket.IAction;
+    authorizeMovieTicketPayments: factory.action.authorize.paymentMethod.movieTicket.IAction[];
 }
 
 export interface IGmoTokenObject {
@@ -136,7 +136,8 @@ export class PurchaseService {
                 orderCount: 0,
                 // incentive: 0,
                 isCreditCardError: false,
-                reservations: []
+                reservations: [],
+                authorizeMovieTicketPayments: []
             };
 
             return;
@@ -166,7 +167,8 @@ export class PurchaseService {
             orderCount: 0,
             // incentive: 0,
             isCreditCardError: false,
-            reservations: []
+            reservations: [],
+            authorizeMovieTicketPayments: []
 
         };
         this.save();
@@ -641,21 +643,44 @@ export class PurchaseService {
         await this.cinerino.getServices();
         let order: factory.order.IOrder;
         if (this.isReserveMvtk()) {
-            if (this.data.authorizeMovieTicketPayment !== undefined) {
-                await this.cinerino.transaction.placeOrder.voidPayment(this.data.authorizeMovieTicketPayment);
+            if (this.data.authorizeMovieTicketPayments.length > 0) {
+                for (const authorizeMovieTicketPayment of this.data.authorizeMovieTicketPayments) {
+                    await this.cinerino.transaction.placeOrder.voidPayment(authorizeMovieTicketPayment);
+                }
+                this.data.authorizeMovieTicketPayments = [];
             }
             // 決済方法として、ムビチケを追加する
-            this.data.authorizeMovieTicketPayment =
-                await this.cinerino.transaction.placeOrder.authorizeMovieTicketPayment({
+            const movieTickets = this.createMovieTicketsFromAuthorizeSeatReservation({
+                authorizeSeatReservation, reservations
+            });
+            const movieTicketIdentifiers: {
+                identifier: string;
+                movieTickets: factory.paymentMethod.paymentCard.movieTicket.IMovieTicket[]
+            }[] = [];
+            movieTickets.forEach((movieTicket) => {
+                const findResult = movieTicketIdentifiers.find((movieTicketIdentifier) => {
+                    return (movieTicketIdentifier.identifier === movieTicket.identifier);
+                });
+                if (findResult === undefined) {
+                    movieTicketIdentifiers.push({
+                        identifier: movieTicket.identifier, movieTickets: [movieTicket]
+                    });
+                    return;
+                }
+                findResult.movieTickets.push(movieTicket);
+
+            });
+            for (const movieTicketIdentifier of movieTicketIdentifiers) {
+                const authorizeMovieTicketPaymentResult = await this.cinerino.transaction.placeOrder.authorizeMovieTicketPayment({
                     object: {
                         typeOf: factory.paymentMethodType.MovieTicket,
                         amount: 0,
-                        movieTickets: this.createMovieTicketsFromAuthorizeSeatReservation({
-                            authorizeSeatReservation, reservations
-                        })
+                        movieTickets: movieTicketIdentifier.movieTickets
                     },
                     purpose: transaction
                 });
+                this.data.authorizeMovieTicketPayments.push(authorizeMovieTicketPaymentResult);
+            }
         }
         // 取引確定
         order = (await this.cinerino.transaction.placeOrder.confirm({

@@ -40,26 +40,24 @@ export class PurchaseSeatComponent implements OnInit {
             terms: [false, [Validators.requiredTrue]]
         });
         this.disable = false;
-        if (this.purchase.data.screeningEvent === undefined) {
-            this.error.redirect(new Error('screeningEvent is undefined'));
-
-            return;
-        }
-
-        if (this.purchase.data.salesTickets.length === 0) {
-            this.purchase.data.salesTickets = await this.fitchSalesTickets();
-            if (this.purchase.data.salesTickets.length === 0) {
-                this.error.redirect(new Error('salesTickets not found'));
-                return;
+        try {
+            if (this.purchase.data.screeningEvent === undefined) {
+                throw new Error('screeningEvent is undefined');
             }
+            if (this.purchase.data.salesTickets.length === 0) {
+                this.purchase.data.salesTickets = await this.fitchSalesTickets();
+                if (this.purchase.data.salesTickets.length === 0) {
+                    throw new Error('salesTickets not found');
+                }
+            }
+            this.screenData = {
+                theaterCode: this.purchase.data.screeningEvent.superEvent.location.branchCode,
+                titleCode: this.purchase.data.screeningEvent.superEvent.workPerformed.identifier,
+                screenCode: this.purchase.data.screeningEvent.location.branchCode
+            };
+        } catch (error) {
+            this.error.redirect(error);
         }
-
-        this.screenData = {
-            theaterCode: this.purchase.data.screeningEvent.superEvent.location.branchCode,
-            titleCode: this.purchase.data.screeningEvent.superEvent.workPerformed.identifier,
-            screenCode: this.purchase.data.screeningEvent.location.branchCode
-        };
-
     }
 
     /**

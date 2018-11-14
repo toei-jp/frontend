@@ -22,7 +22,7 @@ li {
         align-items: center;
         padding: 12px 10px;
     }
-    &.end-of-sale,
+    &.outside-sales,
     &.vacancy-full {
         background-color: #9e9e9f;
         border: 1px solid #9e9e9f;
@@ -95,7 +95,7 @@ li {
     line-height: 30px;
 }
 
-.end-of-sale,
+.outside-sales,
 .vacancy-full {
     .image {
         display: none;

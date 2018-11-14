@@ -1,11 +1,12 @@
 <li class="performance mb-x-small">
     <dl>
         <dt>
-            <p class="title mb-x-small"><strong>{{ title }}</strong></p>
+            <p class="title mb-x-small"><strong>{{ info.name.ja }}</strong></p>
             <div class="d-flex align-items-center justify-content-end">
-                <div class="bage small-x-text text-center">R18+</div>
-                <div class="bage small-x-text text-center">吹替版</div>
-                <div class="small-x-text screening-time text-center">上映時間：{{ duration | duration: 'minutes' }}分</div>
+                <div class="bage small-x-text text-center">{{ info.workPerformed.contentRating }}</div>
+                <div *ngIf="info.superEvent.dubLanguage" class="bage small-x-text text-center">吹替版</div>
+                <div *ngIf="info.superEvent.subtitleLanguage" class="bage small-x-text text-center">字幕版</div>
+                <div class="small-x-text screening-time text-center">上映時間：{{ info.workPerformed.duration | duration: 'minutes' }}分</div>
             </div>
         </dt>
         <dd>

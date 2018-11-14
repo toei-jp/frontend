@@ -20,6 +20,7 @@ export class PurchaseFilmOrderPerformanceComponent implements OnInit {
     @Input() public data: IScreeningEvent;
     public availability: Iavailability;
     private isEndSale: boolean;
+    private isStartSale: boolean;
 
     constructor(
         private storage: StorageService,
@@ -28,13 +29,8 @@ export class PurchaseFilmOrderPerformanceComponent implements OnInit {
 
     public ngOnInit() {
         const now = moment();
-
-        if (this.data.offers === undefined) {
-            this.isEndSale = false;
-        } else {
-            this.isEndSale = moment(this.data.offers.validThrough) < now;
-        }
-
+        this.isEndSale = (this.data.offers === undefined) ? false : moment(this.data.offers.validThrough) < now;
+        this.isStartSale = (this.data.offers === undefined) ? false : moment(this.data.offers.validFrom) < now;
         this.availability = this.getAvailability(this.data.remainingAttendeeCapacity);
     }
 
@@ -48,13 +44,15 @@ export class PurchaseFilmOrderPerformanceComponent implements OnInit {
             { text: '完売', className: 'vacancy-full' },
             { text: '購入', className: 'vacancy-little' },
             { text: '購入', className: 'vacancy-large' },
-            { text: '販売終了', className: 'end-of-sale' }
+            { text: '販売終了', className: 'outside-sales' },
+            { text: '販売期間外', className: 'outside-sales' }
         ];
 
-        return this.isEndSale
-            ? availabilityList[3] : (remaining === 0 || remaining === undefined)
-                ? availabilityList[0] : (remaining <= 10)
-                    ? availabilityList[1] : availabilityList[2];
+        return (this.isEndSale)
+            ? availabilityList[3] : (!this.isStartSale)
+                ? availabilityList[4] : (remaining === 0 || remaining === undefined)
+                    ? availabilityList[0] : (remaining <= 10)
+                        ? availabilityList[1] : availabilityList[2];
     }
 
     /**
@@ -63,7 +61,7 @@ export class PurchaseFilmOrderPerformanceComponent implements OnInit {
      */
     public start(): void {
         const availability = this.data.remainingAttendeeCapacity;
-        if (availability === 0 || availability === undefined || this.isEndSale) {
+        if (availability === 0 || availability === undefined || !this.isStartSale || this.isEndSale) {
             return;
         }
         // location.href = `${environment.ENTRANCE_SERVER_URL}/purchase/index.html?id=${this.data.identifier}`;

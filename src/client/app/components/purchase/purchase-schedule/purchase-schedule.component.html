@@ -8,10 +8,10 @@
 
 
     <div *ngIf="!isPreSaleSchedules && preSaleDateList.length > 0" class="orange-button center-button button">
-        <button (click)="isPreSaleSchedules = true">先行販売スケジュール</button>
+        <button (click)="changeScheduleType('pre')">先行販売スケジュール</button>
     </div>
     <div *ngIf="isPreSaleSchedules && preSaleDateList.length > 0" class="gray-button center-button button">
-        <button (click)="isPreSaleSchedules = false">通常スケジュール</button>
+        <button (click)="changeScheduleType('normal')">通常スケジュール</button>
     </div>
 </div>
 <!-- <dl *ngIf="showTheaterList">
@@ -23,7 +23,6 @@
             </dd>
         </dl> -->
 <div *ngIf="!isPreSaleSchedules" class="date-cover">
-
     <div class="date-list">
         <div style="position:relative;">
             <div class="swiper-container mb-3" #swiper [swiper]="swiperConfig" (resize)="resize()">
@@ -42,28 +41,50 @@
             <div class="swiper-button-prev"></div>
             <div class="swiper-button-next"></div>
         </div>
+    </div>
+</div>
 
+<div *ngIf="isPreSaleSchedules" class="date-cover">
+    <div class="date-list">
+        <div style="position:relative;">
+            <div class="swiper-container mb-3" #swiper [swiper]="swiperConfig" (resize)="resize()">
+                <div class="swiper-wrapper">
+                    <div *ngFor="let date of preSaleDateList" class="swiper-slide">
+                        <div class="date-btn " [class.active]="date.value === conditions.date" (click)="changePreSaleDate(date.value)">
+                            <strong>{{ date.label.month }}/<span class="large-text">{{ date.label.date }}</span>{{
+                                date.label.day
+                                }}</strong>
+                            <br>
+                            <br><span class="small-x-text">レディースデイ</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+        </div>
     </div>
 </div>
 
 <div class="contents wrapper">
-    <div *ngIf="conditions.date" class="selection-date large-x-text mb-x-small">
-        <strong>{{ moment(conditions.date).format('YYYY/MM/DD (ddd)') }}</strong>
+    <div *ngIf="!isLoading">
+        <div class="selection-date large-x-text mb-x-small">
+            <strong>{{ moment(conditions.date).format('YYYY/MM/DD (ddd)') }}</strong>
+        </div>
+
+        <ul *ngIf="!isPreSaleSchedules" class="film-order">
+            <app-purchase-film-order *ngFor="let film of filmOrder" [data]="film"></app-purchase-film-order>
+        </ul>
+
+        <p *ngIf="!isPreSaleSchedules && filmOrder.length === 0" class="mb-middle"><strong>スケジュールがありません</strong></p>
+
+        <ul *ngIf="isPreSaleSchedules" class="film-order">
+            <app-purchase-film-order *ngFor="let film of preSaleFilmOrder" [data]="film"></app-purchase-film-order>
+        </ul>
+
+        <p *ngIf="isPreSaleSchedules && preSaleFilmOrder.length === 0"><strong>スケジュールがありません</strong></p>
     </div>
-
-
-    <div *ngIf="isPreSaleSchedules" class="date-list mb-middle">
-        <div *ngFor="let date of preSaleDateList" class="date-btn" (click)="changePreSaleDate(date.value)">{{
-            date.label.month }}/{{ date.label.date }}{{ date.label.day }}</div>
-    </div>
-
-    <ul *ngIf="!isPreSaleSchedules" class="film-order">
-        <app-purchase-film-order *ngFor="let film of filmOrder" [data]="film"></app-purchase-film-order>
-    </ul>
-
-    <ul *ngIf="isPreSaleSchedules" class="film-order">
-        <app-purchase-film-order *ngFor="let film of preSaleFilmOrder" [data]="film"></app-purchase-film-order>
-    </ul>
+    
 
     <div class="small-x-text">
         <p>

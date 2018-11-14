@@ -37,7 +37,6 @@ export class CinerinoService {
             this.transaction = {
                 placeOrder: new cinerino.service.txn.PlaceOrder(option)
             };
-            console.log(this);
         } catch (err) {
             console.error(err);
             throw new Error('getServices is failed');

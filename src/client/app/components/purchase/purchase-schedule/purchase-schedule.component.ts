@@ -101,6 +101,25 @@ export class PurchaseScheduleComponent implements OnInit {
                     this.showTheaterList = false;
                 }
             }
+
+            const now = moment().toDate();
+            this.preSaleSchedules = (await this.cinerino.event.searchScreeningEvents({
+                eventStatuses: [factory.chevre.eventStatusType.EventScheduled],
+                superEvent: {
+                    locationBranchCodes: [this.theaters[0].location.branchCode]
+                },
+                startFrom: moment().add(3, 'days').toDate(),
+                offers: {
+                    validFrom: now,
+                    validThrough: now,
+                    availableFrom: now,
+                    availableThrough: now
+                }
+            })).data;
+            this.preSaleDateList = this.getPreSaleDateList();
+            if (this.preSaleDateList.length > 0) {
+                this.changePreSaleDate(this.preSaleDateList[0].value);
+            }
             this.dateList = this.getDateList(7);
             this.conditions = {
                 theater: this.theaters[0].location.branchCode,
@@ -108,25 +127,6 @@ export class PurchaseScheduleComponent implements OnInit {
             };
 
             this.directiveRef.update();
-
-            // TODO 先行販売とみなす条件は？
-            // 販売開始日時が3日前以前のイベント
-            const defaultOfferValidFrom = moment(moment().add(-3, 'days').format('YYYY-MM-DDT00:00:00+09:00')).toDate();
-            this.preSaleSchedules = (await this.cinerino.event.searchScreeningEvents({
-                eventStatuses: [factory.chevre.eventStatusType.EventScheduled],
-                superEvent: {
-                    locationBranchCodes: [this.theaters[0].location.branchCode]
-                },
-                startFrom: moment().toDate(),
-                offers: {
-                    // validFrom: new Date(),
-                    validThrough: defaultOfferValidFrom
-                }
-            })).data;
-            this.preSaleDateList = this.getPreSaleDateList();
-            if (this.preSaleDateList.length > 0) {
-                this.changePreSaleDate(this.preSaleDateList[0].value);
-            }
             await this.changeConditions();
         } catch (err) {
             this.error.redirect(err);
@@ -208,6 +208,7 @@ export class PurchaseScheduleComponent implements OnInit {
      * @returns { void }
      */
     public changePreSaleDate(date: string): void {
+        this.conditions.date = date;
         const schedules = this.preSaleSchedules.filter((s) => {
             return date === moment(s.startDate).format('YYYYMMDD');
         });
@@ -282,6 +283,11 @@ export class PurchaseScheduleComponent implements OnInit {
             }
             return 0;
         });
+    }
+
+    public changeScheduleType(type: 'pre' | 'normal') {
+        this.isPreSaleSchedules = (type === 'pre');
+        this.conditions.date = (type === 'pre') ? this.preSaleDateList[0].value : this.dateList[0].value;
     }
 
 }

@@ -4,8 +4,10 @@
         <br>
         <span class="small-text">※券種選択よりムビチケ券を選択してください。</span>
     </p>
-    <ul class="box radius bg-light-gray mb-middle mvtk-lists">
 
+    <p *ngIf="movieTickets.length === 0">使用可能なムビチケ券がありません。</p>
+
+    <ul *ngIf="movieTickets.length > 0" class="box radius bg-light-gray mb-middle mvtk-lists">
         <li *ngFor="let mvtkTicket of movieTickets">
             <dl class="d-table">
                 <dt class="d-td">ムビチケ購入番号 {{ mvtkTicket.identifier }}</dt>

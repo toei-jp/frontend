@@ -71,6 +71,30 @@ export class PurchaseTicketComponent implements OnInit {
             return;
         }
 
+        const validResult = selectedReservations.filter((reservation) => {
+            const unitPriceSpecification = reservation.getUnitPriceSpecification();
+            if (unitPriceSpecification === undefined
+                || unitPriceSpecification.typeOf !== factory.chevre.priceSpecificationType.UnitPriceSpecification) {
+                return false;
+            }
+            const filterResult = selectedReservations.filter((targetReservation) => {
+                return (reservation.ticket !== undefined
+                    && targetReservation.ticket !== undefined
+                    && reservation.ticket.ticketOffer.id === targetReservation.ticket.ticketOffer.id);
+            });
+            const value = (unitPriceSpecification.referenceQuantity.value === undefined)
+                ? 1
+                : unitPriceSpecification.referenceQuantity.value;
+
+            return (filterResult.length % value !== 0);
+        });
+
+        if (validResult.length > 0) {
+            this.discountConditionsModal = true;
+
+            return;
+        }
+
         if (this.disable) {
             return;
         }

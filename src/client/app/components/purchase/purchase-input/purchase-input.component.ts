@@ -131,9 +131,9 @@ export class PurchaseInputComponent implements OnInit {
                 return;
             }
             const rect = validation.getBoundingClientRect();
-            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const scrollTop = window.pageYOffset || (<HTMLElement>document.documentElement).scrollTop;
             const top = rect.top + scrollTop - 50;
-            window.scrollTo(undefined, top);
+            window.scrollTo(0, top);
         }, 0);
     }
 

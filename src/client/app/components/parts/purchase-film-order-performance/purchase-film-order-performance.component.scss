@@ -36,6 +36,12 @@ li {
             text-align: left;
             font-size: 12px;
         }
+        span {
+            @media screen and (max-width: $mobile){
+                display: block;
+                line-height: 1.4;
+            }
+        }
     }
     .date {
         border-bottom: 1px solid #eeeeef;

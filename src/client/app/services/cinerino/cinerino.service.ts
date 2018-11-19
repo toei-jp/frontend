@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import * as cinerino from '@toei-jp/cinerino-api-javascript-client';
+import * as cinerino from '@cinerino/api-javascript-client';
 import 'rxjs/add/operator/toPromise';
 import { environment } from '../../../environments/environment';
 import { SaveType, StorageService } from '../storage/storage.service';

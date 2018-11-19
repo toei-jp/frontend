@@ -1,5 +1,4 @@
-import { factory } from '@toei-jp/cinerino-api-javascript-client';
-import { IMovieTicket } from '@toei-jp/cinerino-factory/lib/factory/paymentMethod/paymentCard/movieTicket';
+import { factory } from '@cinerino/api-javascript-client';
 
 /**
  * Reservation
@@ -91,5 +90,5 @@ export interface IReservationSeat {
  */
 export interface IReservationTicket {
     ticketOffer: factory.chevre.event.screeningEvent.ITicketOffer;
-    movieTicket?: IMovieTicket;
+    movieTicket?: factory.paymentMethod.paymentCard.movieTicket.IMovieTicket;
 }

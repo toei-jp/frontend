@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import * as factory from '@toei-jp/cinerino-factory';
+import { factory } from '@cinerino/api-javascript-client';
 import * as moment from 'moment';
 import { IReservationTicket, Reservation } from '../../models';
 import { TimeFormatPipe } from '../../pipes/time-format/time-format.pipe';
@@ -328,18 +328,14 @@ export class PurchaseService {
      * @method getTotalPrice
      */
     public getTotalPrice(): number {
-        let result = 0;
-        const selectedReservations = this.data.reservations.filter((reservation) => {
-            return (reservation.ticket !== undefined);
-        });
-        selectedReservations.forEach((reservation) => {
-            if (reservation.ticket === undefined) {
-                return;
-            }
-            result += reservation.getTicketPrice().total;
-        });
+        const filterResult = this.data.reservations.filter(reservation => reservation.ticket === undefined);
+        if (filterResult.length > 0
+            || this.data.seatReservationAuthorization === undefined
+            || this.data.seatReservationAuthorization.result === undefined) {
+            return 0;
+        }
 
-        return result;
+        return this.data.seatReservationAuthorization.result.price;
     }
 
     /**

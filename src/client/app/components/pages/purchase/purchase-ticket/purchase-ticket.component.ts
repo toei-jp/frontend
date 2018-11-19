@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import { factory } from '@toei-jp/cinerino-api-javascript-client/lib/abstract';
-import { IMovieTicket } from '@toei-jp/cinerino-factory/lib/factory/paymentMethod/paymentCard/movieTicket';
+import { factory } from '@cinerino/api-javascript-client/lib/abstract';
 import { IReservationTicket, Reservation } from '../../../../models';
 import { ErrorService, PurchaseService, UserService } from '../../../../services';
 
@@ -46,7 +45,7 @@ export class PurchaseTicketComponent implements OnInit {
         this.disable = false;
         this.tickets = [];
         try {
-            this.totalPrice = this.purchase.getTotalPrice();
+            this.totalPrice = this.getPrice();
         } catch (err) {
             this.error.redirect(err);
         }
@@ -136,7 +135,7 @@ export class PurchaseTicketComponent implements OnInit {
             }
 
             // 対象ムビチケ券
-            const movieTickets: IMovieTicket[] = [];
+            const movieTickets: factory.paymentMethod.paymentCard.movieTicket.IMovieTicket[] = [];
             this.purchase.data.mvtkTickets.forEach((checkMovieTicketAction) => {
                 if (checkMovieTicketAction.result === undefined) {
                     return;
@@ -183,9 +182,61 @@ export class PurchaseTicketComponent implements OnInit {
             findReservationResult.ticket = ticket;
         }
         this.purchase.save();
-        this.totalPrice = this.purchase.getTotalPrice();
+
+        this.totalPrice = this.getPrice();
         // this.upDateSalesTickets();
         this.ticketsModal = false;
+    }
+
+    /**
+     * 合計金額取得
+     */
+    private getPrice() {
+        let price = 0;
+        const reservations: Reservation[] = [];
+        this.purchase.data.reservations.forEach((reservation) => {
+            if (reservation.ticket === undefined) {
+                return;
+            }
+            const filterResult = reservations.filter((target) => {
+                if (reservation.ticket === undefined
+                    || target.ticket === undefined) {
+                    return false;
+                }
+
+                return (reservation.ticket.ticketOffer.id === target.ticket.ticketOffer.id);
+            });
+            if (filterResult.length > 0) {
+                return;
+            }
+            reservations.push(reservation);
+        });
+        reservations.forEach((reservation) => {
+            if (reservation.ticket === undefined) {
+                return;
+            }
+            const filterResult = this.purchase.data.reservations.filter((target) => {
+                if (reservation.ticket === undefined
+                    || target.ticket === undefined) {
+                    return false;
+                }
+
+                return (reservation.ticket.ticketOffer.id === target.ticket.ticketOffer.id);
+            });
+
+            const unitPriceSpecification = reservation.getUnitPriceSpecification();
+            if (unitPriceSpecification === undefined
+                || unitPriceSpecification.typeOf !== factory.chevre.priceSpecificationType.UnitPriceSpecification) {
+                return;
+            }
+            const referenceQuantity = (unitPriceSpecification.referenceQuantity.value === undefined)
+                ? 1
+                : unitPriceSpecification.referenceQuantity.value;
+            const availability = Math.floor(filterResult.length / referenceQuantity);
+            price += reservation.getTicketPrice().total * availability;
+        });
+
+        return price;
     }
 
     /**

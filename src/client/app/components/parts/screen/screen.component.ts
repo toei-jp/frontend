@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { factory } from '@toei-jp/cinerino-api-javascript-client';
+import { factory } from '@cinerino/api-javascript-client';
 import 'rxjs/add/operator/toPromise';
 import { IReservationSeat } from '../../../models';
 import { CinerinoService } from '../../../services/cinerino/cinerino.service';

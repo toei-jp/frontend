@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import * as cinerino from '@toei-jp/cinerino-api-javascript-client';
+import * as cinerino from '@cinerino/api-javascript-client';
 
 type IScreeningEvent = cinerino.factory.chevre.event.screeningEvent.IEvent;
 interface IFilmOrder {

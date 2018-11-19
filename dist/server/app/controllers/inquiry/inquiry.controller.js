@@ -11,7 +11,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * 照会
  */
-const cinerino = require("@toei-jp/cinerino-api-nodejs-client");
+const cinerino = require("@cinerino/api-nodejs-client");
 const debug = require("debug");
 const http_status_1 = require("http-status");
 const libphonenumber_js_1 = require("libphonenumber-js");

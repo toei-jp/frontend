@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { factory } from '@toei-jp/cinerino-api-javascript-client';
+import { factory } from '@cinerino/api-javascript-client';
 import { ErrorService, PurchaseService } from '../../../../services';
 
 type IMovieTicketTypeChargeSpecification =

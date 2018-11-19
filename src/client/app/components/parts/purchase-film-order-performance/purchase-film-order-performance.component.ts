@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import * as cinerino from '@toei-jp/cinerino-api-javascript-client';
+import * as cinerino from '@cinerino/api-javascript-client';
 import * as moment from 'moment';
 import { SaveType, StorageService } from '../../../services/storage/storage.service';
 // import { environment } from '../../../../environments/environment';

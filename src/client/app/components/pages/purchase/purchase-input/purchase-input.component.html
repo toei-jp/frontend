@@ -164,13 +164,6 @@
                     </li>
                 </ul>
 
-                <div *ngIf="user.isMember()" class="text-center mb-middle">
-                    <input type="checkbox" formControlName="saveCreditCard" id="saveCreditCard">
-                    <label for="saveCreditCard">
-                        <strong>クレジットカード情報を保存する</strong>
-                    </label>
-                </div>
-
                 <div *ngIf="user.isRegisteredCreditCards()" class="button gray-button">
                     <button type="button" (click)="changeRegisteredCreditCard()">登録済みクレジットカードを使用する</button>
                 </div>

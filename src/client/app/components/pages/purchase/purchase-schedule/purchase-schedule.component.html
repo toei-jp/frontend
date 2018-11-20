@@ -3,7 +3,7 @@
     <h1 class="page-ttl">スケジュール選択</h1>
     <p class="read">鑑賞希望作品の上映時間を選択してください。</p>
     <!-- <div *ngFor="let theater of theaters" class="mb-middle button orange-button center-button inquiry-button">
-        <a href="{{ environment.FRONTEND_ENDPOINT }}/inquiry/login?theater={{ theater.location.branchCode }}">{{ theater.name.ja }}照会</a>
+        <a href="/inquiry/login?theater={{ theater.location.branchCode }}">{{ theater.name.ja }}照会</a>
     </div> -->
 
 
@@ -28,12 +28,8 @@
             <div class="swiper-container mb-3" #swiper [swiper]="swiperConfig" (resize)="resize()">
                 <div class="swiper-wrapper">
                     <div *ngFor="let date of dateList" class="swiper-slide">
-                        <div class="date-btn " [class.active]="date.value === conditions.date" (click)="changeDate(date.value)">
-                            <strong>{{ date.label.month }}/<span class="large-text">{{ date.label.date }}</span>{{
-                                date.label.day
-                                }}</strong>
-                            <br>
-                            <br><span class="small-x-text">レディースデイ</span>
+                        <div class="date-btn d-flex justify-content-center align-items-center" [class.active]="date.value === conditions.date" (click)="changeDate(date.value)">
+                            <strong>{{ date.label.month }}/<span class="large-text">{{ date.label.date }}</span>{{ date.label.day }}</strong>
                         </div>
                     </div>
                 </div>
@@ -50,12 +46,8 @@
             <div class="swiper-container mb-3" #swiper [swiper]="swiperConfig" (resize)="resize()">
                 <div class="swiper-wrapper">
                     <div *ngFor="let date of preSaleDateList" class="swiper-slide">
-                        <div class="date-btn " [class.active]="date.value === conditions.date" (click)="changePreSaleDate(date.value)">
-                            <strong>{{ date.label.month }}/<span class="large-text">{{ date.label.date }}</span>{{
-                                date.label.day
-                                }}</strong>
-                            <br>
-                            <br><span class="small-x-text">レディースデイ</span>
+                        <div class="date-btn d-flex justify-content-center align-items-center" [class.active]="date.value === conditions.date" (click)="changePreSaleDate(date.value)">
+                            <strong>{{ date.label.month }}/<span class="large-text">{{ date.label.date }}</span>{{ date.label.day }}</strong>
                         </div>
                     </div>
                 </div>

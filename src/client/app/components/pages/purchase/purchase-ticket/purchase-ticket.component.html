@@ -26,7 +26,7 @@
                     </div>
                     <div *ngIf="reservation.ticket !== undefined" class="orange-button ghost-button">
                         <button type="button" (click)="openTicketList(reservation)">
-                            {{ reservation.ticket.ticketOffer.name.ja }} {{ reservation.getTicketPrice().total |
+                            {{ reservation.ticket.ticketOffer.name.ja }} {{ reservation.getTicketPrice().single |
                             currency : 'JPY' }}
                         </button>
                     </div>
@@ -74,7 +74,7 @@
             <dl class="d-table">
                 <dt class="d-td">
                     <div class="mb-xx-small">
-                        <strong>{{ ticket.ticketOffer.name.ja }} {{ getTicketPrice(ticket.ticketOffer).total | currency
+                        <strong>{{ ticket.ticketOffer.name.ja }} {{ purchase.getTicketPrice(ticket.ticketOffer).single | currency
                             : 'JPY' }}</strong>
                     </div>
                     <p *ngIf="ticket.movieTicket" class="small-x-text">購入管理番号{{ ticket.movieTicket.identifier

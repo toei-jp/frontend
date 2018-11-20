@@ -35,7 +35,6 @@
     "@angular/router": "^6.1.10",
     "@cinerino/api-javascript-client": "^1.0.0-alpha.21",
     "@cinerino/api-nodejs-client": "^1.1.0-alpha.26",
-    "aws-sdk": "2.176.0",
     "basic-auth": "^2.0.1",
     "body-parser": "^1.18.3",
     "connect-redis": "^3.4.0",

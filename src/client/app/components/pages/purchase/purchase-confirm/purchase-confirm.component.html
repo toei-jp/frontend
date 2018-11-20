@@ -9,14 +9,9 @@
             作品情報
             <div class="right ticket-app-hide">
                 <div class="button light-gray-button change-button">
-                    <a (click)="changeScreeningEvent()">変更</a>
+                    <a routerLink="/purchase/schedule">変更</a>
                 </div>
             </div>
-            <!-- <div class="right ticket-app-show">
-                <div class="button light-gray-button change-button">
-                    <a href="{{ environment.APP_SITE_URL }}/#/purchase">変更</a>
-                </div>
-            </div> -->
         </h2>
 
         <ul class="box radius bg-light-gray mb-large">
@@ -51,19 +46,13 @@
                     <dt>座席</dt>
                     <dd>
                         <p *ngFor="let reservation of purchase.data.reservations">
-                            {{ reservation.seat.seatNumber }} {{ reservation.ticket.ticketOffer.name.ja }}
+                            <span>{{ reservation.seat.seatNumber }} </span>
+                            <span>{{ reservation.ticket.ticketOffer.name.ja }} </span>
+                            <span>{{ reservation.getTicketPrice().single | currency : 'JPY' }}</span>
                         </p>
                     </dd>
                 </dl>
             </li>
-            <!-- <li *ngIf="user.isMember()">
-                <dl>
-                    <dt>獲得ポイント</dt>
-                    <dd>
-                        <strong class="red-text">0ポイント</strong>
-                    </dd>
-                </dl>
-            </li> -->
         </ul>
 
         <h2 class="section-ttl">

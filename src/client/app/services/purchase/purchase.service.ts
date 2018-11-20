@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { factory } from '@cinerino/api-javascript-client';
 import * as moment from 'moment';
+import { environment } from '../../../environments/environment';
 import { IReservationTicket, Reservation } from '../../models';
 import { TimeFormatPipe } from '../../pipes/time-format/time-format.pipe';
 import { CinerinoService } from '../cinerino/cinerino.service';
@@ -12,6 +13,7 @@ export type ICustomerContact = factory.transaction.placeOrder.ICustomerContact;
 export type ISalesTicketResult = factory.chevre.event.screeningEvent.ITicketOffer;
 type IUnauthorizedCardOfMember = factory.paymentMethod.paymentCard.creditCard.IUnauthorizedCardOfMember;
 type IUncheckedCardTokenized = factory.paymentMethod.paymentCard.creditCard.IUncheckedCardTokenized;
+type IItemOffered = factory.chevre.reservation.event.IReservation<factory.chevre.event.screeningEvent.IEvent>;
 
 export interface IOffer {
     price: number;
@@ -324,6 +326,52 @@ export class PurchaseService {
     }
 
     /**
+     * 券種金額取得
+     */
+    public getTicketPrice(ticket: factory.chevre.event.screeningEvent.ITicketOffer | factory.order.IAcceptedOffer<IItemOffered>) {
+        const result = {
+            unitPriceSpecification: 0,
+            videoFormatCharge: 0,
+            soundFormatCharge: 0,
+            movieTicketTypeCharge: 0,
+            total: 0,
+            single: 0
+        };
+
+        if (ticket.priceSpecification === undefined) {
+            return result;
+        }
+        const priceComponent = (<factory.chevre.event.screeningEvent.ITicketPriceSpecification>ticket.priceSpecification).priceComponent;
+        const priceSpecificationType = factory.chevre.priceSpecificationType;
+        const unitPriceSpecifications = priceComponent.filter((s) => s.typeOf === priceSpecificationType.UnitPriceSpecification);
+        const videoFormatCharges = priceComponent.filter((s) => s.typeOf === priceSpecificationType.VideoFormatChargeSpecification);
+        const soundFormatCharges = priceComponent.filter((s) => s.typeOf === priceSpecificationType.SoundFormatChargeSpecification);
+        const movieTicketTypeCharges = priceComponent.filter((s) => s.typeOf === priceSpecificationType.MovieTicketTypeChargeSpecification);
+
+        result.unitPriceSpecification += unitPriceSpecifications[0].price;
+        videoFormatCharges.forEach((videoFormatCharge) => {
+            result.videoFormatCharge += videoFormatCharge.price;
+        });
+        soundFormatCharges.forEach((soundFormatCharge) => {
+            result.soundFormatCharge += soundFormatCharge.price;
+        });
+        movieTicketTypeCharges.forEach((movieTicketTypeCharge) => {
+            result.movieTicketTypeCharge += movieTicketTypeCharge.price;
+        });
+        result.total = result.unitPriceSpecification + result.videoFormatCharge + result.soundFormatCharge + result.movieTicketTypeCharge;
+
+        const unitPriceSpecification = unitPriceSpecifications[0];
+        if (unitPriceSpecification.typeOf === priceSpecificationType.UnitPriceSpecification) {
+            const referenceQuantityValue = (unitPriceSpecification.referenceQuantity.value === undefined)
+                ? 1
+                : unitPriceSpecification.referenceQuantity.value;
+            result.single = result.total / referenceQuantityValue;
+        }
+
+        return result;
+    }
+
+    /**
      * 合計金額計算
      * @method getTotalPrice
      */
@@ -412,7 +460,7 @@ export class PurchaseService {
             location: { branchCodes: [this.data.screeningEvent.superEvent.location.branchCode] }
         })).data[0];
         // 取引期限
-        const VALID_TIME = 15;
+        const VALID_TIME = environment.TRANSACTION_TIME;
         const expires = moment().add(VALID_TIME, 'minutes').toDate();
         // 取引開始
         this.data.transaction = await this.cinerino.transaction.placeOrder.start({
@@ -800,42 +848,5 @@ export class PurchaseService {
 
         this.data.mvtkTickets = [checkMovieTicketAction];
         this.save();
-    }
-
-    /**
-     * 券種金額取得
-     */
-    public getTicketPrice(ticket: ISalesTicketResult) {
-        const result = {
-            unitPriceSpecification: 0,
-            videoFormatCharge: 0,
-            soundFormatCharge: 0,
-            movieTicketTypeCharge: 0,
-            total: 0
-        };
-        const unitPriceSpecifications = ticket.priceSpecification.priceComponent
-            .filter((s) => s.typeOf === factory.chevre.priceSpecificationType.UnitPriceSpecification);
-        const videoFormatCharges = ticket.priceSpecification.priceComponent
-            .filter((s) => s.typeOf === factory.chevre.priceSpecificationType.VideoFormatChargeSpecification);
-        const soundFormatCharges = ticket.priceSpecification.priceComponent
-            .filter((s) => s.typeOf === factory.chevre.priceSpecificationType.SoundFormatChargeSpecification);
-        const movieTicketTypeCharges = ticket.priceSpecification.priceComponent
-            .filter((s) => s.typeOf === factory.chevre.priceSpecificationType.MovieTicketTypeChargeSpecification);
-
-        unitPriceSpecifications.forEach((unitPriceSpecification) => {
-            result.unitPriceSpecification += unitPriceSpecification.price;
-        });
-        videoFormatCharges.forEach((videoFormatCharge) => {
-            result.videoFormatCharge += videoFormatCharge.price;
-        });
-        soundFormatCharges.forEach((soundFormatCharge) => {
-            result.soundFormatCharge += soundFormatCharge.price;
-        });
-        movieTicketTypeCharges.forEach((movieTicketTypeCharge) => {
-            result.movieTicketTypeCharge += movieTicketTypeCharge.price;
-        });
-        result.total = result.unitPriceSpecification + result.videoFormatCharge + result.soundFormatCharge + result.movieTicketTypeCharge;
-
-        return result;
     }
 }

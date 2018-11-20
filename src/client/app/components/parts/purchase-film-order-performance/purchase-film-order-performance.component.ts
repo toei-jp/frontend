@@ -64,7 +64,7 @@ export class PurchaseFilmOrderPerformanceComponent implements OnInit {
         if (availability === 0 || availability === undefined || !this.isStartSale || this.isEndSale) {
             return;
         }
-        // location.href = `${environment.ENTRANCE_SERVER_URL}/purchase/index.html?id=${this.data.identifier}`;
+        // location.href = `${environment.WAITER_SERVER_URL}/purchase/index.html?id=${this.data.identifier}`;
         this.storage.save('parameters', {
             passportToken: '',
             signInRedirect: false,

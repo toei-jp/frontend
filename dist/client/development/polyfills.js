@@ -9931,7 +9931,7 @@ window.global = window;
 
 /***/ }),
 
-/***/ 2:
+/***/ 1:
 /*!****************************!*\
   !*** multi ./polyfills.ts ***!
   \****************************/
@@ -9943,5 +9943,5 @@ module.exports = __webpack_require__(/*! C:\Users\hataguchi\Desktop\workspace\TO
 
 /***/ })
 
-},[[2,"runtime"]]]);
+},[[1,"runtime"]]]);
 //# sourceMappingURL=polyfills.js.map

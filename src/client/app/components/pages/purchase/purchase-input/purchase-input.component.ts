@@ -6,7 +6,6 @@ import * as libphonenumber from 'libphonenumber-js';
 import * as moment from 'moment';
 import { LibphonenumberFormatPipe } from '../../../../pipes/libphonenumber-format/libphonenumber-format.pipe';
 import {
-    CinerinoService,
     ErrorService,
     IGmoTokenObject,
     PurchaseService,
@@ -44,9 +43,7 @@ export class PurchaseInputComponent implements OnInit {
         private elementRef: ElementRef,
         private formBuilder: FormBuilder,
         private router: Router,
-        private error: ErrorService,
-        private cinerino: CinerinoService
-
+        private error: ErrorService
     ) { }
 
     public async ngOnInit() {
@@ -71,51 +68,6 @@ export class PurchaseInputComponent implements OnInit {
             this.validationScroll();
         }
         this.securityCodeModal = false;
-        /* try {
-            if (this.user.isNative() && !this.user.isMember()) {
-                // アプリ非会員ならCognitoから取得
-                const records = await this.awsCognito.getRecords({
-                    datasetName: 'profile'
-                });
-                if (records.familyName !== undefined
-                    || records.givenName !== undefined
-                    || records.email !== undefined
-                    || records.emailConfirm !== undefined
-                    || records.telephone !== undefined) {
-                    this.inputForm.controls.familyName.setValue(records.familyName);
-                    this.inputForm.controls.givenName.setValue(records.givenName);
-                    this.inputForm.controls.email.setValue(records.email);
-                    this.inputForm.controls.emailConfirm.setValue(records.email);
-                    this.inputForm.controls.telephone.setValue(records.telephone);
-                }
-            } else if (this.user.isMember()) {
-                // 会員
-                if (this.user.data.contact === undefined) {
-                    throw new Error('contact is undefined');
-                }
-                const contacts = this.user.data.contact;
-
-                if (this.user.data.creditCards === undefined
-                    || this.user.data.creditCards.length === 0) {
-                    throw new Error('creditCards is notfoud');
-                }
-
-                this.inputForm.controls.familyName.setValue(this.utill.convertToHira(contacts.familyName));
-                this.inputForm.controls.givenName.setValue(this.utill.convertToHira(contacts.givenName));
-                this.inputForm.controls.email.setValue(contacts.email);
-                this.inputForm.controls.emailConfirm.setValue(contacts.email);
-                this.inputForm.controls.telephone.setValue(contacts.telephone.replace(/-/g, ''));
-
-                const payment = this.purchase.getTotalPrice();
-                if (payment > 0) {
-                    // クレジット決済ありならクレジットカードタイプを変更
-                    this.changeRegisteredCreditCard();
-                }
-            }
-        } catch (err) {
-            this.error.redirect(err);
-        } */
-
     }
 
     /**
@@ -208,20 +160,6 @@ export class PurchaseInputComponent implements OnInit {
                     this.disable = false;
 
                     return;
-                }
-                if (this.user.isMember()
-                    && this.inputForm.controls.saveCreditCard.value
-                    && this.purchase.data.gmoTokenObject !== undefined) {
-                    // 会員 クレジットカード情報保存
-                    await this.cinerino.getServices();
-                    const gmoTokenObject = await this.getGmoObject();
-                    const addCreditCardArgs = {
-                        personId: 'me',
-                        creditCard: {
-                            token: gmoTokenObject.token
-                        }
-                    };
-                    await this.cinerino.personOwnershipInfo.addCreditCard(addCreditCardArgs);
                 }
             }
 
@@ -379,36 +317,18 @@ export class PurchaseInputComponent implements OnInit {
                 this.cardExpiration.year.push(moment().add(i, 'year').format('YYYY'));
             }
 
-            if (this.user.isMember()) {
-                // 会員
-                return this.formBuilder.group({
-                    familyName: [customerContact.familyName.value, customerContact.familyName.validators],
-                    givenName: [customerContact.givenName.value, customerContact.givenName.validators],
-                    email: [customerContact.email.value, customerContact.email.validators],
-                    emailConfirm: [customerContact.emailConfirm.value, customerContact.emailConfirm.validators],
-                    telephone: [customerContact.telephone.value, customerContact.telephone.validators],
-                    cardNumber: [customerContact.cardNumber.value, customerContact.cardNumber.validators],
-                    cardExpirationMonth: [customerContact.cardExpirationMonth.value, customerContact.cardExpirationMonth.validators],
-                    cardExpirationYear: [customerContact.cardExpirationYear.value, customerContact.cardExpirationYear.validators],
-                    securityCode: [customerContact.securityCode.value, customerContact.securityCode.validators],
-                    holderName: [customerContact.holderName.value, customerContact.holderName.validators],
-                    saveCreditCard: [false]
-                });
-            } else {
-                // 非会員
-                return this.formBuilder.group({
-                    familyName: [customerContact.familyName.value, customerContact.familyName.validators],
-                    givenName: [customerContact.givenName.value, customerContact.givenName.validators],
-                    email: [customerContact.email.value, customerContact.email.validators],
-                    emailConfirm: [customerContact.emailConfirm.value, customerContact.emailConfirm.validators],
-                    telephone: [customerContact.telephone.value, customerContact.telephone.validators],
-                    cardNumber: [customerContact.cardNumber.value, customerContact.cardNumber.validators],
-                    cardExpirationMonth: [customerContact.cardExpirationMonth.value, customerContact.cardExpirationMonth.validators],
-                    cardExpirationYear: [customerContact.cardExpirationYear.value, customerContact.cardExpirationYear.validators],
-                    securityCode: [customerContact.securityCode.value, customerContact.securityCode.validators],
-                    holderName: [customerContact.holderName.value, customerContact.holderName.validators]
-                });
-            }
+            return this.formBuilder.group({
+                familyName: [customerContact.familyName.value, customerContact.familyName.validators],
+                givenName: [customerContact.givenName.value, customerContact.givenName.validators],
+                email: [customerContact.email.value, customerContact.email.validators],
+                emailConfirm: [customerContact.emailConfirm.value, customerContact.emailConfirm.validators],
+                telephone: [customerContact.telephone.value, customerContact.telephone.validators],
+                cardNumber: [customerContact.cardNumber.value, customerContact.cardNumber.validators],
+                cardExpirationMonth: [customerContact.cardExpirationMonth.value, customerContact.cardExpirationMonth.validators],
+                cardExpirationYear: [customerContact.cardExpirationYear.value, customerContact.cardExpirationYear.validators],
+                securityCode: [customerContact.securityCode.value, customerContact.securityCode.validators],
+                holderName: [customerContact.holderName.value, customerContact.holderName.validators]
+            });
 
         } else {
             // 決済なし

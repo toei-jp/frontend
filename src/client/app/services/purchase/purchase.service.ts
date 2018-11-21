@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { factory } from '@cinerino/api-javascript-client';
 import * as moment from 'moment';
+import * as util from 'util';
 import { environment } from '../../../environments/environment';
+import { getPurchaseCompleteTemplate } from '../../mails';
 import { IReservationTicket, Reservation } from '../../models';
 import { TimeFormatPipe } from '../../pipes/time-format/time-format.pipe';
 import { CinerinoService } from '../cinerino/cinerino.service';
@@ -539,7 +541,7 @@ export class PurchaseService {
                             seatSection: reservation.seat.seatSection,
                             seatNumber: reservation.seat.seatNumber,
                             seatRow: '',
-                            seatingType: '',
+                            seatingType: <any>'',
                             typeOf: factory.chevre.placeType.Seat
                         },
                         id: (reservation.ticket === undefined) ? this.data.salesTickets[0].id : reservation.ticket.ticketOffer.id
@@ -584,7 +586,7 @@ export class PurchaseService {
                             seatSection: reservation.seat.seatSection,
                             seatNumber: reservation.seat.seatNumber,
                             seatRow: '',
-                            seatingType: '',
+                            seatingType: <any>'',
                             typeOf: factory.chevre.placeType.Seat
                         },
                         id: (<IReservationTicket>reservation.ticket).ticketOffer.id
@@ -729,7 +731,28 @@ export class PurchaseService {
         // 取引確定
         order = (await this.cinerino.transaction.placeOrder.confirm({
             id: transaction.id,
-            options: { sendEmailMessage: true }
+            options: {
+                sendEmailMessage: true,
+                emailTemplate: getPurchaseCompleteTemplate({
+                    eventStartDate: moment(this.data.screeningEvent.startDate).format('YYYY年MM月DD日(ddd) HH:mm'),
+                    eventEndDate: moment(this.data.screeningEvent.endDate).format('HH:mm'),
+                    workPerformedName: this.data.screeningEvent.workPerformed.name,
+                    screenName: this.data.screeningEvent.location.name.ja,
+                    screenAddress: (this.data.screeningEvent.location.address !== undefined)
+                        ? `(${this.data.screeningEvent.location.address.ja})`
+                        : '',
+                    reservedSeats: this.data.reservations.map((reservation) => {
+                        return util.format(
+                            '%s %s %s %s',
+                            reservation.seat.seatNumber,
+                            (reservation.ticket === undefined) ? '' : reservation.ticket.ticketOffer.name.ja,
+                            reservation.getTicketPrice().single,
+                            (reservation.ticket === undefined) ? '' : reservation.ticket.ticketOffer.priceCurrency
+                        );
+                    }).join('\n'),
+                    inquiryUrl: `${environment.SITE_URL}/inquiry/login`
+                })
+            }
         })).order;
         const complete = {
             order,
@@ -829,7 +852,7 @@ export class PurchaseService {
                         reservedTicket: {
                             ticketedSeat: {
                                 typeOf: factory.chevre.placeType.Seat,
-                                seatingType: '', // 情報空でよし
+                                seatingType: <any>'', // 情報空でよし
                                 seatNumber: '', // 情報空でよし
                                 seatRow: '', // 情報空でよし
                                 seatSection: '' // 情報空でよし

@@ -1,7 +1,7 @@
 export const environment = {
     production: true,
-    PORTAL_SITE_URL: '/',
-    APP_SITE_URL: 'https://smpapp.ticket-toei.co.jp',
+    SITE_URL: 'https://toei-frontend-production.azurewebsites.net',
+    PORTAL_SITE_URL: 'http://theaters.toei.co.jp',
     WAITER_SERVER_URL: '',
 
     CINERINO_API_ENDPOINT: 'https://toei-cinerino-api-production.azurewebsites.net',

@@ -13,7 +13,6 @@ import methodRouter from './method';
 function defaultSetting(req: Request, res: Response, next: NextFunction) {
     res.locals.NODE_ENV = process.env.NODE_ENV;
     res.locals.PORTAL_SITE_URL = process.env.PORTAL_SITE_URL;
-    res.locals.APP_SITE_URL = process.env.APP_SITE_URL;
     res.locals.isApp = ((<Express.Session>req.session).awsCognitoIdentityId !== undefined);
     next();
 }

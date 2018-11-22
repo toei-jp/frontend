@@ -193,87 +193,11 @@ export class PurchaseTicketComponent implements OnInit {
      */
     private getPrice() {
         let price = 0;
-        const reservations: Reservation[] = [];
         this.purchase.data.reservations.forEach((reservation) => {
-            if (reservation.ticket === undefined) {
-                return;
-            }
-            const filterResult = reservations.filter((target) => {
-                if (reservation.ticket === undefined
-                    || target.ticket === undefined) {
-                    return false;
-                }
-
-                return (reservation.ticket.ticketOffer.id === target.ticket.ticketOffer.id);
-            });
-            if (filterResult.length > 0) {
-                return;
-            }
-            reservations.push(reservation);
-        });
-        reservations.forEach((reservation) => {
-            if (reservation.ticket === undefined) {
-                return;
-            }
-            const filterResult = this.purchase.data.reservations.filter((target) => {
-                if (reservation.ticket === undefined
-                    || target.ticket === undefined) {
-                    return false;
-                }
-
-                return (reservation.ticket.ticketOffer.id === target.ticket.ticketOffer.id);
-            });
-
-            const unitPriceSpecification = reservation.getUnitPriceSpecification();
-            if (unitPriceSpecification === undefined
-                || unitPriceSpecification.typeOf !== factory.chevre.priceSpecificationType.UnitPriceSpecification) {
-                return;
-            }
-            const referenceQuantity = (unitPriceSpecification.referenceQuantity.value === undefined)
-                ? 1
-                : unitPriceSpecification.referenceQuantity.value;
-            const availability = Math.floor(filterResult.length / referenceQuantity);
-            price += reservation.getTicketPrice().total * availability;
+            price += reservation.getTicketPrice().single;
         });
 
         return price;
-    }
-
-    /**
-     * 券種金額取得
-     */
-    public getTicketPrice(ticket: factory.chevre.event.screeningEvent.ITicketOffer) {
-        const result = {
-            unitPriceSpecification: 0,
-            videoFormatCharge: 0,
-            soundFormatCharge: 0,
-            movieTicketTypeCharge: 0,
-            total: 0
-        };
-        const unitPriceSpecifications = ticket.priceSpecification.priceComponent
-            .filter((s) => s.typeOf === factory.chevre.priceSpecificationType.UnitPriceSpecification);
-        const videoFormatCharges = ticket.priceSpecification.priceComponent
-            .filter((s) => s.typeOf === factory.chevre.priceSpecificationType.VideoFormatChargeSpecification);
-        const soundFormatCharges = ticket.priceSpecification.priceComponent
-            .filter((s) => s.typeOf === factory.chevre.priceSpecificationType.SoundFormatChargeSpecification);
-        const movieTicketTypeCharges = ticket.priceSpecification.priceComponent
-            .filter((s) => s.typeOf === factory.chevre.priceSpecificationType.MovieTicketTypeChargeSpecification);
-
-        unitPriceSpecifications.forEach((unitPriceSpecification) => {
-            result.unitPriceSpecification += unitPriceSpecification.price;
-        });
-        videoFormatCharges.forEach((videoFormatCharge) => {
-            result.videoFormatCharge += videoFormatCharge.price;
-        });
-        soundFormatCharges.forEach((soundFormatCharge) => {
-            result.soundFormatCharge += soundFormatCharge.price;
-        });
-        movieTicketTypeCharges.forEach((movieTicketTypeCharge) => {
-            result.movieTicketTypeCharge += movieTicketTypeCharge.price;
-        });
-        result.total = result.unitPriceSpecification + result.videoFormatCharge + result.soundFormatCharge + result.movieTicketTypeCharge;
-
-        return result;
     }
 
     /**

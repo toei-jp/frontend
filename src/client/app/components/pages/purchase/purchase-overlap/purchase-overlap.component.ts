@@ -59,7 +59,7 @@ export class PurchaseOverlapComponent implements OnInit {
             performanceId: this.screeningEvent.id
         }, SaveType.Session);
         this.router.navigate(['/purchase/transaction']);
-        // location.href = `${environment.ENTRANCE_SERVER_URL}/purchase/index.html?id=${this.screeningEvent.identifier}`;
+        // location.href = `${environment.WAITER_SERVER_URL}/purchase/index.html?id=${this.screeningEvent.identifier}`;
     }
 
     /**

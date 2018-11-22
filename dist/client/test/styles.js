@@ -573,7 +573,7 @@ if(false) {}
 
 /***/ }),
 
-/***/ 3:
+/***/ 2:
 /*!*****************************************************************************************************************!*\
   !*** multi ./styles.scss C:/Users/user/Desktop/workspace/TOEI/frontend/node_modules/swiper/dist/css/swiper.css ***!
   \*****************************************************************************************************************/
@@ -586,5 +586,5 @@ module.exports = __webpack_require__(/*! C:\Users\user\Desktop\workspace\TOEI\fr
 
 /***/ })
 
-},[[3,"runtime"]]]);
+},[[2,"runtime"]]]);
 //# sourceMappingURL=styles.js.map

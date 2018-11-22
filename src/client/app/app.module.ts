@@ -48,11 +48,9 @@ import { DurationPipe } from './pipes/duration/duration.pipe';
 import { LibphonenumberFormatPipe } from './pipes/libphonenumber-format/libphonenumber-format.pipe';
 import { TimeFormatPipe } from './pipes/time-format/time-format.pipe';
 import {
-    AwsCognitoService,
     CallNativeService,
     CinerinoService,
     ErrorService,
-    MemberGuardService,
     PurchaseGuardService,
     PurchaseService,
     StorageService,
@@ -118,13 +116,11 @@ import {
         ErrorService,
         StorageService,
         PurchaseService,
-        AwsCognitoService,
         CallNativeService,
         CinerinoService,
         UserService,
         TestGuardService,
-        UtilService,
-        MemberGuardService
+        UtilService
     ],
     bootstrap: [AppComponent]
 })

@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
 import {
-    AwsCognitoService,
     CinerinoService,
     ErrorService,
     PurchaseService,
@@ -53,7 +52,6 @@ export class PurchaseTransactionComponent implements OnInit {
         private cinerino: CinerinoService,
         private purchase: PurchaseService,
         private error: ErrorService,
-        private awsCognito: AwsCognitoService,
         private user: UserService
     ) { }
 
@@ -68,24 +66,8 @@ export class PurchaseTransactionComponent implements OnInit {
                 this.user.load();
                 this.user.save();
             }
-            // if (!this.parametersChack()) {
-            //     throw new Error('parameters is undefined');
-            // }
-            this.user.setNative(this.parameters.native);
-            // this.user.setAccessToken(this.parameters.accessToken);
             this.user.save();
-            // console.log('this.cinerino.auth', this.cinerino.auth);
-            /*if (this.parameters.member === FlgMember.Member && !this.parameters.signInRedirect) {
-                await this.cinerino.signIn();
 
-                return;
-            }*/
-
-            // ticketアプリテスト
-            // this.parameters.identityId = 'ap-northeast-1:c93ad6a4-47e6-4023-a078-2a9ea80c15c9';
-            if (this.parameters.identityId !== undefined) {
-                await this.awsCognito.authenticateWithDeviceId(this.parameters.identityId);
-            }
             await this.cinerino.getServices();
             // イベント情報取得
             const screeningEvent = await this.cinerino.event.findScreeningEventById({
@@ -107,10 +89,7 @@ export class PurchaseTransactionComponent implements OnInit {
                 // 取引期限切れなら購入情報削除
                 this.purchase.reset();
             }
-            if (this.user.isNative()) {
-                // アプリなら購入情報削除
-                this.purchase.reset();
-            }
+
             if (this.purchase.data.reservations.length > 0) {
                 // 重複確認へ
                 this.storage.save('screeningEvent', screeningEvent, SaveType.Session);

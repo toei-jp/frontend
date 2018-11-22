@@ -3,7 +3,13 @@ import { factory } from '@cinerino/api-javascript-client';
 import * as moment from 'moment';
 import { environment } from '../../../../../environments/environment';
 import { TimeFormatPipe } from '../../../../pipes/time-format/time-format.pipe';
-import { ErrorService, SaveType, StorageService, UserService } from '../../../../services';
+import {
+    ErrorService,
+    PurchaseService,
+    SaveType,
+    StorageService,
+    UserService
+} from '../../../../services';
 
 @Component({
     selector: 'app-purchase-complete',
@@ -23,7 +29,7 @@ export class PurchaseCompleteComponent implements OnInit {
     constructor(
         private storage: StorageService,
         private error: ErrorService,
-        // private cinerino: CinerinoService,
+        public purchase: PurchaseService,
         public user: UserService
     ) { }
 
@@ -137,106 +143,7 @@ export class PurchaseCompleteComponent implements OnInit {
      */
     public getInquiryUrl() {
         const params = `theater=${this.data.movieTheaterOrganization.location.branchCode}&reserve=${this.data.order.confirmationNumber}`;
-        return `${this.environment.FRONTEND_ENDPOINT}/inquiry/login?${params}`;
-    }
-
-    /**
-     * メール送信処理
-     */
-    /*public async mailSendProcess(count: number) {
-        try {
-            const movieTheaterPlace = await this.cinerino.searchMovieTheaters({
-                location: branchCodes: [this.data.movieTheaterOrganization.location.branchCode]
-            });
-            const text = (this.user.isNative())
-                ? this.getAppMailText(movieTheaterPlace.telephone)
-                : this.getMailText(movieTheaterPlace.telephone);
-                const sendEmailNotificationArgs = {
-                    transactionId: this.data.transaction.id,
-                    emailMessageAttributes: {
-                        typeOf: <any>factory.creativeWorkType.EmailMessage,
-                        sender: {
-                            name: this.data.order.seller.name,
-                            email: 'noreply@ticket-cinemasunshine.com'
-                        },
-                        toRecipient: {
-                            name: `${this.data.order.customer.familyName} ${this.data.order.customer.givenName}`,
-                            email: this.data.order.customer.email
-                        },
-                        about: `${this.data.order.seller.name} 購入完了`,
-                        text: text
-                    }
-                };
-            this.data.sendEmailNotification =
-                await this.cinerino.transaction.placeOrder.sendEmailNotification(sendEmailNotificationArgs);
-            this.storage.save('complete', this.data, SaveType.Session);
-        } catch (err) {
-            const limit = 10;
-            if (count < limit) {
-                const timer = 1000;
-                setTimeout(
-                    () => {
-                        this.mailSendProcess(count + 1);
-                    },
-                    timer
-                );
-            }
-        }
-    }*/
-
-    public getMailText(telephone: string) {
-        // tslint:disable:max-line-length
-        return `${this.data.order.customer.familyName} ${this.data.order.customer.givenName} 様
-この度は、${this.data.order.seller.name}のオンライン先売りチケットサービスにてご購入頂き、誠にありがとうございます。お客様がご購入されましたチケットの情報は下記の通りです。
-
-[予約番号]
-${this.data.order.confirmationNumber}
-
-[鑑賞日時]
-${this.getAppreciationDate()} ${this.getStartDate()} - ${this.getEndDate()}
-
-[作品名]
-${this.getTitle()}
-
-[スクリーン名]
-${this.getScreenName()}
-
-[座席]
-${this.data.order.acceptedOffers.map((offer) => {
-                if (offer.itemOffered.typeOf !== factory.chevre.reservationType.EventReservation) {
-                    return '';
-                }
-                return `${offer.itemOffered.reservedTicket.ticketedSeat} ${offer.itemOffered.reservedTicket.ticketType} ￥${offer.itemOffered.reservedTicket.totalPrice}`;
-            }).join('\n')}
-[合計]
-￥${this.data.order.price}
-
-【チケット発券について】
-チケットの発券/入場方法は2通りからお選び頂けます。
-
-<発券/入場方法1 入場用QRコードで入場>
-以下のURLよりチケット情報確認画面へアクセス頂き、「チケットを購入した劇場」「予約番号」「お電話番号」を入力してログインしてください。 ご鑑賞時間の24時間前から入場用QRコードが表示されますので、入場時にそちらのQRコードをご提示ください。
-${this.getInquiryUrl()}
-
-<発券/入場方法2 劇場発券機で発券>
-劇場に設置されている発券機にて発券頂きます。予約番号をお控えの上ご来場ください。
-チケットが発券できなかった場合にはチケット売場にお越しください。
-
-【ご注意事項】
-・ご購入されたチケットの変更、キャンセル、払い戻しはいかなる場合でも致しかねます。
-・チケットの発券にお時間がかかる場合もございますので、お時間の余裕を持ってご来場ください。
-・メンバーズカード会員のお客様は、ポイントは付与いたしますので、発券したチケットまたは、表示されたQRコードとメンバーズカードをチケット売場までお持ちくださいませ。
-・年齢や学生など各種証明が必要なチケットを購入された方は、入場時にご提示ください。
-ご提示頂けない場合は、一般料金との差額を頂きます。
-
-なお、このメールは、${this.data.order.seller.name}の予約システムでチケットをご購入頂いた方にお送りしておりますが、
-チケット購入に覚えのない方に届いております場合は、下記お問い合わせ先までご連絡ください。
-※なお、このメールアドレスは送信専用となっておりますので、ご返信頂けません。
-ご不明な点がございましたら、下記番号までお問合わせください。
-
-お問い合わせはこちら
-${this.data.order.seller.name}
-TEL：${telephone}`;
+        return `/inquiry/login?${params}`;
     }
 
 }

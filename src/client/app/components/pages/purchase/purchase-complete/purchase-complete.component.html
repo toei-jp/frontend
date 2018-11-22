@@ -41,7 +41,9 @@
                     <dt>座席</dt>
                     <dd>
                         <p *ngFor="let offer of data.order.acceptedOffers">
-                            {{ offer.itemOffered.reservedTicket.ticketedSeat.seatNumber }} {{ offer.itemOffered.reservedTicket.ticketType.name.ja }}
+                            <span>{{ offer.itemOffered.reservedTicket.ticketedSeat.seatNumber }} </span>
+                            <span>{{ offer.itemOffered.reservedTicket.ticketType.name.ja }} </span>
+                            <span>{{ purchase.getTicketPrice(offer).single | currency : 'JPY' }}</span>
                         </p>
                     </dd>
                 </dl>
@@ -56,14 +58,6 @@
                 <dl>
                     <dt>メールアドレス</dt>
                     <dd>{{ data.order.customer.email }}</dd>
-                </dl>
-            </li>
-            <li *ngIf="user.isMember()">
-                <dl>
-                    <dt>獲得ポイント</dt>
-                    <dd>
-                        <strong class="red-text">{{ data.incentive }}ポイント</strong>
-                    </dd>
                 </dl>
             </li>
         </ul>
@@ -132,8 +126,7 @@
                             <p>
                                 スマートフォンをお持ちでない方は当日チケット発券/入場も可能です。
                                 <br>発券方法は
-                                <a class="icon-new-tab-blue" href="{{ environment.FRONTEND_ENDPOINT }}/method/ticketing"
-                                    target="_blank">こちら</a>
+                                <a class="icon-new-tab-blue" href="/method/ticketing" target="_blank">こちら</a>
                             </p>
                         </dd>
                     </dl>
@@ -147,24 +140,6 @@
                     </a>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <div class="ticket-app-show">
-        <dl class="box radius bg-light-gray mb-middle">
-            <dt class="mb-small text-center">
-                <strong>チケットホルダーでスマート入場</strong>
-            </dt>
-            <dd>
-                <div class="image mb-x-small bg-white">
-                    <img src="/assets/images/purchase/complete/qr.svg" alt="">
-                </div>
-                <p>購入したチケットはチケットホルダーに登録されます。鑑賞当日はチケットホルダー内のQRコードを提示する事で、劇場で発券を行わずにスムーズにご入場頂けます。</p>
-            </dd>
-        </dl>
-
-        <div class="button orange-button center-button">
-            <a href="{{ environment.APP_SITE_URL }}/#/ticket">チケットホルダーに戻る</a>
         </div>
     </div>
 

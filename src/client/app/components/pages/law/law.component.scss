@@ -1,6 +1,19 @@
 $tablet: 1024px;
 $mobile: 767px;
 
+.inner {
+    h2 {
+        font-weight: normal;
+        font-size: 19px;
+        margin-bottom: 10px;
+    }
+    p {
+        line-height: 1.6;
+    }
+}
+.inner-parts {
+    margin-bottom: 25px;
+}
 .button-area {
     margin: 30px auto 0;
     @media screen and (max-width: $mobile){
@@ -17,4 +30,10 @@ $mobile: 767px;
         text-decoration: underline;
         cursor: pointer;
     }
+}
+
+ul li {
+    padding-left: 1em;
+    text-indent: -0.5em;
+    line-height: 1.6;
 }

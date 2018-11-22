@@ -3,14 +3,25 @@ $mobile: 767px;
 
 .footer {
     background-color: #212121;
-    padding: 25px 40px;
-    font-size: 10px;
-    border-radius: 0 0 4px 4px;
-    @media screen and (max-width: $mobile){
-        padding: 20px 15px;
+    .return-top {
+        display: block;
+        border-bottom: 1px solid #FFF;
+        .return-top-inner {
+            text-align: center;
+            padding: 15px 0;
+            img {
+                height: 22px;
+            }
+        }
     }
     .inner {
         position: relative;
+        padding: 25px 40px;
+        font-size: 10px;
+        border-radius: 0 0 4px 4px;
+        @media screen and (max-width: $mobile){
+            padding: 20px 15px;
+        }
     }
     ul {
        text-align: center;

@@ -1,9 +1,15 @@
 <footer class="footer">
+    <a href="#" class="return-top">
+        <div class="return-top-inner">
+            <img src="/assets/images/common/status_04.svg">
+        </div>
+    </a>
     <div class="inner">
         <ul class="clearfix">
+            <li><a routerLink="#" target="_blank">会社概要</a></li>
+            <li><a routerLink="/law" target="_blank">特定商取引法に基づく表記</a></li>
             <li><a href="https://www.toei.co.jp/policy/index.html" target="_blank">プライバシーポリシー</a></li>
-            <li><a routerLink="/law">特定商取引法に基づく表記</a></li>
         </ul>
-        <div class="copyright">&copy; TOEI THEATERS All rights reserved.</div>
+        <div class="copyright">&copy; {{ year }} TOEI THEATERS All rights reserved.</div>
     </div>
 </footer>

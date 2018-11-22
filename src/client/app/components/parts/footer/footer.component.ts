@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import * as moment from 'moment';
 import { environment } from '../../../../environments/environment';
 
 @Component({
@@ -8,10 +9,12 @@ import { environment } from '../../../../environments/environment';
 })
 export class FooterComponent implements OnInit {
     public environment = environment;
+    public year: string;
 
     constructor() { }
 
     public ngOnInit() {
+        this.year = moment().format('YYYY');
     }
 
 }

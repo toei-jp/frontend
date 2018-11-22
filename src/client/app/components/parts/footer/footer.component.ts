@@ -17,4 +17,17 @@ export class FooterComponent implements OnInit {
         this.year = moment().format('YYYY');
     }
 
+    public scroll(event: Event) {
+        event.preventDefault();
+        const time = 10;
+        let top = window.scrollY;
+        const interval = setInterval(() => {
+            if (top < 0) {
+                clearInterval(interval);
+            }
+            top = top - 30;
+            window.scrollTo(0, top);
+        }, time);
+    }
+
 }

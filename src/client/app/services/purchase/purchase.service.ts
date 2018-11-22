@@ -5,6 +5,7 @@ import * as util from 'util';
 import { environment } from '../../../environments/environment';
 import { getPurchaseCompleteTemplate } from '../../mails';
 import { IReservationTicket, Reservation } from '../../models';
+import { LibphonenumberFormatPipe } from '../../pipes/libphonenumber-format/libphonenumber-format.pipe';
 import { TimeFormatPipe } from '../../pipes/time-format/time-format.pipe';
 import { CinerinoService } from '../cinerino/cinerino.service';
 import { SaveType, StorageService } from '../storage/storage.service';
@@ -679,7 +680,8 @@ export class PurchaseService {
     public async purchaseRegistrationProcess() {
         if (this.data.transaction === undefined
             || this.data.screeningEvent === undefined
-            || this.data.seatReservationAuthorization === undefined) {
+            || this.data.seatReservationAuthorization === undefined
+            || this.data.movieTheaterOrganization === undefined) {
             throw new Error('status is different');
         }
         const transaction = this.data.transaction;
@@ -734,23 +736,30 @@ export class PurchaseService {
             options: {
                 sendEmailMessage: true,
                 emailTemplate: getPurchaseCompleteTemplate({
-                    eventStartDate: moment(this.data.screeningEvent.startDate).format('YYYY年MM月DD日(ddd) HH:mm'),
-                    eventEndDate: moment(this.data.screeningEvent.endDate).format('HH:mm'),
+                    order: { date: moment().format('YYYY年MM月DD日(ddd) HH:mm') },
+                    event: {
+                        startDate: moment(this.data.screeningEvent.startDate).format('YYYY年MM月DD日(ddd) HH:mm'),
+                        endDate: moment(this.data.screeningEvent.endDate).format('HH:mm')
+                    },
                     workPerformedName: this.data.screeningEvent.workPerformed.name,
-                    screenName: this.data.screeningEvent.location.name.ja,
-                    screenAddress: (this.data.screeningEvent.location.address !== undefined)
-                        ? `(${this.data.screeningEvent.location.address.ja})`
-                        : '',
+                    screen: {
+                        name: this.data.screeningEvent.location.name.ja,
+                        address: (this.data.screeningEvent.location.address !== undefined)
+                            ? `(${this.data.screeningEvent.location.address.ja})`
+                            : ''
+                    },
                     reservedSeats: this.data.reservations.map((reservation) => {
                         return util.format(
-                            '%s %s %s %s',
+                            '%s %s %s',
                             reservation.seat.seatNumber,
                             (reservation.ticket === undefined) ? '' : reservation.ticket.ticketOffer.name.ja,
-                            reservation.getTicketPrice().single,
-                            (reservation.ticket === undefined) ? '' : reservation.ticket.ticketOffer.priceCurrency
+                            `￥${reservation.getTicketPrice().single}`
                         );
-                    }).join('\n'),
-                    inquiryUrl: `${environment.SITE_URL}/inquiry/login`
+                    }).join('\n| '),
+                    inquiryUrl: `${environment.SITE_URL}/inquiry/login`,
+                    seller: {
+                        telephone: new LibphonenumberFormatPipe().transform(this.data.movieTheaterOrganization.telephone)
+                    }
                 })
             }
         })).order;

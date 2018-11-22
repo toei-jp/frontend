@@ -6,12 +6,10 @@ $mobile: 767px;
     .return-top {
         display: block;
         border-bottom: 1px solid #FFF;
-        .return-top-inner {
-            text-align: center;
-            padding: 15px 0;
-            img {
-                height: 22px;
-            }
+        text-align: center;
+        padding: 15px 0;
+        img {
+            height: 22px;
         }
     }
     .inner {

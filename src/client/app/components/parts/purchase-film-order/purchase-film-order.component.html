@@ -1,7 +1,8 @@
 <li class="performance mb-x-small">
     <dl>
         <dt>
-            <p class="title mb-x-small"><strong>{{ info.name.ja }}</strong></p>
+            <p class="mb-x-small"><strong>{{ info.name.ja }}</strong></p>
+            <p *ngIf="info.workPerformed.headline" class="mb-x-small">{{ info.workPerformed.headline }}</p>
             <div class="d-flex align-items-center justify-content-end">
                 <div *ngIf="info.workPerformed.contentRating" class="bage small-x-text text-center">{{ info.workPerformed.contentRating }}</div>
                 <div *ngIf="info.superEvent.dubLanguage" class="bage small-x-text text-center">吹替版</div>

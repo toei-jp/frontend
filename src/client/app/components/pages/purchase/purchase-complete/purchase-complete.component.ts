@@ -96,6 +96,22 @@ export class PurchaseCompleteComponent implements OnInit {
     }
 
     /**
+     * サブタイトル取得
+     * @method getSubTitle
+     * @returns {string}
+     */
+    public getSubTitle() {
+        const itemOffered = this.data.order.acceptedOffers[0].itemOffered;
+        if (itemOffered.typeOf !== factory.chevre.reservationType.EventReservation
+            || itemOffered.reservationFor.workPerformed.headline === undefined
+            || itemOffered.reservationFor.workPerformed.headline === null) {
+            return '';
+        }
+
+        return itemOffered.reservationFor.workPerformed.headline;
+    }
+
+    /**
      * 鑑賞日取得
      * @method getAppreciationDate
      * @returns {string}

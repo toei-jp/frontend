@@ -61,6 +61,9 @@
                     <div class="mb-xx-small"><%= inquiryModel.movieTheater.location.name.ja %></div>
                     <div class="small-text"><strong><%- __('common.filmTitle') %></strong></div>
                     <div><%= offer.itemOffered.reservationFor.workPerformed.name %></div>
+                    <% if (offer.itemOffered.reservationFor.workPerformed.headline) { %>
+                    <div><%= offer.itemOffered.reservationFor.workPerformed.headline %></div>
+                    <% } %>
                 </div>
             </div>
         </li>

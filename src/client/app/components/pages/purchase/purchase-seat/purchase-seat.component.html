@@ -15,6 +15,7 @@
         <div class="border-bottom title">
             <div><img src="/assets/images/common/title-icon.svg"></div>
             <div class="film-info-contents">{{ purchase.getTitle() }}</div>
+            <div *ngIf="purchase.getSubTitle()" class="film-info-contents">{{ purchase.getSubTitle() }}</div>
         </div>
         <div class="film-info-inner">
             <div class="date">

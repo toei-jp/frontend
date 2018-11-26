@@ -290,6 +290,21 @@ export class PurchaseService {
     }
 
     /**
+     * サブタイトル取得
+     * @method getSubTitle
+     * @returns {string}
+     */
+    public getSubTitle(): string {
+        if (this.data.screeningEvent === undefined
+            || this.data.screeningEvent.workPerformed.headline === undefined
+            || this.data.screeningEvent.workPerformed.headline === null) {
+            return '';
+        }
+
+        return this.data.screeningEvent.workPerformed.headline;
+    }
+
+    /**
      * 鑑賞日取得
      * @method getAppreciationDate
      * @returns {string}

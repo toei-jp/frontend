@@ -90,6 +90,20 @@ export class PurchaseOverlapComponent implements OnInit {
     }
 
     /**
+     * サブタイトル取得
+     * @method getSubTitle
+     * @returns {string}
+     */
+    public getSubTitle() {
+        if (this.screeningEvent.workPerformed.headline === undefined
+            || this.screeningEvent.workPerformed.headline === null) {
+            return '';
+        }
+
+        return this.screeningEvent.workPerformed.headline;
+    }
+
+    /**
      * 鑑賞日取得
      * @method getAppreciationDate
      * @returns {string}

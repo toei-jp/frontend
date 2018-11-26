@@ -9,9 +9,6 @@ import { AuthSigninComponent } from './components/pages/auth/auth-signin/auth-si
 import { BaseComponent } from './components/pages/base/base.component';
 import { ErrorComponent } from './components/pages/error/error.component';
 import { ExpiredComponent } from './components/pages/expired/expired.component';
-import { InquiryBaseComponent } from './components/pages/inquiry/inquiry-base/inquiry-base.component';
-import { InquiryConfirmComponent } from './components/pages/inquiry/inquiry-confirm/inquiry-confirm.component';
-import { InquiryLoginComponent } from './components/pages/inquiry/inquiry-login/inquiry-login.component';
 import { LawComponent } from './components/pages/law/law.component';
 import { NotFoundComponent } from './components/pages/not-found/not-found.component';
 import { PurchaseBaseComponent } from './components/pages/purchase/purchase-base/purchase-base.component';
@@ -71,9 +68,6 @@ import {
         PurchaseConfirmComponent,
         PurchaseMvtkInputComponent,
         PurchaseMvtkConfirmComponent,
-        InquiryBaseComponent,
-        InquiryLoginComponent,
-        InquiryConfirmComponent,
         ScreenComponent,
         HeaderComponent,
         FooterComponent,

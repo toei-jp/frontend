@@ -8229,21 +8229,17 @@ var PurchaseService = /** @class */ (function () {
      */
     PurchaseService.prototype.createOrderId = function () {
         if (this.data.seatReservationAuthorization === undefined
-            || this.data.seatReservationAuthorization.result === undefined
-            || this.data.screeningEvent === undefined) {
+            || this.data.transaction === undefined) {
             throw new Error('status is different');
         }
-        var DIGITS = {
-            '02': -2,
-            '08': -8
-        };
+        var DIGITS = { '02': -2, '06': -6 };
+        var prefix = _environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].APP_PREFIX;
+        var date = moment__WEBPACK_IMPORTED_MODULE_1__().format('YYMMDDHHmmss');
         var orderCount = ("00" + this.data.orderCount).slice(DIGITS['02']);
-        var tmpReserveNum = ("00000000" + this.data.seatReservationAuthorization.id).slice(DIGITS['08']);
-        var theaterCode = this.data.screeningEvent.superEvent.location.branchCode;
-        var reserveDate = moment__WEBPACK_IMPORTED_MODULE_1__().format('YYYYMMDD');
+        var transactionId = ("000000" + this.data.transaction.id).slice(DIGITS['06']);
         this.data.orderCount += 1;
-        // オーダーID 予約日 + 劇場ID(3桁) + 予約番号(8桁) + オーソリカウント(2桁)
-        return "" + reserveDate + theaterCode + tmpReserveNum + orderCount;
+        this.save();
+        return prefix + "-" + date + transactionId + orderCount;
     };
     /**
      * 購入登録処理
@@ -8664,6 +8660,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "environment", function() { return environment; });
 var environment = {
     production: false,
+    APP_PREFIX: 'TO',
     SITE_URL: 'https://toei-frontend-development.azurewebsites.net',
     PORTAL_SITE_URL: 'http://theaters.toei.co.jp',
     WAITER_SERVER_URL: '',

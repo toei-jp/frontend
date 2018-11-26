@@ -290,6 +290,21 @@ export class PurchaseService {
     }
 
     /**
+     * サブタイトル取得
+     * @method getSubTitle
+     * @returns {string}
+     */
+    public getSubTitle(): string {
+        if (this.data.screeningEvent === undefined
+            || this.data.screeningEvent.workPerformed.headline === undefined
+            || this.data.screeningEvent.workPerformed.headline === null) {
+            return '';
+        }
+
+        return this.data.screeningEvent.workPerformed.headline;
+    }
+
+    /**
      * 鑑賞日取得
      * @method getAppreciationDate
      * @returns {string}
@@ -656,22 +671,17 @@ export class PurchaseService {
      */
     private createOrderId() {
         if (this.data.seatReservationAuthorization === undefined
-            || this.data.seatReservationAuthorization.result === undefined
-            || this.data.screeningEvent === undefined) {
+            || this.data.transaction === undefined) {
             throw new Error('status is different');
         }
-        const DIGITS = {
-            '02': -2,
-            '08': -8
-        };
+        const DIGITS = { '02': -2, '06': -6 };
+        const prefix = environment.APP_PREFIX;
+        const date = moment().format('YYMMDDHHmmss');
         const orderCount = `00${this.data.orderCount}`.slice(DIGITS['02']);
-        const tmpReserveNum =
-            `00000000${this.data.seatReservationAuthorization.id}`.slice(DIGITS['08']);
-        const theaterCode = this.data.screeningEvent.superEvent.location.branchCode;
-        const reserveDate = moment().format('YYYYMMDD');
+        const transactionId = `000000${this.data.transaction.id}`.slice(DIGITS['06']);
         this.data.orderCount += 1;
-        // オーダーID 予約日 + 劇場ID(3桁) + 予約番号(8桁) + オーソリカウント(2桁)
-        return `${reserveDate}${theaterCode}${tmpReserveNum}${orderCount}`;
+        this.save();
+        return `${prefix}-${date}${transactionId}${orderCount}`;
     }
 
     /**

@@ -16,7 +16,10 @@
             <li>
                 <dl>
                     <dt>作品名</dt>
-                    <dd>{{ purchase.getTitle() }}</dd>
+                    <dd>
+                        <p>{{ purchase.getTitle() }}</p>
+                        <p *ngIf="purchase.getSubTitle()">{{ purchase.getSubTitle() }}</p>
+                    </dd>
                 </dl>
             </li>
             <li>
@@ -46,7 +49,10 @@
             <li>
                 <dl>
                     <dt>作品名</dt>
-                    <dd>{{ getTitle() }}</dd>
+                    <dd>
+                        <p>{{ getTitle() }}</p>
+                        <p *ngIf="getSubTitle()">{{ getSubTitle() }}</p>
+                    </dd>
                 </dl>
             </li>
             <li>

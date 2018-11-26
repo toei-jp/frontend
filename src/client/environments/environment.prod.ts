@@ -1,5 +1,6 @@
 export const environment = {
     production: true,
+    APP_PREFIX: 'TO',
     SITE_URL: 'https://toei-frontend-production.azurewebsites.net',
     PORTAL_SITE_URL: 'http://theaters.toei.co.jp',
     WAITER_SERVER_URL: '',

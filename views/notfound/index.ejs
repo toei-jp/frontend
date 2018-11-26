@@ -1,12 +1,8 @@
 <%- contentFor('body') %>
 <div class="error">
-    <h1 class="page-ttl"><%- __('notFound.pageTitle') %></h1>
-    <p class="read"><%- __('notFound.read') %></p>
+    <h1 class="page-ttl">ページが見つかりませんでした</h1>
+    <p class="read">申し訳ございません。<br>お探しのページは見つかりませんでした。</p>
     <div class="button-area clearfix">
-        <% if (isApp) { %>
-            <div class="prev-link"><a class="icon-prev-black"href="<%- APP_SITE_URL %>/#/purchase"><%- __('error.prev') %></a></div>
-        <% } else { %>
-            <div class="prev-link"><a class="icon-prev-black"href="<%= PORTAL_SITE_URL %>"><%- __('error.prev') %></a></div>
-        <% } %>
+        <div class="prev-link"><a class="icon-prev-black"href="<%= PORTAL_SITE_URL %>">戻る</a></div>
     </div>
 </div>

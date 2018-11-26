@@ -1,13 +1,9 @@
 <%- contentFor('body') %>
 <div class="error">
-    <h1 class="page-ttl"><%- __('error.pageTitle') %></h1>
-    <p class="read"><%- __('error.detail.badRequest') %></p>
+    <h1 class="page-ttl">エラーが発生しました</h1>
+    <p class="read">お手続きの途中でエラーが発生いたしました。<br>お手数をおかけいたしますが、もう一度最初から操作をお願いいたします。</p>
     <div class="button-area clearfix">
-        <% if (isApp) { %>
-            <div class="prev-link"><a class="icon-prev-black"href="<%- APP_SITE_URL %>/#/purchase"><%- __('error.prev') %></a></div>
-        <% } else { %>
-            <div class="prev-link"><a class="icon-prev-black"href="<%= PORTAL_SITE_URL %>"><%- __('error.prev') %></a></div>
-        <% } %>
+        <div class="prev-link"><a class="icon-prev-black"href="<%= PORTAL_SITE_URL %>">戻る</a></div>
     </div>
     <% if (NODE_ENV !== 'production') { %>
     <code style="

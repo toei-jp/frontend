@@ -3,21 +3,21 @@
 
 <%- contentFor('body') %>
 <div class="inquiry-confirm">
-    <h1 class="page-ttl"><%- __('inquiry.login.pageTitle') %><br>(QRコード付きチケットの発行はコチラから)</h1>
-    <p class="read"><%- __('inquiry.login.read') %></p>
+    <h1 class="page-ttl">チケット情報照会<br>(QRコード付きチケットの発行はコチラから)</h1>
+    <p class="read">下記にチケット購入時の予約番号と電話番号を入力して「照会」ボタンを押してください。<br>QRコード付きチケットが発行されますので、劇場までお持ち下さい。</p>
     <form method="post">
         <div class="box radius bg-light-gray">
             <dl>
-                <dt><%- __('common.purchaseNumber') %></dt>
+                <dt>予約番号</dt>
                 <dd>
-                    <input type="text" pattern="\d*" name="reserveNum" maxlength="8" autocomplete="off" placeholder="<%- __('common.placeholder.purchaseNumber') %>" value="<%= inquiryModel.input.reserveNum %>">
+                    <input type="text" pattern="\d*" name="reserveNum" maxlength="8" autocomplete="off" placeholder="(例)12345678" value="<%= inquiryModel.input.reserveNum %>">
                     <% if (error && error.reserveNum) { %>
                     <div class="validation-text"><%= error.reserveNum.msg %></div>
                     <% } %>
                 </dd>
-                <dt><%- __('common.telNum') %></dt>
+                <dt>電話番号</dt>
                 <dd>
-                    <input type="text" pattern="\d*" name="telephone" autocomplete="off" placeholder="<%- __('common.placeholder.tel') %>" value="<%= inquiryModel.input.telephone %>">
+                    <input type="text" pattern="\d*" name="telephone" autocomplete="off" placeholder="(例)08000000000" value="<%= inquiryModel.input.telephone %>">
                     <% if (error && error.telephone) { %>
                     <div class="validation-text"><%= error.telephone.msg %></div>
                     <% } %>
@@ -28,8 +28,8 @@
         <input type="hidden" name="theaterCode" value="<%= inquiryModel.movieTheater.location.branchCode %>">
         
         <div class="button-area clearfix">
-            <div class="button next-button orange-button"><button type="submit"><%- __('inquiry.login.next') %></button></div>
-            <div class="prev-link"><a class="icon-prev-black" href="<%= inquiryModel.movieTheater.url %>"><%- __('inquiry.login.prev') %></a></div>
+            <div class="button next-button orange-button"><button type="submit">照会</button></div>
+            <div class="prev-link"><a class="icon-prev-black" href="<%= inquiryModel.movieTheater.url %>">劇場TOPへ戻る</a></div>
         </div>
     </form>
 <%- include('../layouts/siteSeal') %>

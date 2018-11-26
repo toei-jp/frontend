@@ -14,8 +14,10 @@
         <p class="mb-small">現在、選択されているチケットは下記のとおりです。</p>
         <div class="border-bottom title">
             <div><img src="/assets/images/common/title-icon.svg"></div>
-            <div class="film-info-contents">{{ purchase.getTitle() }}</div>
-            <div *ngIf="purchase.getSubTitle()" class="film-info-contents">{{ purchase.getSubTitle() }}</div>
+            <div class="film-info-contents">
+                <div>{{ purchase.getTitle() }}</div>
+                <div *ngIf="purchase.getSubTitle()">{{ purchase.getSubTitle() }}</div>
+            </div>
         </div>
         <div class="film-info-inner">
             <div class="date">

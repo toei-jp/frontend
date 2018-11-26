@@ -1,13 +1,17 @@
 <li class="performance mb-x-small">
     <dl>
         <dt>
-            <p class="mb-x-small"><strong>{{ info.name.ja }}</strong></p>
-            <p *ngIf="info.workPerformed.headline" class="mb-x-small">{{ info.workPerformed.headline }}</p>
+            <div class="mb-x-small">
+                <p><strong>{{ info.name.ja }}</strong></p>
+                <p *ngIf="info.workPerformed.headline">{{ info.workPerformed.headline }}</p>
+            </div>
             <div class="d-flex align-items-center justify-content-end">
-                <div *ngIf="info.workPerformed.contentRating" class="bage small-x-text text-center">{{ info.workPerformed.contentRating }}</div>
+                <div *ngIf="info.workPerformed.contentRating" class="bage small-x-text text-center">{{
+                    info.workPerformed.contentRating }}</div>
                 <div *ngIf="info.superEvent.dubLanguage" class="bage small-x-text text-center">吹替版</div>
                 <div *ngIf="info.superEvent.subtitleLanguage" class="bage small-x-text text-center">字幕版</div>
-                <div class="small-x-text screening-time text-center">上映時間：{{ info.workPerformed.duration | duration: 'minutes' }}分</div>
+                <div class="small-x-text screening-time text-center">上映時間：{{ info.workPerformed.duration | duration:
+                    'minutes' }}分</div>
             </div>
         </dt>
         <dd>

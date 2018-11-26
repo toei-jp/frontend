@@ -25,7 +25,10 @@
             <li>
                 <dl>
                     <dt>作品名</dt>
-                    <dd>{{ getTitle() }}</dd>
+                    <dd>
+                        <p>{{ getTitle() }}</p>
+                        <p *ngIf="getSubTitle()">{{ getSubTitle() }}</p>
+                    </dd>
                 </dl>
             </li>
             <li>

@@ -22,7 +22,7 @@
         <li class="ticket">
             <div class="inner bg-light-gray">
                 <div class="box radius border-bottom-dot bg-white border-bottom">
-                    <div class="mb-x-small"><strong><%= offer.itemOffered.reservationFor.location.name.ja %></strong></div>
+                    <div class="mb-x-small"><strong><%= (offer.itemOffered.reservationFor.location.address === undefined) ? '' : offer.itemOffered.reservationFor.location.address.en %> <%= offer.itemOffered.reservationFor.location.name.ja %></strong></div>
                     <div class="mb-xx-small small-text">
                         <strong>【 座席 】</strong>
                         <strong class="large-text"><%= offer.itemOffered.reservedTicket.ticketedSeat.seatNumber %></strong>

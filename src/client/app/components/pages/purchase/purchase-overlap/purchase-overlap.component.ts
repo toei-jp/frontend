@@ -77,7 +77,14 @@ export class PurchaseOverlapComponent implements OnInit {
      * @returns {string}
      */
     public getScreenName() {
-        return this.screeningEvent.location.name.ja;
+        const screen = {
+            name: this.screeningEvent.location.name.ja,
+            address: (this.screeningEvent.location.address === undefined)
+                ? ''
+                : this.screeningEvent.location.address.en
+        };
+
+        return `${screen.address} ${screen.name}`;
     }
 
     /**

@@ -270,9 +270,14 @@ export class PurchaseService {
         if (this.data.screeningEvent === undefined) {
             return '';
         }
-        const screeningEvent = this.data.screeningEvent;
+        const screen = {
+            name: this.data.screeningEvent.location.name.ja,
+            address: (this.data.screeningEvent.location.address === undefined)
+                ? ''
+                : this.data.screeningEvent.location.address.en
+        };
 
-        return screeningEvent.location.name.ja;
+        return `${screen.address} ${screen.name}`;
     }
 
     /**

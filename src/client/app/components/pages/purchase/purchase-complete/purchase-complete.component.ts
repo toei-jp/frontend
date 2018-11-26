@@ -78,7 +78,14 @@ export class PurchaseCompleteComponent implements OnInit {
             return '';
         }
 
-        return itemOffered.reservationFor.location.name.ja;
+        const screen = {
+            name: itemOffered.reservationFor.location.name.ja,
+            address: (itemOffered.reservationFor.location.address === undefined)
+                ? ''
+                : itemOffered.reservationFor.location.address.en
+        };
+
+        return `${screen.address} ${screen.name}`;
     }
 
     /**

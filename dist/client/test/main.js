@@ -1632,7 +1632,13 @@ var PurchaseCompleteComponent = /** @class */ (function () {
         if (itemOffered.typeOf !== _cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_1__["factory"].chevre.reservationType.EventReservation) {
             return '';
         }
-        return itemOffered.reservationFor.location.name.ja;
+        var screen = {
+            name: itemOffered.reservationFor.location.name.ja,
+            address: (itemOffered.reservationFor.location.address === undefined)
+                ? ''
+                : itemOffered.reservationFor.location.address.en
+        };
+        return screen.address + " " + screen.name;
     };
     /**
      * 作品名取得
@@ -3413,7 +3419,13 @@ var PurchaseOverlapComponent = /** @class */ (function () {
      * @returns {string}
      */
     PurchaseOverlapComponent.prototype.getScreenName = function () {
-        return this.screeningEvent.location.name.ja;
+        var screen = {
+            name: this.screeningEvent.location.name.ja,
+            address: (this.screeningEvent.location.address === undefined)
+                ? ''
+                : this.screeningEvent.location.address.en
+        };
+        return screen.address + " " + screen.name;
     };
     /**
      * 作品名取得
@@ -7938,8 +7950,13 @@ var PurchaseService = /** @class */ (function () {
         if (this.data.screeningEvent === undefined) {
             return '';
         }
-        var screeningEvent = this.data.screeningEvent;
-        return screeningEvent.location.name.ja;
+        var screen = {
+            name: this.data.screeningEvent.location.name.ja,
+            address: (this.data.screeningEvent.location.address === undefined)
+                ? ''
+                : this.data.screeningEvent.location.address.en
+        };
+        return screen.address + " " + screen.name;
     };
     /**
      * 作品名取得

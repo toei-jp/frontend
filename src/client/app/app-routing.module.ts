@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthSigninComponent } from './components/pages/auth/auth-signin/auth-signin.component';
 import { BaseComponent } from './components/pages/base/base.component';
+import { CompanyComponent } from './components/pages/company/company.component';
 import { ErrorComponent } from './components/pages/error/error.component';
 import { ExpiredComponent } from './components/pages/expired/expired.component';
 import { InquiryConfirmComponent } from './components/pages/inquiry/inquiry-confirm/inquiry-confirm.component';
@@ -15,13 +16,12 @@ import { PurchaseInputComponent } from './components/pages/purchase/purchase-inp
 import { PurchaseMvtkConfirmComponent } from './components/pages/purchase/purchase-mvtk-confirm/purchase-mvtk-confirm.component';
 import { PurchaseMvtkInputComponent } from './components/pages/purchase/purchase-mvtk-input/purchase-mvtk-input.component';
 import { PurchaseOverlapComponent } from './components/pages/purchase/purchase-overlap/purchase-overlap.component';
-// import { PurchasePointComponent } from './components/pages/purchase/purchase-point/purchase-point.component';
 import { PurchaseScheduleComponent } from './components/pages/purchase/purchase-schedule/purchase-schedule.component';
 import { PurchaseSeatComponent } from './components/pages/purchase/purchase-seat/purchase-seat.component';
 import { PurchaseTicketComponent } from './components/pages/purchase/purchase-ticket/purchase-ticket.component';
 import { PurchaseTransactionComponent } from './components/pages/purchase/purchase-transaction/purchase-transaction.component';
 import { TestScreenComponent } from './components/pages/test/test-screen/test-screen.component';
-// import { MemberGuardService } from './services/member-guard/member-guard.service';
+import { TicketingMethodComponent } from './components/pages/ticketing-method/ticketing-method.component';
 import { PurchaseGuardService } from './services/purchase-guard/purchase-guard.service';
 import { TestGuardService } from './services/test-guard/test-guard.service';
 
@@ -78,6 +78,8 @@ const routes: Routes = [
         component: BaseComponent,
         children: [
             { path: 'law', component: LawComponent },
+            { path: 'company', component: CompanyComponent },
+            { path: 'ticketing-method', component: TicketingMethodComponent },
             { path: 'error', component: ErrorComponent },
             { path: 'expired', component: ExpiredComponent },
             { path: '**', component: NotFoundComponent }

@@ -1,0 +1,42 @@
+$tablet: 1024px;
+$mobile: 767px;
+
+.wrapper {
+    max-width: 940px !important;
+}
+.inner {
+    table {
+        width: 100%;
+        th {
+            text-align: left;
+            font-weight: normal;
+            padding: 15px 0;
+            border-bottom: 1px solid #eeeeef;
+            @media screen and (max-width: $mobile){
+                border-bottom: none;
+                padding: 15px 0 0;
+            }
+        }
+        td {
+            text-align: right;
+            padding: 15px 0;
+            border-bottom: 1px solid #eeeeef;
+            font-size: 14px;
+            @media screen and (max-width: $mobile){
+                text-align: left;
+                padding: 0 0 15px 15px;
+                font-size: 12px;
+            }
+        }
+    }
+    table,
+    tbody,
+    tr,
+    th,
+    td {
+        @media screen and (max-width: $mobile){
+            display: block;
+        }
+    }
+
+}

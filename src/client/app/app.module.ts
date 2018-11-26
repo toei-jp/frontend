@@ -7,6 +7,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './components/app/app.component';
 import { AuthSigninComponent } from './components/pages/auth/auth-signin/auth-signin.component';
 import { BaseComponent } from './components/pages/base/base.component';
+import { CompanyComponent } from './components/pages/company/company.component';
 import { ErrorComponent } from './components/pages/error/error.component';
 import { ExpiredComponent } from './components/pages/expired/expired.component';
 import { InquiryBaseComponent } from './components/pages/inquiry/inquiry-base/inquiry-base.component';
@@ -27,6 +28,7 @@ import { PurchaseSeatComponent } from './components/pages/purchase/purchase-seat
 import { PurchaseTicketComponent } from './components/pages/purchase/purchase-ticket/purchase-ticket.component';
 import { PurchaseTransactionComponent } from './components/pages/purchase/purchase-transaction/purchase-transaction.component';
 import { TestScreenComponent } from './components/pages/test/test-screen/test-screen.component';
+import { TicketingMethodComponent } from './components/pages/ticketing-method/ticketing-method.component';
 import { ButtonsComponent } from './components/parts/buttons/buttons.component';
 import { FooterComponent } from './components/parts/footer/footer.component';
 import { HeaderComponent } from './components/parts/header/header.component';
@@ -101,7 +103,9 @@ import {
         // PurchasePointComponent,
         AuthSigninComponent,
         TestScreenComponent,
-        LawComponent
+        LawComponent,
+        TicketingMethodComponent,
+        CompanyComponent
     ],
     imports: [
         BrowserModule,

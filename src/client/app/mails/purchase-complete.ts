@@ -7,7 +7,7 @@ export function getPurchaseCompleteTemplate(args: {
     screen: { name: string; address: string; };
     reservedSeats: string;
     inquiryUrl: string;
-    seller: { telephone: string; }
+    seller: { branchCode: string; telephone: string; }
 }) {
     return `
 | #{order.customer.familyName} #{order.customer.givenName} 様
@@ -37,7 +37,7 @@ export function getPurchaseCompleteTemplate(args: {
 | 【チケットの発券とご入場について】
 |  (スマート入場のお客様)
 | 以下のURLよりチケット情報確認照会画面へアクセスして頂き、「予約番号」「お電話番号」を入力のうえ照会ボタンを押してください。
-| ${args.inquiryUrl}?confirmationNumber=#{order.confirmationNumber}
+| ${args.inquiryUrl}?theater=${args.seller.branchCode}&reserve=#{order.confirmationNumber}
 | ご鑑賞時間の24時間前から入場用QRコードが表示されますので、直接劇場受付へご提示のうえご入場ください。
 | (ＰＣでご購入のお客様)
 | ＰＣで上記スマート入場と同様の操作していただきますと入場用ＱＲコードが表示されますので、プリントアウトしたものを直接劇場受付へご提示のうえご入場ください。

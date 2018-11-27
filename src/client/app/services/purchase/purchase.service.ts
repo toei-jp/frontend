@@ -773,6 +773,7 @@ export class PurchaseService {
                     }).join('\n| '),
                     inquiryUrl: `${environment.SITE_URL}/inquiry/login`,
                     seller: {
+                        branchCode: this.data.movieTheaterOrganization.location.branchCode,
                         telephone: new LibphonenumberFormatPipe().transform(this.data.movieTheaterOrganization.telephone)
                     }
                 })

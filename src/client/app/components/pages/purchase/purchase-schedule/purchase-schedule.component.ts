@@ -238,7 +238,7 @@ export class PurchaseScheduleComponent implements OnInit {
                 startFrom: moment(this.conditions.date).toDate(),
                 startThrough: moment(this.conditions.date).add(1, 'day').toDate(),
                 offers: {
-                    availableFrom: now,
+                    // availableFrom: now,
                     availableThrough: now
                 }
             })).data;

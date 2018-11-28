@@ -230,7 +230,7 @@ export class PurchaseScheduleComponent implements OnInit {
             if (theater === undefined || theater.identifier === undefined) {
                 throw new Error('theater is not found');
             }
-            const now = moment().toDate();
+            const now = moment(this.conditions.date).toDate();
             this.schedules = (await this.cinerino.event.searchScreeningEvents({
                 eventStatuses: [factory.chevre.eventStatusType.EventScheduled],
                 superEvent: {

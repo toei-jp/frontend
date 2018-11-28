@@ -3856,7 +3856,7 @@ var PurchaseScheduleComponent = /** @class */ (function () {
                         if (theater === undefined || theater.identifier === undefined) {
                             throw new Error('theater is not found');
                         }
-                        now = moment__WEBPACK_IMPORTED_MODULE_3__().toDate();
+                        now = moment__WEBPACK_IMPORTED_MODULE_3__(this.conditions.date).toDate();
                         _a = this;
                         return [4 /*yield*/, this.cinerino.event.searchScreeningEvents({
                                 eventStatuses: [_cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_2__["factory"].chevre.eventStatusType.EventScheduled],

@@ -101,12 +101,13 @@ export class PurchaseScheduleComponent implements OnInit {
             }
 
             const now = moment().toDate();
+            const today = moment(moment().format('YYYY-MM-DD')).toDate();
             this.preSaleSchedules = (await this.cinerino.event.searchScreeningEvents({
                 eventStatuses: [factory.chevre.eventStatusType.EventScheduled],
                 superEvent: {
                     locationBranchCodes: [this.theaters[0].location.branchCode]
                 },
-                startFrom: moment().add(3, 'days').toDate(),
+                startFrom: moment(today).add(3, 'days').toDate(),
                 offers: {
                     validFrom: now,
                     validThrough: now,
@@ -238,7 +239,7 @@ export class PurchaseScheduleComponent implements OnInit {
                 startFrom: moment(this.conditions.date).toDate(),
                 startThrough: moment(this.conditions.date).add(1, 'day').toDate(),
                 offers: {
-                    // availableFrom: now,
+                    availableFrom: now,
                     availableThrough: now
                 }
             })).data;

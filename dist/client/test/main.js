@@ -3664,7 +3664,7 @@ var PurchaseScheduleComponent = /** @class */ (function () {
      */
     PurchaseScheduleComponent.prototype.ngOnInit = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var theaterQs_1, _a, theater, now, _b, err_1;
+            var theaterQs_1, _a, theater, now, today, _b, err_1;
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
@@ -3704,13 +3704,14 @@ var PurchaseScheduleComponent = /** @class */ (function () {
                             }
                         }
                         now = moment__WEBPACK_IMPORTED_MODULE_3__().toDate();
+                        today = moment__WEBPACK_IMPORTED_MODULE_3__(moment__WEBPACK_IMPORTED_MODULE_3__().format('YYYY-MM-DD')).toDate();
                         _b = this;
                         return [4 /*yield*/, this.cinerino.event.searchScreeningEvents({
                                 eventStatuses: [_cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_2__["factory"].chevre.eventStatusType.EventScheduled],
                                 superEvent: {
                                     locationBranchCodes: [this.theaters[0].location.branchCode]
                                 },
-                                startFrom: moment__WEBPACK_IMPORTED_MODULE_3__().add(3, 'days').toDate(),
+                                startFrom: moment__WEBPACK_IMPORTED_MODULE_3__(today).add(3, 'days').toDate(),
                                 offers: {
                                     validFrom: now,
                                     validThrough: now,
@@ -3865,7 +3866,7 @@ var PurchaseScheduleComponent = /** @class */ (function () {
                                 startFrom: moment__WEBPACK_IMPORTED_MODULE_3__(this.conditions.date).toDate(),
                                 startThrough: moment__WEBPACK_IMPORTED_MODULE_3__(this.conditions.date).add(1, 'day').toDate(),
                                 offers: {
-                                    // availableFrom: now,
+                                    availableFrom: now,
                                     availableThrough: now
                                 }
                             })];

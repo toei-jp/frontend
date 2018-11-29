@@ -3853,7 +3853,7 @@ var PurchaseScheduleComponent = /** @class */ (function () {
                         theater = this.theaters.find(function (target) {
                             return (target.location.branchCode === _this.conditions.theater);
                         });
-                        if (theater === undefined || theater.identifier === undefined) {
+                        if (theater === undefined) {
                             throw new Error('theater is not found');
                         }
                         now = moment__WEBPACK_IMPORTED_MODULE_3__(this.conditions.date).toDate();

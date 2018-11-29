@@ -227,7 +227,7 @@ export class PurchaseScheduleComponent implements OnInit {
             const theater = this.theaters.find((target) => {
                 return (target.location.branchCode === this.conditions.theater);
             });
-            if (theater === undefined || theater.identifier === undefined) {
+            if (theater === undefined) {
                 throw new Error('theater is not found');
             }
             const now = moment(this.conditions.date).toDate();

@@ -1,11 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import * as cinerino from '@cinerino/api-javascript-client';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { factory } from '@cinerino/api-javascript-client';
 import * as moment from 'moment';
-import { SaveType, StorageService } from '../../../services/storage/storage.service';
-// import { environment } from '../../../../environments/environment';
 
-type IScreeningEvent = cinerino.factory.chevre.event.screeningEvent.IEvent;
 interface Iavailability {
     text: string;
     className: string;
@@ -17,15 +13,13 @@ interface Iavailability {
     styleUrls: ['./purchase-film-order-performance.component.scss']
 })
 export class PurchaseFilmOrderPerformanceComponent implements OnInit {
-    @Input() public data: IScreeningEvent;
+    @Input() public data: factory.chevre.event.screeningEvent.IEvent;
+    @Output() public select = new EventEmitter<factory.chevre.event.screeningEvent.IEvent>();
     public availability: Iavailability;
     private isEndSale: boolean;
     private isStartSale: boolean;
 
-    constructor(
-        private storage: StorageService,
-        private router: Router
-    ) { }
+    constructor( ) { }
 
     public ngOnInit() {
         const now = moment();
@@ -55,22 +49,12 @@ export class PurchaseFilmOrderPerformanceComponent implements OnInit {
                         ? availabilityList[1] : availabilityList[2];
     }
 
-    /**
-     * @method start
-     * @returns {void}
-     */
-    public start(): void {
+    public selectSchedule() {
         const availability = this.data.remainingAttendeeCapacity;
         if (availability === 0 || availability === undefined || !this.isStartSale || this.isEndSale) {
             return;
         }
-        // location.href = `${environment.WAITER_SERVER_URL}/purchase/index.html?id=${this.data.identifier}`;
-        this.storage.save('parameters', {
-            passportToken: '',
-            signInRedirect: false,
-            performanceId: this.data.id
-        }, SaveType.Session);
-        this.router.navigate(['/purchase/transaction']);
+        this.select.emit(this.data);
     }
 
 }

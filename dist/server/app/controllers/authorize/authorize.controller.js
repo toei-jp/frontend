@@ -26,10 +26,11 @@ function getCredentials(_, res) {
                 auth: authModel.create()
             };
             const accessToken = yield options.auth.getAccessToken();
-            const credentials = {
-                accessToken: accessToken
-            };
-            res.json(credentials);
+            res.json({
+                accessToken: accessToken,
+                userName: undefined,
+                clientId: options.auth.options.clientId
+            });
         }
         catch (err) {
             base_controller_1.errorProsess(res, err);

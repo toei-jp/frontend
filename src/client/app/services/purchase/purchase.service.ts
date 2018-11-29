@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { factory } from '@cinerino/api-javascript-client';
 import * as moment from 'moment';
@@ -9,8 +10,6 @@ import { LibphonenumberFormatPipe } from '../../pipes/libphonenumber-format/libp
 import { TimeFormatPipe } from '../../pipes/time-format/time-format.pipe';
 import { CinerinoService } from '../cinerino/cinerino.service';
 import { SaveType, StorageService } from '../storage/storage.service';
-
-declare const ga: Function;
 
 export type ICustomerContact = factory.transaction.placeOrder.ICustomerContact;
 export type ISalesTicketResult = factory.chevre.event.screeningEvent.ITicketOffer;
@@ -122,7 +121,8 @@ export class PurchaseService {
 
     constructor(
         private storage: StorageService,
-        private cinerino: CinerinoService
+        private cinerino: CinerinoService,
+        private http: HttpClient
     ) {
         this.load();
     }
@@ -465,6 +465,17 @@ export class PurchaseService {
     }
 
     /**
+     * パスポート取得
+     */
+    public async getPassport(selleId: string) {
+        const url = `${environment.WAITER_SERVER_URL}`;
+        const body = { scope: `Transaction:PlaceOrder:${selleId}` };
+        const result = await this.http.post<{ token: string; }>(url, body).toPromise();
+
+        return result;
+    }
+
+    /**
      * 取引開始処理
      * @method transactionStartProcess
      */
@@ -700,7 +711,6 @@ export class PurchaseService {
             throw new Error('status is different');
         }
         const transaction = this.data.transaction;
-        const screeningEvent = this.data.screeningEvent;
         const authorizeSeatReservation = this.data.seatReservationAuthorization;
         const reservations = this.data.reservations;
         await this.cinerino.getServices();
@@ -785,19 +795,6 @@ export class PurchaseService {
             movieTheaterOrganization: this.data.movieTheaterOrganization
         };
         this.storage.save('complete', complete, SaveType.Session);
-
-        try {
-            // Google Analytics
-            const sendData = {
-                hitType: 'event',
-                eventCategory: 'purchase',
-                eventAction: 'complete',
-                eventLabel: `conversion-${screeningEvent.location.branchCode}`
-            };
-            ga('send', sendData);
-        } catch (err) {
-            console.error(err);
-        }
 
         // 購入情報削除
         this.reset();

@@ -1,0 +1,58 @@
+$tablet: 1024px;
+$mobile: 767px;
+
+.inner {
+    background-color: #eeeeef;
+    padding: 40px 30px;
+    @media screen and (max-width: $mobile){
+        padding: 30px 20px;
+    }
+    h2 {
+        text-align: center;
+        padding: 15px 0;
+        border-bottom: 1px solid #eeeeef;
+    }
+    p {
+        padding: 15px;
+    }
+    .title {
+        background-color: #ffa806;
+        color: #FFF;
+        text-align: center;
+        padding: 10px 0;
+    }
+    .issue, .print {
+        @media screen and (max-width: $mobile){
+            display: block;
+        }
+        .ticket-issue {
+            background-color: #FFF;
+            width: 55%;
+            border-radius: 3px;
+            @media screen and (max-width: $mobile){
+                width: 100%;
+            }
+        }
+        .image {
+            width: 6.5%;
+            @media screen and (max-width: $mobile){
+                width: 100%;
+            }
+            img {
+                width: 15px;
+                @media screen and (max-width: $mobile){
+                    transform: rotate(90deg);
+                    margin: 10px 0;
+                }
+            }
+        }
+        .entry {
+            background-color: #FFF;
+            width: calc(100% - 55% - 6.5%);
+            border-radius: 3px;
+            @media screen and (max-width: $mobile){
+                width: 100%;
+            }
+        }
+    }
+}

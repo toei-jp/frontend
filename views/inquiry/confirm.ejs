@@ -1,0 +1,85 @@
+<%- contentFor('script') %>
+<script src="/js/inquiry/index.js"></script>
+
+<%- contentFor('body') %>
+<div class="inquiry-confirm">
+    <h1 class="page-ttl">チケット情報確認</h1>
+    <p class="read">入場に必要なQRコードの情報は下記になります。</p>
+
+    <div class="box radius bg-light-gray mb-x-large">
+        <dl>
+            <dt>予約番号
+            <strong class="red-text large-x-text left-space"><%= inquiryModel.input.reserveNum %></strong></dt>
+            <dd class="small-x-text">※チケットの発行・照会等に必要な番号となりますので必ずお控えください。</dd>
+        </dl>
+    </div>
+
+    <h2 class="page-ttl qr-tickets">入場用QRコード</h2>
+    <p class="read">当日ご入場の際は、QRコードをスタッフに提示してご入場してください。</p>
+    <ul class="tickets mb-large">
+        <% for (let i = 0; i < inquiryModel.order.acceptedOffers.length; i++) { %>
+        <% const offer = inquiryModel.order.acceptedOffers[i] %>
+        <li class="ticket">
+            <div class="inner bg-light-gray">
+                <div class="box radius border-bottom-dot bg-white border-bottom">
+                    <div class="mb-x-small"><strong><%= (offer.itemOffered.reservationFor.location.address === undefined) ? '' : offer.itemOffered.reservationFor.location.address.en %> <%= offer.itemOffered.reservationFor.location.name.ja %></strong></div>
+                    <div class="mb-xx-small small-text">
+                        <strong>【 座席 】</strong>
+                        <strong class="large-text"><%= offer.itemOffered.reservedTicket.ticketedSeat.seatNumber %></strong>
+                    </div>
+                    <div class="ticket-number small-text"><%- `${i + 1}/${inquiryModel.order.acceptedOffers.length}` %>枚</div>
+
+                    <div class="small-text">
+                            <strong>【 券種 】</strong>
+                            <strong class="large-text"><%= offer.itemOffered.reservedTicket.ticketType.name.ja %></strong>
+                    </div>
+                </div>
+
+                <% if (moment(offer.itemOffered.reservationFor.endDate).add(1, 'months').unix() < moment().unix()) { %>
+                <div class="box radius border-bottom-dot not-qr-code bg-white">
+                    <p class="text-center">上映日から1ヶ月以上経過しています。</p>
+                </div>
+                <% } else if (moment(offer.itemOffered.reservationFor.startDate).subtract(24, 'hours').unix() > moment().unix()) { %>
+                    <div class="box radius border-bottom-dot not-qr-code bg-white">
+                        <p class="text-center">鑑賞日前日からQRコードが表示されます。</p>
+                    </div>
+                <% } else { %>
+                <div class="box radius border-bottom-dot qr-code bg-white text-center" data-qrcode="<%- offer.itemOffered.reservedTicket.ticketToken %>"></div>
+                <% } %>
+                <div class="box">
+                    <div class="small-text"><strong>鑑賞日時</strong></div>
+                    <div class="mb-xx-small">
+                        <%
+                        moment.locale('ja');
+                        const date = moment(offer.itemOffered.reservationFor.startDate).format('YYYY MM/DD（ddd）');
+                        const startTime = timeFormat(offer.itemOffered.reservationFor.startDate);
+                        const endTime = timeFormat(offer.itemOffered.reservationFor.endDate);
+                         %>
+                        <%= date %> <%= startTime %> - <%= endTime %>
+                    </div>
+                    <div class="small-text"><strong>劇場</strong></div>
+                    <div class="mb-xx-small"><%= inquiryModel.movieTheater.location.name.ja %></div>
+                    <div class="small-text"><strong>作品名</strong></div>
+                    <div><%= offer.itemOffered.reservationFor.workPerformed.name %></div>
+                    <% if (offer.itemOffered.reservationFor.workPerformed.headline) { %>
+                    <div><%= offer.itemOffered.reservationFor.workPerformed.headline %></div>
+                    <% } %>
+                </div>
+            </div>
+        </li>
+        <% } %>
+    </ul>
+    
+    <div class="button-area clearfix">
+        <div class="prev-link"><a class="icon-prev-black" href="/inquiry/login?theater=<%= inquiryModel.movieTheater.location.branchCode %>">戻る</a></div>
+    </div>
+    <%- include('../layouts/siteSeal') %>
+</div>
+<div id="copy" style="display: none"></div>
+
+<input type="hidden" name="theaterCode" value="<%= inquiryModel.movieTheater.location.branchCode %>">
+<input type="hidden" name="reserveNum" value="<%= inquiryModel.input.reserveNum %>">
+<input type="hidden" name="telephone" value="<%= inquiryModel.input.telephone %>">
+<input type="hidden" name="orderNumber" value="<%= inquiryModel.order.orderNumber %>">
+<input type="hidden" name="expire" value="<%= moment(inquiryModel.order.acceptedOffers[0].itemOffered.reservationFor.startDate).add(10, 'day').format('x') %>">
+

@@ -1,0 +1,122 @@
+<div class="contents wrapper">
+    <h1 class="page-ttl">購入内容確認</h1>
+    <p class="read">
+        <strong class="large-text red-text">まだ購入は完了していません。</strong>
+        <br>ご購入内容をご確認頂き「購入完了」ボタンを押して購入を確定してください。</p>
+
+    <div class="form-layout">
+        <h2 class="section-ttl">
+            作品情報
+            <div class="right ticket-app-hide">
+                <div class="button light-gray-button change-button">
+                    <a routerLink="/purchase/schedule">変更</a>
+                </div>
+            </div>
+        </h2>
+
+        <ul class="box radius bg-light-gray mb-large">
+            <li>
+                <dl>
+                    <dt>劇場 / スクリーン</dt>
+                    <dd>{{ purchase.getTheaterName() }} / {{ purchase.getScreenName() }}</dd>
+                </dl>
+            </li>
+            <li>
+                <dl>
+                    <dt>作品名</dt>
+                    <dd>
+                        <p>{{ purchase.getTitle() }}</p>
+                        <p *ngIf="purchase.getSubTitle()">{{ purchase.getSubTitle() }}</p>
+                    </dd>
+                </dl>
+            </li>
+            <li>
+                <dl>
+                    <dt>鑑賞日時</dt>
+                    <dd>
+                        <div class="mb-xx-small">
+                            <strong class="red-text">
+                                {{ purchase.getAppreciationDate() }} {{ purchase.getStartDate() }} - {{
+                                purchase.getEndDate() }}
+                            </strong>
+                        </div>
+                        <p class="small-x-text red-text">※鑑賞日時を必ずご確認ください。</p>
+                    </dd>
+                </dl>
+            </li>
+            <li>
+                <dl>
+                    <dt>座席</dt>
+                    <dd>
+                        <p *ngFor="let reservation of purchase.data.reservations">
+                            <span>{{ reservation.seat.seatNumber }} </span>
+                            <span>{{ reservation.ticket.ticketOffer.name.ja }} </span>
+                            <span>{{ reservation.getTicketPrice().single | currency : 'JPY' }}</span>
+                        </p>
+                    </dd>
+                </dl>
+            </li>
+        </ul>
+
+        <h2 class="section-ttl">
+            購入情報
+            <div class="right">
+                <div class="button light-gray-button change-button">
+                    <a routerLink="/purchase/input">変更</a>
+                </div>
+            </div>
+        </h2>
+        <ul class="box radius bg-light-gray mb-large">
+            <li>
+                <dl>
+                    <dt>お名前（ひらがな）</dt>
+                    <dd>{{ purchase.data.customerContact?.familyName }} {{ purchase.data.customerContact?.givenName }}</dd>
+                </dl>
+            </li>
+            <li>
+                <dl>
+                    <dt>メールアドレス</dt>
+                    <dd>{{ purchase.data.customerContact?.email }}</dd>
+                </dl>
+            </li>
+            <li>
+                <dl>
+                    <dt>電話番号</dt>
+                    <dd>{{ (purchase.data.customerContact?.telephone | libphonenumberFormat) }}</dd>
+                </dl>
+            </li>
+
+            <li *ngIf="purchase.getTotalPrice() > 0">
+                <dl>
+                    <dt>カード番号</dt>
+                    <dd *ngIf="purchase.data.gmoTokenObject !== undefined">{{
+                        purchase.data.gmoTokenObject?.maskedCardNo }}</dd>
+                    <dd *ngIf="purchase.data.gmoTokenObject === undefined && user.data.creditCards !== undefined">{{
+                        user.data.creditCards[0].cardNo }}</dd>
+                </dl>
+            </li>
+
+        </ul>
+
+        <h2 class="section-ttl">注意事項(重要)</h2>
+        <p class="mb-small">下記項目をご確認いただきチェックを入れて「購入完了」ボタンを押してください。</p>
+
+        <app-purchase-note class="mb-middle bg-light-gray" [theaterCode]="purchase.data.screeningEvent?.superEvent.location.branchCode.slice(-2)"></app-purchase-note>
+
+        <form [formGroup]="confirmForm" (ngSubmit)="onSubmit()">
+            <div class="mb-x-large text-center">
+                <input type="checkbox" formControlName="notes" id="notes">
+                <label for="notes">
+                    <strong>上記内容に同意する</strong>
+                </label>
+                <div *ngIf="confirmForm.controls['notes'].invalid && (confirmForm.controls['notes'].dirty || confirmForm.controls['notes'].touched)"
+                    class="validation-text">利用規約に同意してください</div>
+            </div>
+            <app-buttons nextLabel="購入完了" prevLabel="戻る" prevLink="/purchase/input"></app-buttons>
+        </form>
+    </div>
+    <app-site-seal></app-site-seal>
+</div>
+
+
+<app-loading [show]="isLoading"></app-loading>

@@ -1,0 +1,113 @@
+$tablet: 1024px;
+$mobile: 767px;
+:host {
+    width: 20%;
+    padding: 0 0 0 10px;
+    margin: 0 0 20px;
+    @media screen and (max-width: $tablet){
+        width: 25%;
+    }
+    @media screen and (max-width: $mobile){
+        width: 100%;
+        margin: 0 0 10px;
+    }
+}
+li {
+    cursor: pointer;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #dbdcdc;
+    @media screen and (max-width: $mobile){
+        display: flex;
+        align-items: center;
+        padding: 12px 10px;
+    }
+    &.outside-sales,
+    &.vacancy-full {
+        background-color: #9e9e9f;
+        border: 1px solid #9e9e9f;
+        color: #c8c9ca;
+        cursor: default;
+    }
+    .screen-name {
+        @media screen and (max-width: $mobile){
+            margin-bottom: 0 !important;
+            width: 75px;
+            text-align: left;
+            font-size: 12px;
+        }
+        span {
+            @media screen and (max-width: $mobile){
+                display: block;
+                line-height: 1.4;
+            }
+        }
+    }
+    .date {
+        border-bottom: 1px solid #eeeeef;
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+        @media screen and (max-width: $mobile){
+            border-bottom: none;
+            margin-bottom: 0 !important;
+            padding-bottom: 0 !important;
+            width: calc(100% - 75px - 70px);
+            text-align: left;
+            padding-left: 10px;
+        }
+        strong {
+            vertical-align: middle;
+        }
+    }
+    .status {
+        @media screen and (max-width: $mobile){
+            width: 70px;
+        }
+        .image {
+            width: 30px;
+            height: 30px;
+            background-size: 30px;
+            @media screen and (max-width: $mobile){
+                margin-right: 10px; 
+            }
+        }
+    }
+    .large-text {
+        font-size: 22px !important;
+    }
+}
+
+.vacancy-full .status .text {
+    color: #e61919;
+}
+
+.vacancy-little .status .image {
+    background-image: url(/assets/images/common/status_02.svg);
+}
+.vacancy-little .status .text {
+    color: #ee7700;
+}
+
+.vacancy-large .status .image {
+    background-image: url(/assets/images/common/status_01.svg);
+}
+.vacancy-large .status .text {
+    color: #0081cc;
+}
+
+
+.text {
+    height: 30px;
+    line-height: 30px;
+}
+
+.outside-sales,
+.vacancy-full {
+    .image {
+        display: none;
+    }
+    .text {
+        display: block;
+    }
+}
+

@@ -1,0 +1,118 @@
+$tablet: 1024px;
+$mobile: 767px;
+dl {
+    dt {
+        font-weight: bold;
+    }
+}
+
+.validation-text {
+    margin: 10px 0;
+}
+
+.column-02 {
+    display: flex;
+    @media screen and (max-width: $mobile){
+        display: block;
+    }
+    dl {
+        display: flex;
+        width: 50%;
+        @media screen and (max-width: $mobile){
+            display: block;
+            width: 100%;
+        }
+        &:first-child {
+            margin-bottom: 0;
+            @media screen and (max-width: $mobile){
+                margin-bottom: 10px;
+            }
+        }
+        &:last-child {
+            dt {
+                padding-left: 0.5em;
+                @media screen and (max-width: $mobile){
+                    padding-left: 0;
+                }
+            }
+        }
+        dt {
+            width: 4em;
+            margin-bottom: 0;
+            line-height: 44px;
+            @media screen and (max-width: $mobile){
+                width: 100%;
+                margin-bottom: 10px;
+                line-height: 1.0;
+            }
+        }
+        dd {
+            width: calc(100% - 0.5em);
+            @media screen and (max-width: $mobile){
+                width: 100%;
+            }
+        }
+    }
+}
+
+.credit-image {
+    display: inline-block;
+    @media screen and (max-width: $mobile) {
+        display: block;
+    }
+    img {
+        width: auto;
+        height: 22px;
+        @media screen and (max-width: $mobile) {
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+        }
+    }
+}
+
+.credit {         
+    dl {
+        dt {
+            line-height: 44px;
+            @media screen and (max-width: $mobile) {
+                line-height: 1;
+            }
+        }
+        dd {
+            width: 100%;
+            @media screen and (max-width: $mobile) {
+                width: auto;
+            }
+        }
+    }
+    .price {
+        dl {
+            dt {
+                line-height: 1;
+            }
+        }
+    }
+    .credit-card-details {
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px solid #FFF;
+        @media screen and (max-width: $mobile) {
+            display: block;
+            padding-bottom: 15px;
+        }
+    }
+}
+
+.security-code-modal {
+    dl {
+        dd {
+            img {
+                display: block;
+                margin: 0 auto;
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    }
+}

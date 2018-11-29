@@ -1,0 +1,20 @@
+<%
+let analyticsId;
+if (NODE_ENV === 'production') {
+    analyticsId = '';
+} else if (NODE_ENV === 'test') {
+    analyticsId = '';
+} else {
+    analyticsId = '';
+}
+%>
+<!-- Google Tag Manager (noscript) -->
+
+<!-- End Google Tag Manager (noscript) -->
+<script>
+try {
+    ga('create', '<%= analyticsId %>', 'auto');
+} catch (err) {
+    console.error(err);
+}
+</script>

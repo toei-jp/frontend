@@ -1,0 +1,134 @@
+$tablet: 1024px;
+$mobile: 767px;
+.sp-text {
+    display: none;
+    @media screen and (max-width: $mobile){
+        display: inline;
+    }
+}
+
+.film-info {
+    background-color: #595757;
+    color: #FFF;
+    padding: 0;
+    @media screen and (max-width: $mobile) {
+        padding: 15px;
+    }
+    p {
+        text-align: center;
+        color: #e1dd00;
+        padding-top: 15px;
+        @media screen and (max-width: $mobile) {
+            text-align: left;
+        }
+    }
+    .film-info-contents {
+        line-height: 1.6;
+    }
+    img {
+        width: 25px;
+        height: 25px;
+        margin-right: 25px;
+        @media screen and (max-width: $mobile) {
+            margin-right: 15px;
+        }
+    }
+    .title {
+        padding: 0 25px 20px 25px;
+        display: flex;
+        align-items: center;
+        @media screen and (max-width: $mobile) {
+            padding: 0 10px 20px 10px;
+        }
+    }
+    .film-info-inner {
+        display: flex;
+        @media screen and (max-width: $mobile) {
+            display: block;
+        }
+        .date {
+            width: 50%;
+            border-right: 1px solid #FFF;
+            padding: 20px 25px 20px 25px;
+            display: flex;
+            align-items: center;
+            @media screen and (max-width: $mobile) {
+                border-right: none;
+                border-bottom: 1px solid #FFF;
+                width: 100%;
+                padding: 20px 10px 20px 10px;
+            }
+        }
+        .screen-name {
+            width: 50%;
+            padding: 20px 25px 20px 25px;
+            display: flex;
+            align-items: center;
+            @media screen and (max-width: $mobile) {
+                width: 100%;
+                padding: 20px 10px 10px 10px;
+            }
+        }
+    }
+    .border-bottom {
+        border-bottom: 1px solid #FFF;
+    }
+}
+
+.button-area {
+    margin: 30px auto 0;
+    @media screen and (max-width: $mobile){
+        width: auto;
+    }
+}
+.next-button {
+    width: 320px;
+    margin: 0 auto 40px;
+    @media screen and (max-width: $mobile){
+        width: auto;
+        margin: 0 0 40px;
+    }
+    a, button {
+        font-size: 18px;
+        font-weight: bold;
+        width: 320px;
+        padding: 22px 0;
+        @media screen and (max-width: $mobile){
+            width: 100%;
+        }
+        app-icon {
+            position: absolute;
+            top: 50%;
+            right: 20px;
+            margin-top: -7.5px;
+        }
+    }
+}
+.prev-button {
+    width: 320px;
+    margin: 0 auto;
+    @media screen and (max-width: $mobile){
+        width: auto;
+        margin: 0;
+    }
+    a, button {
+        font-size: 18px;
+        font-weight: bold;
+        width: 320px;
+        padding: 22px 0;
+        @media screen and (max-width: $mobile){
+            width: 100%;
+        }
+    }
+}
+.prev-link {
+    text-align: center;
+    a, button {
+        font-size: 16px;
+        font-weight: bold;
+        color: #595757;
+        position: relative;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+}

@@ -1,0 +1,84 @@
+<div class="contents wrapper">
+    <h1 class="page-ttl">座席選択</h1>
+    <p class="read">ご希望の座席を選択して「次へ」ボタンを押してください。
+        <br>選択できる座席数は最大
+        <span class="seat-limit-text">{{ purchase.data.screeningEvent?.offers?.eligibleQuantity.maxValue }}</span>席までとなります。
+        <br>
+        <span class="sp-text">画面をタッチすると画面がズームしますので座席を選択してください。
+            <br>
+        </span>
+        <span class="small-x-text">※車椅子席をご希望の方は、お手数ですが通常のお席をご購入の上、対象の劇場にご連絡ください。</span>
+    </p>
+
+    <div class="film-info mb-small">
+        <p class="mb-small">現在、選択されているチケットは下記のとおりです。</p>
+        <div class="border-bottom title">
+            <div><img src="/assets/images/common/title-icon.svg"></div>
+            <div class="film-info-contents">
+                <div>{{ purchase.getTitle() }}</div>
+                <div *ngIf="purchase.getSubTitle()">{{ purchase.getSubTitle() }}</div>
+            </div>
+        </div>
+        <div class="film-info-inner">
+            <div class="date">
+                <div><img src="/assets/images/common/date-icon.svg"></div>
+                <div class="film-info-contents">
+                    {{ purchase.getAppreciationDate() }} {{ purchase.getStartDate() }} - {{ purchase.getEndDate() }}
+                </div>
+            </div>
+            <div class="screen-name">
+                <div><img src="/assets/images/common/screen-name-icon.svg"></div>
+                <div class="film-info-contents">
+                    {{ purchase.getTheaterName() }} / {{ purchase.getScreenName() }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <app-seat-info></app-seat-info>
+    </div>
+
+
+
+    <div class="mb-large">
+        <app-screen *ngIf="screenData" [inputData]="screenData" [test]="false" (select)="seatSelect($event)" (alert)="seatSelectionAlert()"
+            (load)="loadScreen()">
+        </app-screen>
+    </div>
+
+    <h2 class="page-ttl">利用規約</h2>
+    <p class="mb-small read">利用規約に同意した上で「次へ」ボタンを押してください。</p>
+
+    <app-purchase-term class="mb-middle" [theaterCode]="purchase.data.screeningEvent?.superEvent.location.branchCode.slice(-2)"></app-purchase-term>
+
+    <form [formGroup]="seatForm" (ngSubmit)="onSubmit()">
+        <div class="mb-x-large text-center">
+            <input type="checkbox" formControlName="terms" id="terms">
+            <label for="terms" class="agree-label">
+                <strong>利用規約に同意する</strong>
+            </label>
+            <div *ngIf="seatForm.controls['terms'].invalid && (seatForm.controls['terms'].dirty || seatForm.controls['terms'].touched)"
+                class="validation-text">利用規約に同意してください</div>
+        </div>
+
+        <app-buttons nextLabel="次へ" prevLabel="戻る" prevLink="/purchase/schedule"></app-buttons>
+    </form>
+    <app-site-seal></app-site-seal>
+</div>
+
+<app-modal [open]="notSelectSeatModal" [layout]="true" (close)="notSelectSeatModal = false">
+    <div class="modal-title large-text text-center mb-middle">
+        <strong>座席が未選択です</strong>
+    </div>
+    <p class="text-center">ご希望の空席を選択して「次へ」ボタンを押してください。</p>
+</app-modal>
+
+<app-modal [open]="upperLimitModal" [layout]="true" (close)="upperLimitModal = false">
+    <div class="modal-title large-text text-center mb-middle">
+        <strong>予約座席数が上限です</strong>
+    </div>
+    <p class="text-center">予約座席数は最大
+        <span class="seat-limit-text">{{ purchase.data.screeningEvent?.offers?.eligibleQuantity.maxValue }}</span>席までとなります。</p>
+</app-modal>
+
+<app-loading [show]="isLoading"></app-loading>

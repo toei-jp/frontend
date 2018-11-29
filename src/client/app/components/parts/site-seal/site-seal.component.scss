@@ -1,0 +1,11 @@
+$tablet: 1024px;
+$mobile: 767px;
+.site-seal {
+    margin-top: 60px;
+    @media screen and (max-width: $mobile){
+        margin-top: 50px;
+    }
+    p {
+        color: #737373;
+    }
+}

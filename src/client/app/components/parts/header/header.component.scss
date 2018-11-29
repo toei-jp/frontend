@@ -1,0 +1,35 @@
+$tablet: 1024px;
+$mobile: 767px;
+.header {
+    padding: 25px 40px;
+    border-bottom: 1px solid #E2E1E0;
+    border-top: 10px solid #000;
+    @media screen and (max-width: $mobile){
+        padding: 10px 15px;
+    }
+    .inner {
+        position: relative;
+        max-width: 940px;
+        margin: 0 auto;
+        a {
+            color: #000;
+        }
+    }
+    .logo img {
+        width: 60px;
+        @media screen and (max-width: $mobile){
+            width: 50px;
+        }
+        img {
+            width: 100%;
+        }
+    }
+    .company-name {
+        display: inline-block;
+        line-height: 55px;
+        padding-left: 5px;
+        @media screen and (max-width: $mobile) {
+            display: none;
+        }
+    }
+}

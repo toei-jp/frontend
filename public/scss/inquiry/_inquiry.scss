@@ -1,0 +1,106 @@
+.inquiry-confirm {
+    padding: 0 15px 50px;
+    input[type=text],
+    input[type=number],
+    input[type=password],
+    input[type=tel],
+    input[type=email],
+    input[type=number],
+    textarea {
+        margin: 0 0 5px;
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+    h1 {
+        line-height: 1.4;
+    }
+    .bookmark {
+        text-align: center;
+        padding: 0 10px;
+        img {
+            width: 100%;
+            max-width: 360px;
+        }
+    }
+    .tickets {
+        display: flex;
+        justify-content: space-between;
+        align-items: stretch;
+        flex-wrap: wrap;
+        margin: 0 -10px;
+    }
+    .ticket {
+        width: 50%;
+        @media screen and (max-width: $mobile){
+            width: 100%;
+        }
+        .inner {
+            border: 2px solid #9e9e9f;
+            border-radius: 5px;
+            margin: 0 10px 20px;
+        }
+        .box {
+            overflow: visible;
+        }
+        .ticket-number {
+            padding: 4px 9px;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            border: 1px solid #9e9e9f;
+            @media screen and (max-width: $mobile){
+                right: 10px;
+            }
+        }
+        .qr-code {
+
+        }
+        .not-qr-code {
+            padding: 40px;
+            background-image: url(/assets/images/bg_ticket.svg);
+            background-size: 100px 60px;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        &:last-child {
+            .inner {
+                margin-bottom: 0;
+            }
+        }
+    }
+}
+.header .logo img {
+    @media screen and (max-width: $mobile){
+    width: 100%;
+    width: 50px;
+    }
+}
+
+.box {
+    dl {
+        margin: 0;
+        dt {
+            margin: 0;
+            .left-space {
+                margin-left: 20px;
+            }
+        }
+        dd {
+            margin-left: 0;
+            input {
+                border: none;
+            }
+        }
+    }
+}
+
+ul {
+    padding: 0;
+    li {
+        list-style: none;
+        .border-bottom {
+            border-bottom: 2px solid #eeeeef;
+        }
+    }
+}

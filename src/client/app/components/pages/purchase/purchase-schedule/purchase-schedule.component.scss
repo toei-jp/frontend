@@ -1,0 +1,51 @@
+$tablet: 1024px;
+$mobile: 767px;
+.selection-date {
+    color: #ee7700;
+}
+
+.date-cover {
+    background: #F0F0F2;
+    padding: 20px 46px;
+}
+
+.large-x-text {
+    @media screen and (max-width: $mobile){
+    font-size: 20px;
+    }
+}
+
+.date-list {
+    max-width: 766px;
+    margin: 0 auto;
+    @media screen and (max-width: $mobile){
+        max-width: auto;
+    }
+    height: 105px;
+    text-align: center;
+    
+    .active {
+        background-color: #f9b714 !important;
+        border-bottom: 5px solid #f5a100 !important;
+        color: #FFF;
+    }
+
+    .date-btn {
+        cursor: pointer;
+        height: 100%;
+        background-color: #ffdd00;
+        border-bottom: 5px solid #fdca00;
+        height: 100px;
+    }
+}
+
+.swiper-button-prev {
+    background-image: url(/assets/images/icon/icon_prev_black.svg);
+    left: -38px;
+    
+}
+
+.swiper-button-next {
+    background-image: url(/assets/images/icon/icon_prev_next.svg);
+    right: -38px;
+}

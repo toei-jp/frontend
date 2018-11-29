@@ -1,0 +1,11 @@
+.member-show {
+    display: none;
+}
+.member {
+    .member-show {
+        display: block;
+    }
+    .member-hide {
+        display: none;
+    }
+}

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ja">
+<%- include head %>
+<body>
+<%- include noscript %>
+<div>
+
+<%- include header %>
+
+<div class="contents wrapper">
+    <%- body %>
+</div>
+
+<%- include footer %>
+</div>
+<div class="modal-cover" onclick=""></div>
+<%- defineContent('modals') %>
+<%- include loading %>
+
+<%- defineContent('afterScript') %>
+
+<%- include tags/env %>
+</body>
+</html>

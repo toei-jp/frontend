@@ -1,0 +1,13 @@
+<li class="button text-center radius {{ availability.className }}" (click)="start()">
+    <div class="screen-name small-text mb-x-small">
+        <span>{{ data.location.address?.en }}</span>
+        <span>{{ data.location.name.ja }}</span>
+    </div>
+    <div class="date">
+        <strong class="large-text">{{ data.startDate| timeFormat }}</strong><span> - {{ data.endDate | timeFormat }}</span>
+    </div>
+    <div class="status d-flex justify-content-around align-items-center">
+        <div class="image"></div>
+        <div class="text">{{ availability.text }}</div>
+    </div>
+</li>

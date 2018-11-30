@@ -19,7 +19,7 @@
     <ul class="tickets mb-large">
         <% for (let i = 0; i < inquiryModel.order.acceptedOffers.length; i++) { %>
         <% const offer = inquiryModel.order.acceptedOffers[i] %>
-        <li class="ticket">
+        <li class="ticket mb-middle">
             <div class="inner bg-light-gray">
                 <div class="box radius border-bottom-dot bg-white border-bottom">
                     <div class="mb-x-small"><strong><%= (offer.itemOffered.reservationFor.location.address === undefined) ? '' : offer.itemOffered.reservationFor.location.address.en %> <%= offer.itemOffered.reservationFor.location.name.ja %></strong></div>

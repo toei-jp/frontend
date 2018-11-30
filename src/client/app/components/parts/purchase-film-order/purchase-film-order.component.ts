@@ -1,10 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
-import * as cinerino from '@cinerino/api-javascript-client';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { factory } from '@cinerino/api-javascript-client';
 
-type IScreeningEvent = cinerino.factory.chevre.event.screeningEvent.IEvent;
 interface IFilmOrder {
     id: string;
-    films: IScreeningEvent[];
+    films: factory.chevre.event.screeningEvent.IEvent[];
 }
 
 @Component({
@@ -14,7 +13,8 @@ interface IFilmOrder {
 })
 export class PurchaseFilmOrderComponent implements OnInit {
     @Input() public data: IFilmOrder;
-    public info: IScreeningEvent;
+    @Output() public select = new EventEmitter<factory.chevre.event.screeningEvent.IEvent>();
+    public info: factory.chevre.event.screeningEvent.IEvent;
 
     constructor() { }
 

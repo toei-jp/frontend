@@ -1,10 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { factory } from '@cinerino/api-javascript-client';
+import { SERVICE_UNAVAILABLE, TOO_MANY_REQUESTS } from 'http-status';
 import * as moment from 'moment';
 import { SwiperComponent, SwiperConfigInterface, SwiperDirective } from 'ngx-swiper-wrapper';
 import { environment } from '../../../../../environments/environment';
-import { CinerinoService, ErrorService, PurchaseService } from '../../../../services';
+import { CinerinoService, ErrorService, PurchaseService, SaveType, StorageService } from '../../../../services';
 
 type IMovieTheater = factory.organization.movieTheater.IOrganization;
 type IScreeningEvent = factory.chevre.event.screeningEvent.IEvent;
@@ -49,7 +50,9 @@ export class PurchaseScheduleComponent implements OnInit {
         private error: ErrorService,
         private route: ActivatedRoute,
         private purchase: PurchaseService,
-        private cinerino: CinerinoService
+        private cinerino: CinerinoService,
+        private storage: StorageService,
+        private router: Router
     ) {
         this.showTheaterList = true;
         this.theaters = [];
@@ -230,7 +233,7 @@ export class PurchaseScheduleComponent implements OnInit {
             if (theater === undefined) {
                 throw new Error('theater is not found');
             }
-            const now = moment(this.conditions.date).toDate();
+            const today = moment(this.conditions.date).toDate();
             this.schedules = (await this.cinerino.event.searchScreeningEvents({
                 eventStatuses: [factory.chevre.eventStatusType.EventScheduled],
                 superEvent: {
@@ -239,8 +242,8 @@ export class PurchaseScheduleComponent implements OnInit {
                 startFrom: moment(this.conditions.date).toDate(),
                 startThrough: moment(this.conditions.date).add(1, 'day').toDate(),
                 offers: {
-                    availableFrom: now,
-                    availableThrough: now
+                    availableFrom: today,
+                    availableThrough: today
                 }
             })).data;
             this.filmOrder = this.getEventFilmOrder(this.schedules);
@@ -292,6 +295,40 @@ export class PurchaseScheduleComponent implements OnInit {
     public changeScheduleType(type: 'pre' | 'normal') {
         this.isPreSaleSchedules = (type === 'pre');
         this.conditions.date = (type === 'pre') ? this.preSaleDateList[0].value : this.dateList[0].value;
+    }
+
+    /**
+     * @method selectSchedule
+     */
+    public async selectSchedule(data: factory.chevre.event.screeningEvent.IEvent) {
+        this.isLoading = true;
+        const findResult =
+            this.theaters.find(theater => theater.location.branchCode === this.conditions.theater);
+        if (findResult === undefined) {
+            this.isLoading = false;
+            return;
+        }
+        try {
+            const selleId = findResult.id;
+            const passport = await this.purchase.getPassport(selleId);
+            this.storage.save('parameters', {
+                passport: passport,
+                signInRedirect: false,
+                performanceId: data.id
+            }, SaveType.Session);
+            this.router.navigate(['/purchase/transaction']);
+            this.isLoading = false;
+        } catch (error) {
+            if (error.status === TOO_MANY_REQUESTS) {
+                this.router.navigate(['/congestion']);
+                return;
+            }
+            if (error.status === SERVICE_UNAVAILABLE) {
+                this.router.navigate(['/maintenance']);
+                return;
+            }
+            this.router.navigate(['/error']);
+        }
     }
 
 }

@@ -3,9 +3,11 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthSigninComponent } from './components/pages/auth/auth-signin/auth-signin.component';
 import { BaseComponent } from './components/pages/base/base.component';
 import { CompanyComponent } from './components/pages/company/company.component';
+import { CongestionComponent } from './components/pages/congestion/congestion.component';
 import { ErrorComponent } from './components/pages/error/error.component';
 import { ExpiredComponent } from './components/pages/expired/expired.component';
 import { LawComponent } from './components/pages/law/law.component';
+import { MaintenanceComponent } from './components/pages/maintenance/maintenance.component';
 import { NotFoundComponent } from './components/pages/not-found/not-found.component';
 import { PurchaseBaseComponent } from './components/pages/purchase/purchase-base/purchase-base.component';
 import { PurchaseCompleteComponent } from './components/pages/purchase/purchase-complete/purchase-complete.component';
@@ -76,6 +78,8 @@ const routes: Routes = [
             { path: 'law', component: LawComponent },
             { path: 'company', component: CompanyComponent },
             { path: 'ticketing-method', component: TicketingMethodComponent },
+            { path: 'congestion', component: CongestionComponent },
+            { path: 'maintenance', component: MaintenanceComponent },
             { path: 'error', component: ErrorComponent },
             { path: 'expired', component: ExpiredComponent },
             { path: '**', component: NotFoundComponent }

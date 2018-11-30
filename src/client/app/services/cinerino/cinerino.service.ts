@@ -1,9 +1,8 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import * as cinerino from '@cinerino/api-javascript-client';
 import 'rxjs/add/operator/toPromise';
 import { environment } from '../../../environments/environment';
-import { SaveType, StorageService } from '../storage/storage.service';
 
 @Injectable()
 export class CinerinoService {
@@ -19,9 +18,7 @@ export class CinerinoService {
     };
 
     constructor(
-        private http: HttpClient,
-        private storage: StorageService
-    ) { }
+        private http: HttpClient    ) { }
 
     /**
      * getServices
@@ -58,21 +55,16 @@ export class CinerinoService {
      * @method authorize
      */
     public async authorize() {
-        const user = this.storage.load('user', SaveType.Session);
-        const member = user.memberType;
         const url = '/api/authorize/getCredentials';
-        const options = {
-            headers: new HttpHeaders({
-                'Pragma': 'no-cache',
-                'Cache-Control': 'no-cache',
-                'If-Modified-Since': new Date(0).toUTCString()
-            }),
-            params: new HttpParams().set('member', member)
-        };
-        const credentials = await this.http.get<any>(url, options).toPromise();
+        const body = { };
+        const result = await this.http.post<{
+            accessToken: string;
+            userName: string;
+            clientId: string;
+        }>(url, body).toPromise();
         const option = {
             domain: '',
-            clientId: '',
+            clientId: result.clientId,
             redirectUri: '',
             logoutUri: '',
             responseType: '',
@@ -82,7 +74,7 @@ export class CinerinoService {
             tokenIssuer: ''
         };
         this.auth = cinerino.createAuthInstance(option);
-        this.auth.setCredentials(credentials);
+        this.auth.setCredentials({ accessToken: result.accessToken });
     }
 
     /**

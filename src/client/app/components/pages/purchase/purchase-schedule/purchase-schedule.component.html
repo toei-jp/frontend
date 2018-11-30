@@ -65,13 +65,13 @@
         </div>
 
         <ul *ngIf="!isPreSaleSchedules" class="film-order">
-            <app-purchase-film-order *ngFor="let film of filmOrder" [data]="film"></app-purchase-film-order>
+            <app-purchase-film-order *ngFor="let film of filmOrder" [data]="film" (select)="selectSchedule($event)"></app-purchase-film-order>
         </ul>
 
         <p *ngIf="!isPreSaleSchedules && filmOrder.length === 0" class="mb-middle"><strong>スケジュールがありません</strong></p>
 
         <ul *ngIf="isPreSaleSchedules" class="film-order">
-            <app-purchase-film-order *ngFor="let film of preSaleFilmOrder" [data]="film"></app-purchase-film-order>
+            <app-purchase-film-order *ngFor="let film of preSaleFilmOrder" [data]="film" (select)="selectSchedule($event)"></app-purchase-film-order>
         </ul>
 
         <p *ngIf="isPreSaleSchedules && preSaleFilmOrder.length === 0"><strong>スケジュールがありません</strong></p>

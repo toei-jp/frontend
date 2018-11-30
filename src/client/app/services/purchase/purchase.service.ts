@@ -1,16 +1,15 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { factory } from '@cinerino/api-javascript-client';
 import * as moment from 'moment';
 import * as util from 'util';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../environments/environment.local';
 import { getPurchaseCompleteTemplate } from '../../mails';
 import { IReservationTicket, Reservation } from '../../models';
 import { LibphonenumberFormatPipe } from '../../pipes/libphonenumber-format/libphonenumber-format.pipe';
 import { TimeFormatPipe } from '../../pipes/time-format/time-format.pipe';
 import { CinerinoService } from '../cinerino/cinerino.service';
 import { SaveType, StorageService } from '../storage/storage.service';
-
-declare const ga: Function;
 
 export type ICustomerContact = factory.transaction.placeOrder.ICustomerContact;
 export type ISalesTicketResult = factory.chevre.event.screeningEvent.ITicketOffer;
@@ -122,7 +121,8 @@ export class PurchaseService {
 
     constructor(
         private storage: StorageService,
-        private cinerino: CinerinoService
+        private cinerino: CinerinoService,
+        private http: HttpClient
     ) {
         this.load();
     }
@@ -465,11 +465,26 @@ export class PurchaseService {
     }
 
     /**
+     * パスポート取得
+     */
+    public async getPassport(selleId: string) {
+        if (environment.WAITER_SERVER_URL === undefined
+            || environment.WAITER_SERVER_URL === '') {
+            return { token: '' };
+        }
+        const url = `${environment.WAITER_SERVER_URL}/projects/${environment.PROJECT_ID}/passports`;
+        const body = { scope: `Transaction:PlaceOrder:${selleId}` };
+        const result = await this.http.post<{ token: string; }>(url, body).toPromise();
+
+        return result;
+    }
+
+    /**
      * 取引開始処理
      * @method transactionStartProcess
      */
     public async transactionStartProcess(args: {
-        passportToken: string;
+        passport?: { token: string };
         screeningEvent: factory.chevre.event.screeningEvent.IEvent;
         customerContact?: ICustomerContact;
     }) {
@@ -485,6 +500,7 @@ export class PurchaseService {
         // 取引期限
         const VALID_TIME = environment.TRANSACTION_TIME;
         const expires = moment().add(VALID_TIME, 'minutes').toDate();
+        const passport = args.passport;
         // 取引開始
         this.data.transaction = await this.cinerino.transaction.placeOrder.start({
             expires: expires,
@@ -492,17 +508,13 @@ export class PurchaseService {
                 id: this.data.movieTheaterOrganization.id,
                 typeOf: this.data.movieTheaterOrganization.typeOf
             },
-            object: {
-                passport: {
-                    token: args.passportToken
-                }
-            }
+            object: { passport }
         });
         this.save();
     }
 
     /**
-     * 取引開始処理
+     * 取引キャンセル処理
      * @method transactionStartProcess
      */
     public async transactionCancelProcess() {
@@ -700,7 +712,6 @@ export class PurchaseService {
             throw new Error('status is different');
         }
         const transaction = this.data.transaction;
-        const screeningEvent = this.data.screeningEvent;
         const authorizeSeatReservation = this.data.seatReservationAuthorization;
         const reservations = this.data.reservations;
         await this.cinerino.getServices();
@@ -785,19 +796,6 @@ export class PurchaseService {
             movieTheaterOrganization: this.data.movieTheaterOrganization
         };
         this.storage.save('complete', complete, SaveType.Session);
-
-        try {
-            // Google Analytics
-            const sendData = {
-                hitType: 'event',
-                eventCategory: 'purchase',
-                eventAction: 'complete',
-                eventLabel: `conversion-${screeningEvent.location.branchCode}`
-            };
-            ga('send', sendData);
-        } catch (err) {
-            console.error(err);
-        }
 
         // 購入情報削除
         this.reset();

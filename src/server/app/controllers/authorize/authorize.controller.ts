@@ -17,11 +17,12 @@ export async function getCredentials(_: Request, res: Response) {
             auth: authModel.create()
         };
         const accessToken = await options.auth.getAccessToken();
-        const credentials = {
-            accessToken: accessToken
-        };
 
-        res.json(credentials);
+        res.json({
+            accessToken: accessToken,
+            userName: undefined,
+            clientId: options.auth.options.clientId
+        });
     } catch (err) {
         errorProsess(res, err);
     }

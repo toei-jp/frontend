@@ -19,7 +19,7 @@
     <ul class="tickets mb-large">
         <% for (let i = 0; i < inquiryModel.order.acceptedOffers.length; i++) { %>
         <% const offer = inquiryModel.order.acceptedOffers[i] %>
-        <li class="ticket">
+        <li class="ticket mb-middle">
             <div class="inner bg-light-gray">
                 <div class="box radius border-bottom-dot bg-white border-bottom">
                     <div class="mb-x-small"><strong><%= (offer.itemOffered.reservationFor.location.address === undefined) ? '' : offer.itemOffered.reservationFor.location.address.en %> <%= offer.itemOffered.reservationFor.location.name.ja %></strong></div>
@@ -34,8 +34,11 @@
                             <strong class="large-text"><%= offer.itemOffered.reservedTicket.ticketType.name.ja %></strong>
                     </div>
                 </div>
-
-                <% if (moment(offer.itemOffered.reservationFor.endDate).add(1, 'months').unix() < moment().unix()) { %>
+                <% if (offer.itemOffered.attended) { %>
+                <div class="box radius border-bottom-dot not-qr-code bg-white">
+                    <p class="text-center">入場済み</p>
+                </div>
+                <% } else if (moment(offer.itemOffered.reservationFor.endDate).add(1, 'months').unix() < moment().unix()) { %>
                 <div class="box radius border-bottom-dot not-qr-code bg-white">
                     <p class="text-center">上映日から1ヶ月以上経過しています。</p>
                 </div>

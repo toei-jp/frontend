@@ -32,7 +32,13 @@
           "configurations": {
             "local": {
               "outputPath": "./dist/client/development",
-              "watch": true
+              "watch": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/client/environments/environment.ts",
+                  "with": "src/client/environments/environment.local.ts"
+                }
+              ]
             },
             "dev": {
               "aot": true,
@@ -40,7 +46,7 @@
               "fileReplacements": [
                 {
                   "replace": "src/client/environments/environment.ts",
-                  "with": "src/client/environments/environment.dev.ts"
+                  "with": "src/client/environments/environment.development.ts"
                 }
               ]
             },
@@ -65,13 +71,7 @@
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
-              "index": "src/client/production.html",
-              "fileReplacements": [
-                {
-                  "replace": "src/client/environments/environment.ts",
-                  "with": "src/client/environments/environment.prod.ts"
-                }
-              ]
+              "index": "src/client/production.html"
             }
           }
         },

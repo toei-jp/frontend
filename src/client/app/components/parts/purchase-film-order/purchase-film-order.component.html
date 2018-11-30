@@ -16,7 +16,7 @@
         </dt>
         <dd>
             <ul>
-                <app-purchase-film-order-performance *ngFor="let film of data.films" [data]="film"></app-purchase-film-order-performance>
+                <app-purchase-film-order-performance *ngFor="let film of data.films" [data]="film" (select)="select.emit($event)"></app-purchase-film-order-performance>
             </ul>
         </dd>
     </dl>

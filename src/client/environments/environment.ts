@@ -1,12 +1,12 @@
 export const environment = {
-    production: false,
+    production: true,
     APP_PREFIX: 'TO',
-    SITE_URL: 'https://toei-frontend-development.azurewebsites.net',
-    PORTAL_SITE_URL: '/#/purchase/schedule',
-    WAITER_SERVER_URL: 'https://waiter-development.appspot.com/projects/toei-development/passports',
+    PROJECT_ID: 'toei-production',
+    SITE_URL: 'https://toei-frontend-production.azurewebsites.net',
+    PORTAL_SITE_URL: 'http://theaters.toei.co.jp',
+    WAITER_SERVER_URL: 'https://waiter-production.appspot.com',
 
-    CINERINO_API_ENDPOINT: 'https://toei-cinerino-api-development.azurewebsites.net',
-    ANALYTICS_ID: '',
+    CINERINO_API_ENDPOINT: 'https://toei-cinerino-api-production.azurewebsites.net',
 
-    TRANSACTION_TIME: '120'
+    TRANSACTION_TIME: '15'
 };

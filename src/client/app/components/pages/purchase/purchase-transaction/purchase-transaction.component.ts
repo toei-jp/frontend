@@ -24,7 +24,7 @@ export class PurchaseTransactionComponent implements OnInit {
         /**
          * WAITER許可証トークン
          */
-        passportToken?: string;
+        passport?: { token: string; };
         /**
          * awsCognitoIdentityId
          */
@@ -99,7 +99,7 @@ export class PurchaseTransactionComponent implements OnInit {
             }
 
             await this.purchase.transactionStartProcess({
-                passportToken: <string>this.parameters.passportToken,
+                passport: this.parameters.passport,
                 screeningEvent: screeningEvent,
                 customerContact: this.purchase.data.customerContact
             });

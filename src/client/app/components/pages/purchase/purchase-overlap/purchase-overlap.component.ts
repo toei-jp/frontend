@@ -11,7 +11,7 @@ import { ErrorService, PurchaseService, SaveType, StorageService } from '../../.
 })
 export class PurchaseOverlapComponent implements OnInit {
     public screeningEvent: factory.chevre.event.screeningEvent.IEvent;
-
+    public isLoading: boolean;
     constructor(
         private storage: StorageService,
         public purchase: PurchaseService,
@@ -43,6 +43,7 @@ export class PurchaseOverlapComponent implements OnInit {
      * 新しい取引へ
      */
     public async newTransaction() {
+        this.isLoading = true;
         try {
             if (this.purchase.data.seatReservationAuthorization === undefined) {
                 await this.purchase.transactionCancelProcess();
@@ -50,16 +51,11 @@ export class PurchaseOverlapComponent implements OnInit {
                 await this.purchase.cancelSeatRegistrationProcess();
             }
         } catch (err) {
-            console.error(err);
+            this.router.navigate(['/error']);
         }
         this.storage.remove('screeningEvent', SaveType.Session);
-        this.storage.save('parameters', {
-            passportToken: '',
-            signInRedirect: false,
-            performanceId: this.screeningEvent.id
-        }, SaveType.Session);
         this.router.navigate(['/purchase/transaction']);
-        // location.href = `${environment.WAITER_SERVER_URL}/purchase/index.html?id=${this.screeningEvent.identifier}`;
+        this.isLoading = false;
     }
 
     /**

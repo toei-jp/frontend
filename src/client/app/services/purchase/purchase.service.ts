@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { factory } from '@cinerino/api-javascript-client';
 import * as moment from 'moment';
 import * as util from 'util';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../environments/environment.local';
 import { getPurchaseCompleteTemplate } from '../../mails';
 import { IReservationTicket, Reservation } from '../../models';
 import { LibphonenumberFormatPipe } from '../../pipes/libphonenumber-format/libphonenumber-format.pipe';
@@ -468,7 +468,11 @@ export class PurchaseService {
      * パスポート取得
      */
     public async getPassport(selleId: string) {
-        const url = `${environment.WAITER_SERVER_URL}`;
+        if (environment.WAITER_SERVER_URL === undefined
+            || environment.WAITER_SERVER_URL === '') {
+            return { token: '' };
+        }
+        const url = `${environment.WAITER_SERVER_URL}/projects/${environment.PROJECT_ID}/passports`;
         const body = { scope: `Transaction:PlaceOrder:${selleId}` };
         const result = await this.http.post<{ token: string; }>(url, body).toPromise();
 
@@ -480,7 +484,7 @@ export class PurchaseService {
      * @method transactionStartProcess
      */
     public async transactionStartProcess(args: {
-        passportToken: string;
+        passport?: { token: string };
         screeningEvent: factory.chevre.event.screeningEvent.IEvent;
         customerContact?: ICustomerContact;
     }) {
@@ -496,6 +500,7 @@ export class PurchaseService {
         // 取引期限
         const VALID_TIME = environment.TRANSACTION_TIME;
         const expires = moment().add(VALID_TIME, 'minutes').toDate();
+        const passport = args.passport;
         // 取引開始
         this.data.transaction = await this.cinerino.transaction.placeOrder.start({
             expires: expires,
@@ -503,17 +508,13 @@ export class PurchaseService {
                 id: this.data.movieTheaterOrganization.id,
                 typeOf: this.data.movieTheaterOrganization.typeOf
             },
-            object: {
-                passport: {
-                    token: args.passportToken
-                }
-            }
+            object: { passport }
         });
         this.save();
     }
 
     /**
-     * 取引開始処理
+     * 取引キャンセル処理
      * @method transactionStartProcess
      */
     public async transactionCancelProcess() {

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { factory } from '@cinerino/api-javascript-client';
 import * as moment from 'moment';
 import * as util from 'util';
-import { environment } from '../../../environments/environment.local';
+import { environment } from '../../../environments/environment';
 import { getPurchaseCompleteTemplate } from '../../mails';
 import { IReservationTicket, Reservation } from '../../models';
 import { LibphonenumberFormatPipe } from '../../pipes/libphonenumber-format/libphonenumber-format.pipe';

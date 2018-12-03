@@ -7991,7 +7991,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var util__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! util */ "../../node_modules/util/util.js");
 /* harmony import */ var util__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(util__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _environments_environment_local__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../environments/environment.local */ "./environments/environment.local.ts");
+/* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../environments/environment */ "./environments/environment.ts");
 /* harmony import */ var _mails__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../mails */ "./app/mails/index.ts");
 /* harmony import */ var _models__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../models */ "./app/models/index.ts");
 /* harmony import */ var _pipes_libphonenumber_format_libphonenumber_format_pipe__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../pipes/libphonenumber-format/libphonenumber-format.pipe */ "./app/pipes/libphonenumber-format/libphonenumber-format.pipe.ts");
@@ -8361,11 +8361,11 @@ var PurchaseService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (_environments_environment_local__WEBPACK_IMPORTED_MODULE_4__["environment"].WAITER_SERVER_URL === undefined
-                            || _environments_environment_local__WEBPACK_IMPORTED_MODULE_4__["environment"].WAITER_SERVER_URL === '') {
+                        if (_environments_environment__WEBPACK_IMPORTED_MODULE_4__["environment"].WAITER_SERVER_URL === undefined
+                            || _environments_environment__WEBPACK_IMPORTED_MODULE_4__["environment"].WAITER_SERVER_URL === '') {
                             return [2 /*return*/, { token: '' }];
                         }
-                        url = _environments_environment_local__WEBPACK_IMPORTED_MODULE_4__["environment"].WAITER_SERVER_URL + "/projects/" + _environments_environment_local__WEBPACK_IMPORTED_MODULE_4__["environment"].PROJECT_ID + "/passports";
+                        url = _environments_environment__WEBPACK_IMPORTED_MODULE_4__["environment"].WAITER_SERVER_URL + "/projects/" + _environments_environment__WEBPACK_IMPORTED_MODULE_4__["environment"].PROJECT_ID + "/passports";
                         body = { scope: "Transaction:PlaceOrder:" + selleId };
                         return [4 /*yield*/, this.http.post(url, body).toPromise()];
                     case 1:
@@ -8400,7 +8400,7 @@ var PurchaseService = /** @class */ (function () {
                     case 2:
                         // 劇場のショップを検索
                         _a.movieTheaterOrganization = (_c.sent()).data[0];
-                        VALID_TIME = _environments_environment_local__WEBPACK_IMPORTED_MODULE_4__["environment"].TRANSACTION_TIME;
+                        VALID_TIME = _environments_environment__WEBPACK_IMPORTED_MODULE_4__["environment"].TRANSACTION_TIME;
                         expires = moment__WEBPACK_IMPORTED_MODULE_2__().add(VALID_TIME, 'minutes').toDate();
                         passport = args.passport;
                         // 取引開始
@@ -8683,7 +8683,7 @@ var PurchaseService = /** @class */ (function () {
             throw new Error('status is different');
         }
         var DIGITS = { '02': -2, '06': -6 };
-        var prefix = _environments_environment_local__WEBPACK_IMPORTED_MODULE_4__["environment"].APP_PREFIX;
+        var prefix = _environments_environment__WEBPACK_IMPORTED_MODULE_4__["environment"].APP_PREFIX;
         var date = moment__WEBPACK_IMPORTED_MODULE_2__().format('YYMMDDHHmmss');
         var orderCount = ("00" + this.data.orderCount).slice(DIGITS['02']);
         var transactionId = ("000000" + this.data.transaction.id).slice(DIGITS['06']);
@@ -8786,7 +8786,7 @@ var PurchaseService = /** @class */ (function () {
                                     reservedSeats: this.data.reservations.map(function (reservation) {
                                         return util__WEBPACK_IMPORTED_MODULE_3__["format"]('%s %s %s', reservation.seat.seatNumber, (reservation.ticket === undefined) ? '' : reservation.ticket.ticketOffer.name.ja, "\uFFE5" + reservation.getTicketPrice().single);
                                     }).join('\n| '),
-                                    inquiryUrl: _environments_environment_local__WEBPACK_IMPORTED_MODULE_4__["environment"].SITE_URL + "/inquiry/login",
+                                    inquiryUrl: _environments_environment__WEBPACK_IMPORTED_MODULE_4__["environment"].SITE_URL + "/inquiry/login",
                                     seller: {
                                         branchCode: this.data.movieTheaterOrganization.location.branchCode,
                                         telephone: new _pipes_libphonenumber_format_libphonenumber_format_pipe__WEBPACK_IMPORTED_MODULE_7__["LibphonenumberFormatPipe"]().transform(this.data.movieTheaterOrganization.telephone)
@@ -9082,31 +9082,6 @@ var UtilService = /** @class */ (function () {
     return UtilService;
 }());
 
-
-
-/***/ }),
-
-/***/ "./environments/environment.local.ts":
-/*!*******************************************!*\
-  !*** ./environments/environment.local.ts ***!
-  \*******************************************/
-/*! exports provided: environment */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "environment", function() { return environment; });
-var environment = {
-    production: false,
-    APP_PREFIX: 'TO',
-    PROJECT_ID: 'toei-development',
-    SITE_URL: 'https://toei-frontend-development.azurewebsites.net',
-    PORTAL_SITE_URL: '/#/purchase/schedule',
-    WAITER_SERVER_URL: 'https://waiter-development.appspot.com',
-    CINERINO_API_ENDPOINT: 'https://toei-cinerino-api-development.azurewebsites.net',
-    ANALYTICS_ID: '',
-    TRANSACTION_TIME: '120'
-};
 
 
 /***/ }),

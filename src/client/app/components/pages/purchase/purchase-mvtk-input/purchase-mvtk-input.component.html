@@ -1,9 +1,7 @@
 <div class="contents wrapper">
     <h1 class="page-ttl">ムビチケ券認証</h1>
-    <!-- <p class="read">ご利用になるムビチケ券の購入番号と、暗証番号を入力してください。
-        <br>複数枚ご利用になる場合は「ムビチケ券を追加」ボタンを押して追加してください。</p> -->
     <p class="read">ご利用になるムビチケ券の購入番号と、暗証番号を入力してください。
-    <br><strong class="red-text">現在ムビチケ券を複数枚ご利用頂けない不具合が発生しておりますので、<br class="d-md-block">お手数をおかけしますがムビチケ券は1枚ずつご利用ください。</strong></p>
+        <br>複数枚ご利用になる場合は「ムビチケ券を追加」ボタンを押して追加してください。</p>
 
     <div *ngFor="let mvtkForm of mvtkForms; let index = index" class="ticket-list mb-middle">
         <form [formGroup]="mvtkForm">
@@ -47,9 +45,9 @@
         </form>
     </div>
 
-    <!-- <div *ngIf="purchase.data.reservations.length > mvtkForms.length" class="button dark-orange-button add-button mb-middle center-button">
+    <div *ngIf="purchase.data.reservations.length > mvtkForms.length" class="button dark-orange-button add-button mb-middle center-button">
         <a class="icon-add-white" (click)="addMvtk()">ムビチケ券を追加</a>
-    </div> -->
+    </div>
 
     <div class="box radius bg-light-gray mb-small">
         <!-- <div class="box-ttl">選択中の座席</div> -->

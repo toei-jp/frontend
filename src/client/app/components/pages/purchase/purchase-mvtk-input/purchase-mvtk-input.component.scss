@@ -1,3 +1,5 @@
+$tablet: 1024px;
+$mobile: 767px;
 .mvtk-box {
     position: relative;
     padding: 32px 0 0;
@@ -53,5 +55,12 @@
     display: flex;
     .seat {
         margin-left: auto;
+    }
+}
+
+.d-md-block {
+    display: block;
+    @media screen and (max-width: $mobile){
+        display: none;
     }
 }

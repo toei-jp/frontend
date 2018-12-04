@@ -26,8 +26,8 @@
                     </div>
                     <div *ngIf="reservation.ticket !== undefined" class="orange-button ghost-button">
                         <button type="button" (click)="openTicketList(reservation)">
-                            {{ reservation.ticket.ticketOffer.name.ja }} {{ reservation.getTicketPrice().single |
-                            currency : 'JPY' }}
+                            {{ reservation.ticket.ticketOffer.name.ja }} {{ reservation.getTicketPrice().single | currency : 'JPY' }}
+                            <!-- <div *ngIf="reservation.ticket.movieTicket" class="small-x-text">購入管理番号{{ reservation.ticket.movieTicket.identifier }}</div> -->
                         </button>
                     </div>
                     <p class="small-x-text">※割引券などのご利用はできません。</p>
@@ -47,13 +47,6 @@
             </div>
         </div>
         <div class="border-bottom mb-small"></div>
-        <!-- 4DX -->
-        <!--<p *ngIf="(purchase.data.screeningEvent?.superEvent.coaInfo.kbnJoueihousiki?.kubunCode === '002')" class="small-x-text mb-xx-small">
-            ※[４DXをご鑑賞のお客様へ]
-            <br> ４DX®作品は「身長100cm未満の方は入場不可」「身長120cm未満のお子様は保護者同伴」の入場制限がありますので、ご注意くださいませ。
-            <br> また、妊娠されている方、ご高齢の方、心臓・背中・腰・首などに障害のある方、特別な疾病のある方、乗り物酔いしやすい方、体調に不安のある方はご利用になれません。
-            <br> 上映中のホットドリンク・アルコールはご遠慮ください。
-        </p>-->
         <p class="small-x-text">※車椅子席をご希望の方は、対象の劇場にご連絡ください。
             <br>※ムビチケ券によっては別途追加料金が発生する場合がありますのでご了承ください。
         </p>
@@ -77,8 +70,7 @@
                         <strong>{{ ticket.ticketOffer.name.ja }} {{ purchase.getTicketPrice(ticket.ticketOffer).single | currency
                             : 'JPY' }}</strong>
                     </div>
-                    <p *ngIf="ticket.movieTicket" class="small-x-text">購入管理番号{{ ticket.movieTicket.identifier
-                        }}</p>
+                    <p *ngIf="ticket.movieTicket" class="small-x-text">購入管理番号{{ ticket.movieTicket.identifier }}</p>
                 </dt>
                 <dd class="d-td width-small">
                     <div class="button orange-button ticket-type-select">

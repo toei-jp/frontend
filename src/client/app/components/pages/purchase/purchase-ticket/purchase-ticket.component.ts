@@ -160,8 +160,14 @@ export class PurchaseTicketComponent implements OnInit {
                     === reservation.ticket.movieTicket.serviceType);
             });
 
-            movieTickets.forEach((movieTicket, index) => {
-                if (index >= (movieTickets.length - reservations.length)) {
+            movieTickets.forEach((movieTicket) => {
+                const index = reservations.findIndex((reservation) => {
+                    return (reservation.ticket !== undefined
+                        && reservation.ticket.movieTicket !== undefined
+                        && reservation.ticket.movieTicket.identifier === movieTicket.identifier);
+                });
+                if (index > -1) {
+                    reservations.splice(index, 1);
                     return;
                 }
                 this.tickets.push({ ticketOffer, movieTicket });

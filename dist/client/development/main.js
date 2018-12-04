@@ -3202,7 +3202,7 @@ __webpack_require__.r(__webpack_exports__);
  * @suppress {suspiciousCode,uselessCode,missingProperties,missingOverride,checkTypes}
  * tslint:disable
  */ 
-var styles = [".mvtk-box[_ngcontent-%COMP%] {\n  position: relative;\n  padding: 32px 0 0; }\n  .mvtk-box[_ngcontent-%COMP%]   .remove-button[_ngcontent-%COMP%] {\n    position: absolute;\n    top: 0;\n    right: 0; }\n  .mvtk-box[_ngcontent-%COMP%]   .remove-button[_ngcontent-%COMP%]   a[_ngcontent-%COMP%] {\n      width: 70px;\n      padding: 8px 0;\n      font-size: 12px;\n      box-shadow: 0 0 0 transparent;\n      font-weight: 500; }\n  .mvtk-box.active[_ngcontent-%COMP%] {\n    display: block; }\n  .mvtk-box[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%] {\n    padding-top: 0;\n    padding-bottom: 0; }\n  .mvtk-box[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   li[_ngcontent-%COMP%] {\n      margin-bottom: 0 !important; }\n  .mvtk-box[_ngcontent-%COMP%]   dl[_ngcontent-%COMP%] {\n    display: flex;\n    border-bottom: 1px solid #FFF;\n    padding: 20px 0;\n    align-items: center; }\n  .mvtk-box[_ngcontent-%COMP%]   dt[_ngcontent-%COMP%] {\n    width: 180px;\n    justify-content: ce; }\n  .mvtk-box[_ngcontent-%COMP%]   dd[_ngcontent-%COMP%] {\n    width: calc(100% - 180px); }\n  .validation-text[_ngcontent-%COMP%] {\n  margin: 10px 0; }\n  .zoom[_ngcontent-%COMP%] {\n  -webkit-animation: zoom 0.2s;\n  animation: zoom 0.2s; }\n  .selected-seat[_ngcontent-%COMP%] {\n  font-size: 16px;\n  font-weight: bold;\n  display: flex; }\n  .selected-seat[_ngcontent-%COMP%]   .seat[_ngcontent-%COMP%] {\n    margin-left: auto; }"];
+var styles = [".mvtk-box[_ngcontent-%COMP%] {\n  position: relative;\n  padding: 32px 0 0; }\n  .mvtk-box[_ngcontent-%COMP%]   .remove-button[_ngcontent-%COMP%] {\n    position: absolute;\n    top: 0;\n    right: 0; }\n  .mvtk-box[_ngcontent-%COMP%]   .remove-button[_ngcontent-%COMP%]   a[_ngcontent-%COMP%] {\n      width: 70px;\n      padding: 8px 0;\n      font-size: 12px;\n      box-shadow: 0 0 0 transparent;\n      font-weight: 500; }\n  .mvtk-box.active[_ngcontent-%COMP%] {\n    display: block; }\n  .mvtk-box[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%] {\n    padding-top: 0;\n    padding-bottom: 0; }\n  .mvtk-box[_ngcontent-%COMP%]   .box[_ngcontent-%COMP%]   li[_ngcontent-%COMP%] {\n      margin-bottom: 0 !important; }\n  .mvtk-box[_ngcontent-%COMP%]   dl[_ngcontent-%COMP%] {\n    display: flex;\n    border-bottom: 1px solid #FFF;\n    padding: 20px 0;\n    align-items: center; }\n  .mvtk-box[_ngcontent-%COMP%]   dt[_ngcontent-%COMP%] {\n    width: 180px;\n    justify-content: ce; }\n  .mvtk-box[_ngcontent-%COMP%]   dd[_ngcontent-%COMP%] {\n    width: calc(100% - 180px); }\n  .validation-text[_ngcontent-%COMP%] {\n  margin: 10px 0; }\n  .zoom[_ngcontent-%COMP%] {\n  -webkit-animation: zoom 0.2s;\n  animation: zoom 0.2s; }\n  .selected-seat[_ngcontent-%COMP%] {\n  font-size: 16px;\n  font-weight: bold;\n  display: flex; }\n  .selected-seat[_ngcontent-%COMP%]   .seat[_ngcontent-%COMP%] {\n    margin-left: auto; }\n  .d-md-block[_ngcontent-%COMP%] {\n  display: block; }\n  @media screen and (max-width: 767px) {\n    .d-md-block[_ngcontent-%COMP%] {\n      display: none; } }"];
 
 
 
@@ -4881,8 +4881,14 @@ var PurchaseTicketComponent = /** @class */ (function () {
                 return (movieTicketTypeChargeSpecification.appliesToMovieTicketType
                     === reservation.ticket.movieTicket.serviceType);
             });
-            movieTickets.forEach(function (movieTicket, index) {
-                if (index >= (movieTickets.length - reservations.length)) {
+            movieTickets.forEach(function (movieTicket) {
+                var index = reservations.findIndex(function (reservation) {
+                    return (reservation.ticket !== undefined
+                        && reservation.ticket.movieTicket !== undefined
+                        && reservation.ticket.movieTicket.identifier === movieTicket.identifier);
+                });
+                if (index > -1) {
+                    reservations.splice(index, 1);
                     return;
                 }
                 _this.tickets.push({ ticketOffer: ticketOffer, movieTicket: movieTicket });

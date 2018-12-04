@@ -4882,13 +4882,12 @@ var PurchaseTicketComponent = /** @class */ (function () {
                     === reservation.ticket.movieTicket.serviceType);
             });
             movieTickets.forEach(function (movieTicket) {
-                var findResult = reservations.find(function (reservation) {
+                var index = reservations.findIndex(function (reservation) {
                     return (reservation.ticket !== undefined
                         && reservation.ticket.movieTicket !== undefined
                         && reservation.ticket.movieTicket.identifier === movieTicket.identifier);
                 });
-                if (findResult !== undefined) {
-                    var index = reservations.indexOf(findResult);
+                if (index > -1) {
                     reservations.splice(index, 1);
                     return;
                 }

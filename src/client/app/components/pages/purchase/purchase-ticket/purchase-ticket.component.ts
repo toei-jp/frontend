@@ -161,13 +161,12 @@ export class PurchaseTicketComponent implements OnInit {
             });
 
             movieTickets.forEach((movieTicket) => {
-                const findResult = reservations.find((reservation) => {
+                const index = reservations.findIndex((reservation) => {
                     return (reservation.ticket !== undefined
                         && reservation.ticket.movieTicket !== undefined
                         && reservation.ticket.movieTicket.identifier === movieTicket.identifier);
                 });
-                if (findResult !== undefined) {
-                    const index = reservations.indexOf(findResult);
+                if (index > -1) {
                     reservations.splice(index, 1);
                     return;
                 }

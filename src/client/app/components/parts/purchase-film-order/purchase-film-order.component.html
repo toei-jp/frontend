@@ -4,6 +4,7 @@
             <div class="mb-x-small">
                 <p><strong>{{ info.name.ja }}</strong></p>
                 <p *ngIf="info.workPerformed.headline">{{ info.workPerformed.headline }}</p>
+                <p *ngIf="info.superEvent.description?.ja">{{ info.superEvent.description?.ja }}</p>
             </div>
             <div class="d-flex align-items-center justify-content-end">
                 <div *ngIf="info.workPerformed.contentRating" class="bage small-x-text text-center">{{

@@ -14,6 +14,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Removed
 
+## 1.1.0 - 2018-12-07
+### Added
+- スケジュールへ補足説明を追加
+
 ## 1.0.2 - 2018-12-06
 ### Fixed
 - スケジュール選択ページの注意事項文言修正

@@ -92,4 +92,11 @@
     <app-site-seal></app-site-seal>
 </div>
 
+<app-modal [open]="reservationModal" [layout]="true" (close)="reservationModal = false">
+    <div class="modal-title large-text text-center mb-middle">
+        <strong>予約エラー</strong>
+    </div>
+    <p>販売受付は上映時間の20分前となります。窓口での購入をお願いします。</p>
+</app-modal>
+
 <app-loading [show]="isLoading"></app-loading>

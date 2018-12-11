@@ -6163,10 +6163,11 @@ var PurchaseFilmOrderPerformanceComponent = /** @class */ (function () {
      * @returns {Iavailability}
      */
     PurchaseFilmOrderPerformanceComponent.prototype.getAvailability = function (remaining) {
+        var isNotSale = moment__WEBPACK_IMPORTED_MODULE_2__(this.data.startDate).add(-20, 'minutes').unix() < moment__WEBPACK_IMPORTED_MODULE_2__().unix();
         var availabilityList = [
             { text: '完売', className: 'vacancy-full' },
-            { text: '購入', className: 'vacancy-little' },
-            { text: '購入', className: 'vacancy-large' },
+            { text: (isNotSale) ? '窓口' : '購入', className: 'vacancy-little' },
+            { text: (isNotSale) ? '窓口' : '購入', className: 'vacancy-large' },
             { text: '販売終了', className: 'outside-sales' },
             { text: '販売期間外', className: 'outside-sales' }
         ];

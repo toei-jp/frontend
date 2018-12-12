@@ -42,7 +42,9 @@ export class PurchaseScheduleComponent implements OnInit {
     public preSaleFilmOrder: IFilmOrder[];
     public isPreSaleSchedules: boolean;
     private preSaleSchedules: IScreeningEvent[];
+    public reservationModal: boolean;
     public swiperConfig: SwiperConfigInterface;
+
     @ViewChild(SwiperComponent) public componentRef: SwiperComponent;
     @ViewChild(SwiperDirective) public directiveRef: SwiperDirective;
 
@@ -76,6 +78,7 @@ export class PurchaseScheduleComponent implements OnInit {
         moment.locale('ja');
         this.isLoading = true;
         this.isPreSaleSchedules = false;
+        this.reservationModal = false;
         this.swiperConfig = {
             spaceBetween: 10,
             slidesPerView: 7,
@@ -305,6 +308,12 @@ export class PurchaseScheduleComponent implements OnInit {
         const findResult =
             this.theaters.find(theater => theater.location.branchCode === this.conditions.theater);
         if (findResult === undefined) {
+            this.isLoading = false;
+            return;
+        }
+        if (moment(data.startDate).add(-20, 'minutes').unix() < moment().unix()) {
+            // 上映開始20分前以降ならエラー
+            this.reservationModal = true;
             this.isLoading = false;
             return;
         }

@@ -5,6 +5,7 @@ import * as moment from 'moment';
 interface Iavailability {
     text: string;
     className: string;
+    textClassName: string;
 }
 
 @Component({
@@ -19,7 +20,7 @@ export class PurchaseFilmOrderPerformanceComponent implements OnInit {
     private isEndSale: boolean;
     private isStartSale: boolean;
 
-    constructor( ) { }
+    constructor() { }
 
     public ngOnInit() {
         const now = moment();
@@ -34,12 +35,13 @@ export class PurchaseFilmOrderPerformanceComponent implements OnInit {
      * @returns {Iavailability}
      */
     public getAvailability(remaining?: number): Iavailability {
+        const isNotSale = moment(this.data.startDate).add(-20, 'minutes').unix() < moment().unix();
         const availabilityList = [
-            { text: '完売', className: 'vacancy-full' },
-            { text: '購入', className: 'vacancy-little' },
-            { text: '購入', className: 'vacancy-large' },
-            { text: '販売終了', className: 'outside-sales' },
-            { text: '販売期間外', className: 'outside-sales' }
+            { text: '完売', className: 'vacancy-full', textClassName: '' },
+            { text: (isNotSale) ? '窓口' : '購入', className: 'vacancy-little', textClassName: (isNotSale) ? 'text-gray' : '' },
+            { text: (isNotSale) ? '窓口' : '購入', className: 'vacancy-large', textClassName: (isNotSale) ? 'text-gray' : '' },
+            { text: '販売終了', className: 'outside-sales', textClassName: '' },
+            { text: '販売期間外', className: 'outside-sales', textClassName: '' }
         ];
 
         return (this.isEndSale)

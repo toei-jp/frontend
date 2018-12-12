@@ -28,7 +28,7 @@
     "build": "npm run css-server && npm run build-server && npm run build-client",
     "version": "git add -A",
     "preversion": "npm run build",
-    "check": "npm run lint && nsp check",
+    "check": "npm run lint",
     "lint": "npm run lint-client && npm run lint-server",
     "test": "npm run check"
   },

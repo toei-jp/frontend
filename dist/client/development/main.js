@@ -1,9 +1,9 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([["main"],{
 
 /***/ "../../node_modules/moment/locale sync recursive ^\\.\\/.*$":
-/*!**********************************************************************************************!*\
-  !*** C:/Users/user/Desktop/workspace/TOEI/frontend/node_modules/moment/locale sync ^\.\/.*$ ***!
-  \**********************************************************************************************/
+/*!*****************************************************************************************************************!*\
+  !*** C:/Users/hataguchi/Desktop/workspace/TOEI Ticket System/frontend/node_modules/moment/locale sync ^\.\/.*$ ***!
+  \*****************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -4862,6 +4862,7 @@ var PurchaseTicketComponent = /** @class */ (function () {
     PurchaseTicketComponent.prototype.createTickets = function () {
         var _this = this;
         this.tickets = [];
+        var movieTickets = [];
         this.purchase.data.salesTickets.forEach(function (ticketOffer) {
             var movieTicketTypeChargeSpecification = ticketOffer.priceSpecification.priceComponent
                 .filter(function (s) { return s.typeOf === _cinerino_api_javascript_client_lib_abstract__WEBPACK_IMPORTED_MODULE_3__["factory"].chevre.priceSpecificationType.MovieTicketTypeChargeSpecification; })
@@ -4872,7 +4873,7 @@ var PurchaseTicketComponent = /** @class */ (function () {
                 return;
             }
             // 対象ムビチケ券
-            var movieTickets = [];
+            var targetMovieTickets = [];
             _this.purchase.data.mvtkTickets.forEach(function (checkMovieTicketAction) {
                 if (checkMovieTicketAction.result === undefined) {
                     return;
@@ -4882,7 +4883,7 @@ var PurchaseTicketComponent = /** @class */ (function () {
                 });
                 availabilityMovieTickets.forEach(function (movieTicket) {
                     if (movieTicket.serviceType === movieTicketTypeChargeSpecification.appliesToMovieTicketType) {
-                        movieTickets.push(movieTicket);
+                        targetMovieTickets.push(movieTicket);
                     }
                 });
             });
@@ -4895,7 +4896,7 @@ var PurchaseTicketComponent = /** @class */ (function () {
                 return (movieTicketTypeChargeSpecification.appliesToMovieTicketType
                     === reservation.ticket.movieTicket.serviceType);
             });
-            movieTickets.forEach(function (movieTicket) {
+            targetMovieTickets.forEach(function (movieTicket) {
                 var index = reservations.findIndex(function (reservation) {
                     return (reservation.ticket !== undefined
                         && reservation.ticket.movieTicket !== undefined
@@ -4905,9 +4906,10 @@ var PurchaseTicketComponent = /** @class */ (function () {
                     reservations.splice(index, 1);
                     return;
                 }
-                _this.tickets.push({ ticketOffer: ticketOffer, movieTicket: movieTicket });
+                movieTickets.push({ ticketOffer: ticketOffer, movieTicket: movieTicket });
             });
         });
+        this.tickets = movieTickets.concat(this.tickets);
     };
     /**
      * 券種選択
@@ -9157,7 +9159,7 @@ _angular_platform_browser__WEBPACK_IMPORTED_MODULE_4__["platformBrowser"]().boot
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Users\user\Desktop\workspace\TOEI\frontend\src\client\main.ts */"./main.ts");
+module.exports = __webpack_require__(/*! C:\Users\hataguchi\Desktop\workspace\TOEI Ticket System\frontend\src\client\main.ts */"./main.ts");
 
 
 /***/ })

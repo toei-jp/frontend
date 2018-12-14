@@ -121,10 +121,10 @@ export class PurchaseMvtkInputComponent implements OnInit {
 
             checkMovieTicketAction.result.purchaseNumberAuthResult.knyknrNoInfoOut.forEach((info) => {
                 if (info.knyknrNoMkujyuCd !== undefined) {
-                    this.warningActions.push({code: info.knyknrNo, message: 'ムビチケ情報をご確認ください。'});
+                    this.warningActions.push({ code: info.knyknrNo, message: 'ムビチケ情報をご確認ください。' });
                 }
                 if (info.ykknmiNum === '0') {
-                    this.warningActions.push({code: info.knyknrNo, message: 'すでに使用済みのムビチケです。'});
+                    this.warningActions.push({ code: info.knyknrNo, message: 'すでに使用済みのムビチケです。' });
                 }
             });
             if (this.warningActions.length > 0) {
@@ -133,6 +133,8 @@ export class PurchaseMvtkInputComponent implements OnInit {
                 this.disable = false;
                 return;
             }
+            this.purchase.data.mvtkTickets = checkMovieTicketActions;
+            this.purchase.save();
             this.router.navigate(['purchase/mvtk/confirm']);
         } catch (err) {
             console.error(err);

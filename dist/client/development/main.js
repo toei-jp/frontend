@@ -3383,6 +3383,8 @@ var PurchaseMvtkInputComponent = /** @class */ (function () {
                             this.disable = false;
                             return [2 /*return*/];
                         }
+                        this.purchase.data.mvtkTickets = checkMovieTicketActions;
+                        this.purchase.save();
                         this.router.navigate(['purchase/mvtk/confirm']);
                         return [3 /*break*/, 4];
                     case 3:

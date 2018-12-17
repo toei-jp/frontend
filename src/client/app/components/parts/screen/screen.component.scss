@@ -39,8 +39,16 @@ $mobile: 767px;
     }
     .seat-hc {
         a {
+            border-radius: 5px;
             background-image: url(/images/theater/parts/seat_hc.svg) !important;
-            background-size: 40px 50px;
+            background-color: #cececf;
+            background-size: 30px 37.5px;
+            background-position: center;
+            cursor: default;
+            &.disabled {
+                background-image: url(/images/theater/parts/seat_hc_disabled.svg) !important;
+                background-color: #474241;
+            }
             span {
                 display: none !important;
             }

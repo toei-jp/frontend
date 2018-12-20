@@ -892,7 +892,6 @@ export class PurchaseService {
             }
         });
 
-        this.data.mvtkTickets = [checkMovieTicketAction];
-        this.save();
+        return [checkMovieTicketAction];
     }
 }

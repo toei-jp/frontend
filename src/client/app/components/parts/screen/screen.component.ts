@@ -105,12 +105,15 @@ export class ScreenComponent implements OnInit, AfterViewInit {
 
     /**
      * 座席選択
-     * @method seatSelect
+     * @method selectSeat
      * @param {Event} event
      * @param {Iseat} seat
      */
-    public seatSelect(seat: ISeat) {
+    public selectSeat(seat: ISeat) {
         if (this.isMobile() && !this.zoomState) {
+            return;
+        }
+        if (this.data.screen.hc.indexOf(seat.code) !== -1) {
             return;
         }
         if (seat.status === 'default') {
@@ -372,7 +375,6 @@ export class ScreenComponent implements OnInit, AfterViewInit {
                     };
                     if (screenData.hc.indexOf(code) !== -1) {
                         seat.className = `seat-${code} seat-hc`;
-                        seat.status = SeatStatus.Disabled;
                     }
                     seats.push(seat);
                 }

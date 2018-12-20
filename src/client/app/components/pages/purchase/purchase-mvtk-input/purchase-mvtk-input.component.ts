@@ -13,8 +13,10 @@ export class PurchaseMvtkInputComponent implements OnInit {
     public mvtkInputForm: FormGroup;
     public inputValidationModal: boolean;
     public authErrorModal: boolean;
+    public authWarningModal: boolean;
     public isLoading: boolean;
     public disable: boolean;
+    public warningActions: { code: string; message: string; }[];
 
     constructor(
         public purchase: PurchaseService,
@@ -27,10 +29,12 @@ export class PurchaseMvtkInputComponent implements OnInit {
         this.isLoading = false;
         this.inputValidationModal = false;
         this.authErrorModal = false;
+        this.authWarningModal = false;
         this.mvtkForms = [];
         this.mvtkForms.push(this.createForm());
         this.mvtkInputForm = this.formBuilder.group({});
         this.disable = false;
+        this.warningActions = [];
     }
 
     /**
@@ -106,7 +110,31 @@ export class PurchaseMvtkInputComponent implements OnInit {
                     pinCd: mvtkForm.controls.password.value
                 };
             });
-            await this.purchase.mvtkAuthenticationProcess(mvtkData);
+            const checkMovieTicketActions = await this.purchase.mvtkAuthenticationProcess(mvtkData);
+            this.warningActions = [];
+            const checkMovieTicketAction = checkMovieTicketActions[0];
+            if (checkMovieTicketAction === undefined
+                || checkMovieTicketAction.result === undefined
+                || checkMovieTicketAction.result.purchaseNumberAuthResult.knyknrNoInfoOut === null) {
+                throw new Error('checkMovieTicketAction is undefined');
+            }
+
+            checkMovieTicketAction.result.purchaseNumberAuthResult.knyknrNoInfoOut.forEach((info) => {
+                if (info.knyknrNoMkujyuCd !== undefined) {
+                    this.warningActions.push({ code: info.knyknrNo, message: 'ムビチケ情報をご確認ください。' });
+                }
+                if (info.ykknmiNum === '0') {
+                    this.warningActions.push({ code: info.knyknrNo, message: 'すでに使用済みのムビチケです。' });
+                }
+            });
+            if (this.warningActions.length > 0) {
+                this.isLoading = false;
+                this.authWarningModal = true;
+                this.disable = false;
+                return;
+            }
+            this.purchase.data.mvtkTickets = checkMovieTicketActions;
+            this.purchase.save();
             this.router.navigate(['purchase/mvtk/confirm']);
         } catch (err) {
             console.error(err);

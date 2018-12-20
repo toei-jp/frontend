@@ -124,6 +124,7 @@ export class PurchaseTicketComponent implements OnInit {
      */
     public createTickets() {
         this.tickets = [];
+        const movieTickets: IReservationTicket[] = [];
         this.purchase.data.salesTickets.forEach((ticketOffer) => {
             const movieTicketTypeChargeSpecification = <IMovieTicketTypeChargeSpecification>ticketOffer.priceSpecification.priceComponent
                 .filter((s) => s.typeOf === factory.chevre.priceSpecificationType.MovieTicketTypeChargeSpecification)
@@ -135,7 +136,7 @@ export class PurchaseTicketComponent implements OnInit {
             }
 
             // 対象ムビチケ券
-            const movieTickets: factory.paymentMethod.paymentCard.movieTicket.IMovieTicket[] = [];
+            const targetMovieTickets: factory.paymentMethod.paymentCard.movieTicket.IMovieTicket[] = [];
             this.purchase.data.mvtkTickets.forEach((checkMovieTicketAction) => {
                 if (checkMovieTicketAction.result === undefined) {
                     return;
@@ -145,7 +146,7 @@ export class PurchaseTicketComponent implements OnInit {
                 });
                 availabilityMovieTickets.forEach((movieTicket) => {
                     if (movieTicket.serviceType === movieTicketTypeChargeSpecification.appliesToMovieTicketType) {
-                        movieTickets.push(movieTicket);
+                        targetMovieTickets.push(movieTicket);
                     }
                 });
             });
@@ -160,7 +161,7 @@ export class PurchaseTicketComponent implements OnInit {
                     === reservation.ticket.movieTicket.serviceType);
             });
 
-            movieTickets.forEach((movieTicket) => {
+            targetMovieTickets.forEach((movieTicket) => {
                 const index = reservations.findIndex((reservation) => {
                     return (reservation.ticket !== undefined
                         && reservation.ticket.movieTicket !== undefined
@@ -170,9 +171,11 @@ export class PurchaseTicketComponent implements OnInit {
                     reservations.splice(index, 1);
                     return;
                 }
-                this.tickets.push({ ticketOffer, movieTicket });
+                movieTickets.push({ ticketOffer, movieTicket });
             });
         });
+
+        this.tickets = movieTickets.concat(this.tickets);
     }
 
     /**

@@ -14,6 +14,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Removed
 
+## 1.3.0 - 2018-12-20
+### Added
+- スケジュール選択での仮予約削除を追加
+### Changed
+- ムビチケ認証エラーハンドリングを変更
+- 券種一覧の順番を変更
+### Fixed
+- 車椅子席の表示を修正
+
 ## 1.2.0 - 2018-12-12
 ### Changed
 - 上映開始20分前以降を予約エラーへ変更

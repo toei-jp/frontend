@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const moment = require("moment");
 const path = require("path");
 const authorize_controller_1 = require("../controllers/authorize/authorize.controller");
 const authorize_1 = require("./authorize");
@@ -21,10 +22,19 @@ function error(err, _req, res, _next) {
     res.locals.error = err;
     res.render('error/index');
 }
+/**
+ * サーバー時間取得
+ */
+function getServerDate(_req, res, _next) {
+    res.json({
+        date: moment().toISOString()
+    });
+}
 exports.default = (app) => {
     app.set('layout', 'layouts/layout');
     app.use(defaultSetting);
     app.use('/api/authorize', authorize_1.default);
+    app.get('/api/getServerDate', getServerDate);
     app.use('/inquiry', inquiry_1.default);
     app.get('/signIn', authorize_controller_1.signInRedirect);
     app.get('/', root);

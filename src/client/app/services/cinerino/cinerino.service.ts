@@ -18,7 +18,8 @@ export class CinerinoService {
     };
 
     constructor(
-        private http: HttpClient    ) { }
+        private http: HttpClient
+    ) { }
 
     /**
      * getServices
@@ -56,7 +57,7 @@ export class CinerinoService {
      */
     public async authorize() {
         const url = '/api/authorize/getCredentials';
-        const body = { };
+        const body = {};
         const result = await this.http.post<{
             accessToken: string;
             userName: string;

@@ -2,6 +2,7 @@
  * ルーティング
  */
 import { Application, NextFunction, Request, Response } from 'express';
+import moment = require('moment');
 import * as path from 'path';
 import { signInRedirect } from '../controllers/authorize/authorize.controller';
 import authorizeRouter from './authorize';
@@ -28,10 +29,20 @@ function error(err: Error, _req: Request, res: Response, _next: NextFunction) {
     res.render('error/index');
 }
 
+/**
+ * サーバー時間取得
+ */
+function getServerDate(_req: Request, res: Response, _next: NextFunction) {
+    res.json({
+        date: moment().toISOString()
+    });
+}
+
 export default (app: Application) => {
     app.set('layout', 'layouts/layout');
     app.use(defaultSetting);
     app.use('/api/authorize', authorizeRouter);
+    app.get('/api/getServerDate', getServerDate);
     app.use('/inquiry', inquiryRouter);
     app.get('/signIn', signInRedirect);
     app.get('/', root);

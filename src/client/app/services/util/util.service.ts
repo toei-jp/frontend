@@ -1,9 +1,22 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 @Injectable()
 export class UtilService {
 
-    constructor() { }
+    constructor(
+        private http: HttpClient
+    ) { }
+
+    /**
+     * @method getServerDate
+     */
+    public async getServerDate() {
+        const url = '/api/getServerDate';
+        const body = {};
+        const result = await this.http.get<{ date: string }>(url, body).toPromise();
+        return result;
+    }
 
     /**
      * カタカナをひらがなへ変換

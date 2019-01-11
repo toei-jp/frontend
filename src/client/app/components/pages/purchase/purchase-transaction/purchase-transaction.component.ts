@@ -6,7 +6,8 @@ import {
     ErrorService,
     PurchaseService,
     SaveType,
-    StorageService
+    StorageService,
+    UtilService
 } from '../../../../services';
 
 @Component({
@@ -30,6 +31,7 @@ export class PurchaseTransactionComponent implements OnInit {
         private router: Router,
         private cinerino: CinerinoService,
         private purchase: PurchaseService,
+        private util: UtilService,
         private error: ErrorService,
         private activatedRoute: ActivatedRoute
     ) { }
@@ -41,13 +43,13 @@ export class PurchaseTransactionComponent implements OnInit {
         this.activatedRoute.paramMap
             .subscribe(async (params) => {
                 try {
-                    const passportToken =  params.get('passportToken');
-                    const performanceId =  params.get('performanceId');
+                    const passportToken = params.get('passportToken');
+                    const performanceId = params.get('performanceId');
                     if (performanceId === null) {
                         throw new Error('performanceId is null');
                     }
                     this.parameters = {
-                        passport: (passportToken === null) ? undefined : { token: passportToken},
+                        passport: (passportToken === null) ? undefined : { token: passportToken },
                         performanceId
                     };
 
@@ -56,8 +58,12 @@ export class PurchaseTransactionComponent implements OnInit {
                     const screeningEvent = await this.cinerino.event.findScreeningEventById({
                         id: (<string>this.parameters.performanceId)
                     });
+
+                    const serverDate = await this.util.getServerDate();
+
                     // 開始可能日判定
-                    if (!this.purchase.isSales(screeningEvent)) {
+                    if (screeningEvent.offers === undefined
+                        || moment(screeningEvent.offers.validFrom) > moment(serverDate.date)) {
                         throw new Error('Unable to start sales');
                     }
 

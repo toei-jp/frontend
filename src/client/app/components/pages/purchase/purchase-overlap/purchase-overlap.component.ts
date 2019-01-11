@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { factory } from '@cinerino/api-javascript-client';
 import * as moment from 'moment';
-import { ErrorService, PurchaseService, SaveType, StorageService } from '../../../../services';
+import { CinerinoService, ErrorService, PurchaseService } from '../../../../services';
 
 @Component({
     selector: 'app-purchase-overlap',
@@ -13,23 +13,33 @@ export class PurchaseOverlapComponent implements OnInit {
     public screeningEvent: factory.chevre.event.screeningEvent.IEvent;
     public isLoading: boolean;
     constructor(
-        private storage: StorageService,
         public purchase: PurchaseService,
         private router: Router,
-        private error: ErrorService
+        private error: ErrorService,
+        private activatedRoute: ActivatedRoute,
+        private cinerino: CinerinoService
     ) { }
 
     public async ngOnInit() {
         window.scrollTo(0, 0);
-        try {
-            // イベント情報取得
-            this.screeningEvent = <factory.chevre.event.screeningEvent.IEvent>this.storage.load('screeningEvent', SaveType.Session);
-            if (this.screeningEvent === null) {
-                throw new Error('screeningEvent is null');
-            }
-        } catch (err) {
-            this.error.redirect(err);
-        }
+        this.activatedRoute.paramMap
+            .subscribe(async (params) => {
+                this.isLoading = true;
+                const performanceId = params.get('performanceId');
+                try {
+                    // イベント情報取得
+                    await this.cinerino.getServices();
+                    this.screeningEvent = await this.cinerino.event.findScreeningEventById({
+                        id: <string>performanceId
+                    });
+                    if (this.screeningEvent === null) {
+                        throw new Error('screeningEvent is null');
+                    }
+                    this.isLoading = false;
+                } catch (err) {
+                    this.error.redirect(err);
+                }
+            }).unsubscribe();
     }
 
     /**
@@ -53,9 +63,13 @@ export class PurchaseOverlapComponent implements OnInit {
         } catch (err) {
             this.router.navigate(['/error']);
         }
-        this.storage.remove('screeningEvent', SaveType.Session);
-        this.router.navigate(['/purchase/transaction']);
-        this.isLoading = false;
+        this.activatedRoute.paramMap
+            .subscribe((params) => {
+                const passportToken = params.get('passportToken');
+                const performanceId = params.get('performanceId');
+                this.router.navigate([`/purchase/transaction/${performanceId}/${passportToken}`]);
+                this.isLoading = false;
+            }).unsubscribe();
     }
 
     /**

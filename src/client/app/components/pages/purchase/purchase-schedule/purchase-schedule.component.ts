@@ -5,7 +5,7 @@ import { SERVICE_UNAVAILABLE, TOO_MANY_REQUESTS } from 'http-status';
 import * as moment from 'moment';
 import { SwiperComponent, SwiperConfigInterface, SwiperDirective } from 'ngx-swiper-wrapper';
 import { environment } from '../../../../../environments/environment';
-import { CinerinoService, ErrorService, PurchaseService, SaveType, StorageService } from '../../../../services';
+import { CinerinoService, ErrorService, PurchaseService } from '../../../../services';
 
 type IMovieTheater = factory.organization.movieTheater.IOrganization;
 type IScreeningEvent = factory.chevre.event.screeningEvent.IEvent;
@@ -50,10 +50,9 @@ export class PurchaseScheduleComponent implements OnInit {
 
     constructor(
         private error: ErrorService,
-        private route: ActivatedRoute,
+        private activatedRoute: ActivatedRoute,
         private purchase: PurchaseService,
         private cinerino: CinerinoService,
-        private storage: StorageService,
         private router: Router
     ) {
         this.showTheaterList = true;
@@ -94,7 +93,7 @@ export class PurchaseScheduleComponent implements OnInit {
         };
         try {
             await this.cinerino.getServices();
-            const theaterQs = this.route.snapshot.queryParamMap.get('theater');
+            const theaterQs = this.activatedRoute.snapshot.queryParamMap.get('theater');
             this.theaters = (await this.cinerino.organization.searchMovieTheaters({})).data;
             if (theaterQs !== null) {
                 const theater = this.theaters.find((t) => (
@@ -320,12 +319,8 @@ export class PurchaseScheduleComponent implements OnInit {
         try {
             const selleId = findResult.id;
             const passport = await this.purchase.getPassport(selleId);
-            this.storage.save('parameters', {
-                passport: passport,
-                signInRedirect: false,
-                performanceId: data.id
-            }, SaveType.Session);
-            this.router.navigate(['/purchase/transaction']);
+            const performanceId = data.id;
+            this.router.navigate([`/purchase/transaction/${performanceId}/${passport.token}`]);
             this.isLoading = false;
         } catch (error) {
             if (error.status === TOO_MANY_REQUESTS) {

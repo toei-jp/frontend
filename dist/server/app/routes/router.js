@@ -10,23 +10,6 @@ function defaultSetting(req, res, next) {
     res.locals.isApp = (req.session.awsCognitoIdentityId !== undefined);
     next();
 }
-function purchaseTransaction(req, res, _next) {
-    let params = `performanceId=${req.query.performanceId}`;
-    params += `&passportToken=${req.query.passportToken}`;
-    if (req.query.identityId !== undefined) {
-        params += `&identityId=${req.query.identityId}`;
-    }
-    if (req.query.native !== undefined) {
-        params += `&native=${req.query.native}`;
-    }
-    if (req.query.member !== undefined) {
-        params += `&member=${req.query.member}`;
-    }
-    if (req.query.accessToken !== undefined) {
-        params += `&accessToken=${req.query.accessToken}`;
-    }
-    res.redirect(`/?${params}`);
-}
 function root(_req, res, _next) {
     const fileName = (process.env.NODE_ENV === 'production') ? 'production.html' : 'index.html';
     res.sendFile(path.resolve(`${__dirname}/../../../client/${process.env.NODE_ENV}/${fileName}`));
@@ -43,7 +26,6 @@ exports.default = (app) => {
     app.use(defaultSetting);
     app.use('/api/authorize', authorize_1.default);
     app.use('/inquiry', inquiry_1.default);
-    app.get('/purchase/transaction', purchaseTransaction);
     app.get('/signIn', authorize_controller_1.signInRedirect);
     app.get('/', root);
     app.use(notfound);

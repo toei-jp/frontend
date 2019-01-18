@@ -285,10 +285,16 @@ export class PurchaseScheduleComponent implements OnInit {
         });
 
         return results.sort((event1, event2) => {
-            if (event1.films[0].name.ja < event2.films[0].name.ja) {
+            if (event1.films[0].workPerformed.datePublished === undefined
+                || event2.films[0].workPerformed.datePublished === undefined) {
+                    return 0;
+                }
+            const unixA = moment(event1.films[0].workPerformed.datePublished).unix();
+            const unixB = moment(event2.films[0].workPerformed.datePublished).unix();
+            if (unixA > unixB) {
                 return -1;
             }
-            if (event1.films[0].name.ja > event2.films[0].name.ja) {
+            if (unixA < unixB) {
                 return 1;
             }
             return 0;

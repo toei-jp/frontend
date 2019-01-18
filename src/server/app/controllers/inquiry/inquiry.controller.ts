@@ -180,6 +180,7 @@ function getInquiryError(req: Request) {
  * @returns {string}
  */
 function timeFormat(time: Date | string) {
+    moment.tz.setDefault('Asia/Tokyo');
     const mm = moment(time).tz('Asia/Tokyo');
     const hour = mm.format('HH');
     const minutes = mm.format('mm');

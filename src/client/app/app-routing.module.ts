@@ -27,13 +27,13 @@ import { TestGuardService } from './services/test-guard/test-guard.service';
 
 const routes: Routes = [
     { path: '', redirectTo: 'purchase/schedule', pathMatch: 'full' },
-    { path: 'purchase/transaction', component: PurchaseTransactionComponent },
+    { path: 'purchase/transaction/:performanceId/:passportToken', component: PurchaseTransactionComponent },
     { path: 'auth/signin', component: AuthSigninComponent },
     {
         path: '',
         component: BaseComponent,
         children: [
-            { path: 'purchase/overlap', component: PurchaseOverlapComponent }
+            { path: 'purchase/overlap/:performanceId/:passportToken', component: PurchaseOverlapComponent },
         ]
     },
     {

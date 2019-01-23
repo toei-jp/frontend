@@ -27,6 +27,7 @@ import { TestGuardService } from './services/test-guard/test-guard.service';
 
 const routes: Routes = [
     { path: '', redirectTo: 'purchase/schedule', pathMatch: 'full' },
+    { path: 'purchase/transaction/:performanceId', component: PurchaseTransactionComponent },
     { path: 'purchase/transaction/:performanceId/:passportToken', component: PurchaseTransactionComponent },
     { path: 'auth/signin', component: AuthSigninComponent },
     {

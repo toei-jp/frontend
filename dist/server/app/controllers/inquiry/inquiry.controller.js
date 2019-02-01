@@ -190,6 +190,7 @@ function getInquiryError(req) {
  * @returns {string}
  */
 function timeFormat(time) {
+    moment.tz.setDefault('Asia/Tokyo');
     const mm = moment(time).tz('Asia/Tokyo');
     const hour = mm.format('HH');
     const minutes = mm.format('mm');

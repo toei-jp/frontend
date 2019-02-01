@@ -113,9 +113,10 @@ export class ScreenComponent implements OnInit, AfterViewInit {
         if (this.isMobile() && !this.zoomState) {
             return;
         }
-        if (this.data.screen.hc.indexOf(seat.code) !== -1) {
-            return;
-        }
+        // if (this.data.screen.hc.indexOf(seat.code) !== -1
+        // || this.data.screen.spare.indexOf(seat.code) !== -1) {
+        //     return;
+        // }
         if (seat.status === 'default') {
             seat.status = 'active';
         } else if (seat.status === 'active') {
@@ -362,6 +363,14 @@ export class ScreenComponent implements OnInit, AfterViewInit {
                         }
                     }
 
+                    if (screenData.spare.indexOf(code) !== -1) {
+                        status = SeatStatus.Disabled;
+                    }
+
+                    if (screenData.hc.indexOf(code) !== -1) {
+                        status = SeatStatus.Disabled;
+                    }
+
                     const seat = {
                         className: `seat-${label}`,
                         w: screenData.seatSize.w,
@@ -434,6 +443,7 @@ interface IScreen {
     map: number[][];
     special: string[];
     hc: string[];
+    spare: string[];
     pair: string[];
     seatSize: ISize;
     seatMargin: ISize;

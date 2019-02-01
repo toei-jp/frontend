@@ -14,6 +14,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Removed
 
+## 1.4.0 - 2019-02-01
+### Added
+- 予備席（選択不可の座席）を設定を追加
+### Changed
+- スケジュール表示を公開日順へ変更
+- 券種選択、文言を削除
+- ムビチケ券認証、文言を削除
+
 ## 1.3.0 - 2018-12-20
 ### Added
 - スケジュール選択での仮予約削除を追加

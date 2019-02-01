@@ -62,9 +62,6 @@
             <div class="seat">{{ purchase.data.reservations.length }}席</div>
         </div>
     </div>
-
-    <p class="small-x-text">※不足金額が発生した場合は別途クレジットカードにてお支払いいただきます。</p>
-
     <form (ngSubmit)="onSubmit()">
         <app-buttons nextLabel="認証する" prevLabel="戻る" prevLink="/purchase/ticket"></app-buttons>
     </form>

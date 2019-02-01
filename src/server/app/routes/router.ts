@@ -2,6 +2,7 @@
  * ルーティング
  */
 import { Application, NextFunction, Request, Response } from 'express';
+import moment = require('moment');
 import * as path from 'path';
 import { signInRedirect } from '../controllers/authorize/authorize.controller';
 import authorizeRouter from './authorize';
@@ -12,24 +13,6 @@ function defaultSetting(req: Request, res: Response, next: NextFunction) {
     res.locals.PORTAL_SITE_URL = process.env.PORTAL_SITE_URL;
     res.locals.isApp = ((<Express.Session>req.session).awsCognitoIdentityId !== undefined);
     next();
-}
-
-function purchaseTransaction(req: Request, res: Response, _next: NextFunction) {
-    let params = `performanceId=${req.query.performanceId}`;
-    params += `&passportToken=${req.query.passportToken}`;
-    if (req.query.identityId !== undefined) {
-        params += `&identityId=${req.query.identityId}`;
-    }
-    if (req.query.native !== undefined) {
-        params += `&native=${req.query.native}`;
-    }
-    if (req.query.member !== undefined) {
-        params += `&member=${req.query.member}`;
-    }
-    if (req.query.accessToken !== undefined) {
-        params += `&accessToken=${req.query.accessToken}`;
-    }
-    res.redirect(`/?${params}`);
 }
 
 function root(_req: Request, res: Response, _next: NextFunction) {
@@ -46,12 +29,21 @@ function error(err: Error, _req: Request, res: Response, _next: NextFunction) {
     res.render('error/index');
 }
 
+/**
+ * サーバー時間取得
+ */
+function getServerDate(_req: Request, res: Response, _next: NextFunction) {
+    res.json({
+        date: moment().toISOString()
+    });
+}
+
 export default (app: Application) => {
     app.set('layout', 'layouts/layout');
     app.use(defaultSetting);
     app.use('/api/authorize', authorizeRouter);
+    app.get('/api/getServerDate', getServerDate);
     app.use('/inquiry', inquiryRouter);
-    app.get('/purchase/transaction', purchaseTransaction);
     app.get('/signIn', signInRedirect);
     app.get('/', root);
     app.use(notfound);

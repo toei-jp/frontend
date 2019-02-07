@@ -8,10 +8,10 @@
 
 
     <div *ngIf="!isPreSaleSchedules && preSaleDateList.length > 0" class="orange-button center-button button">
-        <button (click)="changeScheduleType('pre')">先行販売スケジュール</button>
+        <button (click)="changeScheduleType(ScheduleType.Pre)">先行販売スケジュール</button>
     </div>
     <div *ngIf="isPreSaleSchedules && preSaleDateList.length > 0" class="gray-button center-button button">
-        <button (click)="changeScheduleType('normal')">通常スケジュール</button>
+        <button (click)="changeScheduleType(ScheduleType.Normal)">通常スケジュール</button>
     </div>
 </div>
 <!-- <dl *ngIf="showTheaterList">

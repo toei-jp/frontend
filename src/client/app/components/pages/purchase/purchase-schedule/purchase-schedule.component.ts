@@ -23,6 +23,20 @@ interface IDate {
     };
 }
 
+/**
+ * スケジュールタイプ
+ */
+enum ScheduleType {
+    /**
+     * 通常販売スケジュール
+     */
+    'Normal' = 'Normal',
+    /**
+     * 先行販売スケジュール
+     */
+    'Pre' = 'Pre'
+}
+
 @Component({
     selector: 'app-purchase-schedule',
     templateUrl: './purchase-schedule.component.html',
@@ -44,6 +58,7 @@ export class PurchaseScheduleComponent implements OnInit {
     private preSaleSchedules: IScreeningEvent[];
     public reservationModal: boolean;
     public swiperConfig: SwiperConfigInterface;
+    public ScheduleType: typeof ScheduleType = ScheduleType;
 
     @ViewChild(SwiperComponent) public componentRef: SwiperComponent;
     @ViewChild(SwiperDirective) public directiveRef: SwiperDirective;
@@ -286,8 +301,8 @@ export class PurchaseScheduleComponent implements OnInit {
         return results.sort((event1, event2) => {
             if (event1.films[0].workPerformed.datePublished === undefined
                 || event2.films[0].workPerformed.datePublished === undefined) {
-                    return 0;
-                }
+                return 0;
+            }
             const unixA = moment(event1.films[0].workPerformed.datePublished).unix();
             const unixB = moment(event2.films[0].workPerformed.datePublished).unix();
             if (unixA > unixB) {
@@ -300,9 +315,18 @@ export class PurchaseScheduleComponent implements OnInit {
         });
     }
 
-    public changeScheduleType(type: 'pre' | 'normal') {
-        this.isPreSaleSchedules = (type === 'pre');
-        this.conditions.date = (type === 'pre') ? this.preSaleDateList[0].value : this.dateList[0].value;
+    public changeScheduleType(type: ScheduleType) {
+        this.isPreSaleSchedules = (type === ScheduleType.Pre);
+        this.conditions.date = (type === ScheduleType.Pre)
+            ? this.preSaleDateList[0].value
+            : this.dateList[0].value;
+        if (type === ScheduleType.Pre) {
+            console.log(type, this.conditions.date);
+            this.changePreSaleDate(this.conditions.date);
+        } else {
+            console.log(type, this.conditions.date);
+            this.changeDate(this.conditions.date);
+        }
     }
 
     /**

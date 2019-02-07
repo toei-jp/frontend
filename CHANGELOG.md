@@ -9,6 +9,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 ### Changed
 
 ### Fixed
+ - クレジットカードエラーメッセージ修正
+ - スケジュール切り替え修正
+ - メールアドレス一致バリデーション修正
 
 ### Security
 

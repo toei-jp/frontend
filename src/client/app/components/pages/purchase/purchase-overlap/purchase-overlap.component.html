@@ -39,7 +39,7 @@
 
     <div class="form-layout">
         <h2 class="section-ttl">新しく選択した上映スケジュール</h2>
-        <ul class="box radius bg-light-gray mb-large">
+        <ul *ngIf="screeningEvent" class="box radius bg-light-gray mb-large">
             <li>
                 <dl>
                     <dt>劇場 / スクリーン</dt>

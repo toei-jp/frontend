@@ -9,13 +9,16 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 ### Changed
 
 ### Fixed
- - クレジットカードエラーメッセージ修正
- - スケジュール切り替え修正
- - メールアドレス一致バリデーション修正
 
 ### Security
 
 ### Removed
+
+## 1.4.1 - 2019-02-14
+### Fixed
+ - クレジットカードエラーメッセージ修正
+ - スケジュール切り替え修正
+ - メールアドレス一致バリデーション修正
 
 ## 1.4.0 - 2019-02-01
 ### Added

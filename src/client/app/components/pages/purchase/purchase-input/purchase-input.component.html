@@ -4,30 +4,38 @@
 
     <form [formGroup]="inputForm" (ngSubmit)="onSubmit()">
         <div class="box radius bg-light-gray mb-middle">
-            <h2 class="section-ttl mb-middle border-bottom">購入者情報<span class="text-icon-red small-x-text">入力必須</span></h2>
+            <h2 class="section-ttl mb-middle border-bottom">購入者情報<span class="text-icon-red small-x-text">入力必須</span>
+            </h2>
             <h3 class="section-ttl">お名前（ひらがな）</h3>
             <div class="column-02 mb-middle">
                 <dl>
                     <dd>
-                        <input [class.validation]="inputForm.controls['familyName'].invalid && inputForm.controls['familyName'].touched"
+                        <input
+                            [class.validation]="inputForm.controls['familyName'].invalid && inputForm.controls['familyName'].touched"
                             type="text" formControlName="familyName" autocomplete="family-name" placeholder="せい／例：しねま">
-                        <div *ngIf="inputForm.controls['familyName'].invalid && inputForm.controls['familyName'].touched">
-                            <div *ngIf="inputForm.controls['familyName'].errors.required" class="validation-text">せいが未入力です</div>
+                        <div
+                            *ngIf="inputForm.controls['familyName'].invalid && inputForm.controls['familyName'].touched">
+                            <div *ngIf="inputForm.controls['familyName'].errors.required" class="validation-text">
+                                せいが未入力です</div>
                             <div *ngIf="inputForm.controls['familyName'].errors.maxlength" class="validation-text">せいは{{
                                 inputForm.controls['familyName'].errors.maxlength.requiredLength }}文字以下で入力してください</div>
-                            <div *ngIf="inputForm.controls['familyName'].errors.pattern" class="validation-text">せいは全角ひらがなで入力してください</div>
+                            <div *ngIf="inputForm.controls['familyName'].errors.pattern" class="validation-text">
+                                せいは全角ひらがなで入力してください</div>
                         </div>
                     </dd>
                 </dl>
                 <dl>
                     <dd>
-                        <input [class.validation]="inputForm.controls['givenName'].invalid && inputForm.controls['givenName'].touched"
+                        <input
+                            [class.validation]="inputForm.controls['givenName'].invalid && inputForm.controls['givenName'].touched"
                             type="text" formControlName="givenName" autocomplete="given-name" placeholder="めい／例：たろう">
                         <div *ngIf="inputForm.controls['givenName'].invalid && inputForm.controls['givenName'].touched">
-                            <div *ngIf="inputForm.controls['givenName'].errors.required" class="validation-text">めいが未入力です</div>
+                            <div *ngIf="inputForm.controls['givenName'].errors.required" class="validation-text">
+                                めいが未入力です</div>
                             <div *ngIf="inputForm.controls['givenName'].errors.maxlength" class="validation-text">めいは{{
                                 inputForm.controls['givenName'].errors.maxlength.requiredLength }}文字以下で入力してください</div>
-                            <div *ngIf="inputForm.controls['givenName'].errors.pattern" class="validation-text">めいは全角ひらがなで入力してください</div>
+                            <div *ngIf="inputForm.controls['givenName'].errors.pattern" class="validation-text">
+                                めいは全角ひらがなで入力してください</div>
                         </div>
                     </dd>
                 </dl>
@@ -35,28 +43,36 @@
             <h3 class="section-ttl">メールアドレス</h3>
             <dl>
                 <dd>
-                    <input [class.validation]="inputForm.controls['email'].invalid && inputForm.controls['email'].touched"
+                    <input
+                        [class.validation]="inputForm.controls['email'].invalid && inputForm.controls['email'].touched"
                         type="email" formControlName="email" autocomplete="email" placeholder="例：cinema@toei.co.jp">
                     <div *ngIf="inputForm.controls['email'].invalid && inputForm.controls['email'].touched">
-                        <div *ngIf="inputForm.controls['email'].errors.required" class="validation-text">メールアドレスが未入力です</div>
+                        <div *ngIf="inputForm.controls['email'].errors.required" class="validation-text">メールアドレスが未入力です
+                        </div>
                         <div *ngIf="inputForm.controls['email'].errors.maxlength" class="validation-text">メールアドレスは{{
                             inputForm.controls['email'].errors.maxlength.requiredLength }}文字以下で入力してください</div>
-                        <div *ngIf="inputForm.controls['email'].errors.email" class="validation-text">メールアドレスが正しくありません</div>
+                        <div *ngIf="inputForm.controls['email'].errors.email" class="validation-text">メールアドレスが正しくありません
+                        </div>
                     </div>
                 </dd>
             </dl>
             <dl class="mb-middle">
                 <dt class="small-x-text">確認のため再入力してください。</dt>
                 <dd>
-                    <input [class.validation]="inputForm.controls['emailConfirm'].invalid && inputForm.controls['emailConfirm'].touched"
+                    <input
+                        [class.validation]="(inputForm.controls['emailConfirm'].invalid && inputForm.controls['emailConfirm'].touched) || (inputForm.controls['email'].touched && inputForm.controls['emailConfirm'].touched && (inputForm.controls['email'].value !== inputForm.controls['emailConfirm'].value))"
                         type="email" formControlName="emailConfirm" placeholder="例：cinema@toei.co.jp">
-                    <div *ngIf="inputForm.controls['emailConfirm'].invalid && inputForm.controls['emailConfirm'].touched">
-                        <div *ngIf="inputForm.controls['emailConfirm'].errors.required" class="validation-text">メールアドレス確認が未入力です</div>
+                    <div
+                        *ngIf="inputForm.controls['emailConfirm'].invalid && inputForm.controls['emailConfirm'].touched">
+                        <div *ngIf="inputForm.controls['emailConfirm'].errors.required" class="validation-text">
+                            メールアドレス確認が未入力です</div>
                         <div *ngIf="inputForm.controls['emailConfirm'].errors.maxlength" class="validation-text">メールアドレス確認は{{
                             inputForm.controls['emailConfirm'].errors.maxlength.requiredLength }}文字以下で入力してください</div>
-                        <div *ngIf="inputForm.controls['emailConfirm'].errors.email" class="validation-text">メールアドレス確認が正しくありません</div>
-                        <div *ngIf="inputForm.controls['emailConfirm'].errors.equals" class="validation-text">メールアドレス確認が一致しません</div>
+                        <div *ngIf="inputForm.controls['emailConfirm'].errors.email" class="validation-text">
+                            メールアドレス確認が正しくありません</div>
                     </div>
+                    <div *ngIf="inputForm.controls['email'].touched && inputForm.controls['emailConfirm'].touched && (inputForm.controls['email'].value !== inputForm.controls['emailConfirm'].value)" class="validation-text">
+                            メールアドレス確認が一致しません</div>
                     <p class="small-x-text">
                         【ドメイン指定受信をご利用の場合について】
                         <br>※ 携帯電話のドメイン指定受信をされている場合、「@example.com」を追加設定してください。
@@ -67,16 +83,20 @@
             <h3 class="section-ttl">電話番号</h3>
             <dl>
                 <dd>
-                    <input [class.validation]="inputForm.controls['telephone'].invalid && inputForm.controls['telephone'].touched"
+                    <input
+                        [class.validation]="inputForm.controls['telephone'].invalid && inputForm.controls['telephone'].touched"
                         type="tel" formControlName="telephone" autocomplete="tel" placeholder="(例)08000000000">
                     <div *ngIf="inputForm.controls['telephone'].invalid && inputForm.controls['telephone'].touched">
-                        <div *ngIf="inputForm.controls['telephone'].errors.required" class="validation-text">電話番号が未入力です</div>
+                        <div *ngIf="inputForm.controls['telephone'].errors.required" class="validation-text">電話番号が未入力です
+                        </div>
                         <div *ngIf="inputForm.controls['telephone'].errors.minlength" class="validation-text">電話番号は{{
                             inputForm.controls['telephone'].errors.minlength.requiredLength }}文字以上で入力してください</div>
                         <div *ngIf="inputForm.controls['telephone'].errors.maxlength" class="validation-text">電話番号は{{
                             inputForm.controls['telephone'].errors.maxlength.requiredLength }}文字以下で入力してください</div>
-                        <div *ngIf="inputForm.controls['telephone'].errors.pattern" class="validation-text">電話番号は数字で入力してください</div>
-                        <div *ngIf="inputForm.controls['telephone'].errors.telephone" class="validation-text">電話番号が正しくありません</div>
+                        <div *ngIf="inputForm.controls['telephone'].errors.pattern" class="validation-text">
+                            電話番号は数字で入力してください</div>
+                        <div *ngIf="inputForm.controls['telephone'].errors.telephone" class="validation-text">
+                            電話番号が正しくありません</div>
                     </div>
                     <p class="small-x-text">※半角数字、ハイフン「-」なしで入力してください</p>
                 </dd>
@@ -104,12 +124,16 @@
                         <dl>
                             <dt>カード番号</dt>
                             <dd>
-                                <input [class.validation]="inputForm.controls['cardNumber'].invalid && inputForm.controls['cardNumber'].touched"
-                                    type="text" pattern="\d*" formControlName="cardNumber" id="cardNumber" autocomplete="off"
-                                    placeholder="(例)1234567890" maxlength="16">
-                                <div *ngIf="inputForm.controls['cardNumber'].invalid && inputForm.controls['cardNumber'].touched">
-                                    <div *ngIf="inputForm.controls['cardNumber'].errors.required" class="validation-text">カード番号が未入力です</div>
-                                    <div *ngIf="inputForm.controls['cardNumber'].errors.pattern" class="validation-text">カード番号は数字で入力してください</div>
+                                <input
+                                    [class.validation]="inputForm.controls['cardNumber'].invalid && inputForm.controls['cardNumber'].touched"
+                                    type="text" pattern="\d*" formControlName="cardNumber" id="cardNumber"
+                                    autocomplete="off" placeholder="(例)1234567890" maxlength="16">
+                                <div
+                                    *ngIf="inputForm.controls['cardNumber'].invalid && inputForm.controls['cardNumber'].touched">
+                                    <div *ngIf="inputForm.controls['cardNumber'].errors.required"
+                                        class="validation-text">カード番号が未入力です</div>
+                                    <div *ngIf="inputForm.controls['cardNumber'].errors.pattern"
+                                        class="validation-text">カード番号は数字で入力してください</div>
                                 </div>
                                 <p class="small-x-text">※半角数字、ハイフン「-」なしで入力してください</p>
                             </dd>
@@ -122,7 +146,8 @@
 
                                 <select formControlName="cardExpirationMonth" id="cardExpirationMonth">
 
-                                    <option *ngFor="let month of cardExpiration.month" [value]="month">{{ month }}</option>
+                                    <option *ngFor="let month of cardExpiration.month" [value]="month">{{ month }}
+                                    </option>
 
                                 </select> 月
                                 <select formControlName="cardExpirationYear" id="cardExpirationYear">
@@ -138,11 +163,14 @@
                         <dl>
                             <dt>セキュリティーコード</dt>
                             <dd>
-                                <input [class.validation]="inputForm.controls['securityCode'].invalid && inputForm.controls['securityCode'].touched"
+                                <input
+                                    [class.validation]="inputForm.controls['securityCode'].invalid && inputForm.controls['securityCode'].touched"
                                     type="text" pattern="\d*" formControlName="securityCode" autocomplete="off"
                                     placeholder="(例)123" maxlength="4">
-                                <div *ngIf="inputForm.controls['securityCode'].invalid && inputForm.controls['securityCode'].touched">
-                                    <div *ngIf="inputForm.controls['securityCode'].errors.required" class="validation-text">セキュリティーコードが未入力です</div>
+                                <div
+                                    *ngIf="inputForm.controls['securityCode'].invalid && inputForm.controls['securityCode'].touched">
+                                    <div *ngIf="inputForm.controls['securityCode'].errors.required"
+                                        class="validation-text">セキュリティーコードが未入力です</div>
                                 </div>
                                 <p>
                                     <a (click)="securityCodeModal = true">セキュリティーコードについて</a>
@@ -154,10 +182,14 @@
                         <dl>
                             <dt>カード名義人</dt>
                             <dd>
-                                <input [class.validation]="inputForm.controls['holderName'].invalid && inputForm.controls['holderName'].touched"
-                                    type="text" formControlName="holderName" autocomplete="off" placeholder="(例)TARO CINEMA">
-                                <div *ngIf="inputForm.controls['holderName'].invalid && inputForm.controls['holderName'].touched">
-                                    <div *ngIf="inputForm.controls['holderName'].errors.required" class="validation-text">カード名義人が未入力です</div>
+                                <input
+                                    [class.validation]="inputForm.controls['holderName'].invalid && inputForm.controls['holderName'].touched"
+                                    type="text" formControlName="holderName" autocomplete="off"
+                                    placeholder="(例)TARO CINEMA">
+                                <div
+                                    *ngIf="inputForm.controls['holderName'].invalid && inputForm.controls['holderName'].touched">
+                                    <div *ngIf="inputForm.controls['holderName'].errors.required"
+                                        class="validation-text">カード名義人が未入力です</div>
                                 </div>
                             </dd>
                         </dl>
@@ -259,4 +291,7 @@
     <div class="modal-title large-text text-center mb-middle">
         <strong>エラーが発生しました</strong>
     </div>
+    <p class="read">
+        クレジットカード情報を再度入力してください。
+    </p>
 </app-modal>

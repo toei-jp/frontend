@@ -115,6 +115,11 @@ export class PurchaseInputComponent implements OnInit {
 
             return;
         }
+        if (this.inputForm.controls.email.value !== this.inputForm.controls.emailConfirm.value) {
+            this.validationScroll();
+
+            return;
+        }
         if (this.purchase.isExpired()) {
             this.router.navigate(['expired']);
 
@@ -255,17 +260,7 @@ export class PurchaseInputComponent implements OnInit {
                 value: '', validators: [
                     Validators.required,
                     Validators.maxLength(MAIL_MAX_LENGTH),
-                    Validators.email,
-                    (control: AbstractControl): ValidationErrors | null => {
-                        const field = control.root.get('email');
-                        if (field !== null) {
-                            if (control.value !== field.value) {
-                                return { equals: true };
-                            }
-                        }
-
-                        return null;
-                    }
+                    Validators.email
                 ]
             },
             telephone: {

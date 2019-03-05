@@ -3,10 +3,8 @@ export const environment = {
     APP_PREFIX: 'TO',
     PROJECT_ID: 'toei-production',
     SITE_URL: 'https://ticket.toeitheaters.com',
-    PORTAL_SITE_URL: 'http://theaters.toei.co.jp',
+    PORTAL_SITE_URL: 'http://toeitheaters.com',
     WAITER_SERVER_URL: 'https://waiter-production.appspot.com',
-
-    CINERINO_API_ENDPOINT: 'https://toei-cinerino-api-production.azurewebsites.net',
-
+    ANALYTICS_ID: '',
     TRANSACTION_TIME: '15'
 };

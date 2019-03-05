@@ -11,17 +11,19 @@ const log = debug('toei-frontend:authorize');
 export async function getCredentials(_: Request, res: Response) {
     log('getCredentials');
     try {
+        const endpoint = (<string>process.env.CINERINO_API_ENDPOINT);
         const authModel = new AuthModel();
         const options = {
-            endpoint: (<string>process.env.CINERINO_API_ENDPOINT),
+            endpoint,
             auth: authModel.create()
         };
         const accessToken = await options.auth.getAccessToken();
 
         res.json({
-            accessToken: accessToken,
+            accessToken,
             userName: undefined,
-            clientId: options.auth.options.clientId
+            clientId: options.auth.options.clientId,
+            endpoint
         });
     } catch (err) {
         errorProsess(res, err);

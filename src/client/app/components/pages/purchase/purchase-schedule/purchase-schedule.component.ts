@@ -286,11 +286,11 @@ export class PurchaseScheduleComponent implements OnInit {
                 return;
             }
             const film = results.find((event) => {
-                return (event.id === screeningEvent.workPerformed.identifier);
+                return (event.id === screeningEvent.superEvent.id);
             });
             if (film === undefined) {
                 results.push({
-                    id: screeningEvent.workPerformed.identifier,
+                    id: screeningEvent.superEvent.id,
                     films: [screeningEvent]
                 });
             } else {

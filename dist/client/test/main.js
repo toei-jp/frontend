@@ -3954,6 +3954,10 @@ var PurchaseScheduleComponent = /** @class */ (function () {
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
+                        if (_environments_environment__WEBPACK_IMPORTED_MODULE_6__["environment"].ENV !== 'local') {
+                            location.href = _environments_environment__WEBPACK_IMPORTED_MODULE_6__["environment"].PORTAL_SITE_URL;
+                            return [2 /*return*/];
+                        }
                         window.scrollTo(0, 0);
                         moment__WEBPACK_IMPORTED_MODULE_4__["locale"]('ja');
                         this.isLoading = true;
@@ -9268,6 +9272,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "environment", function() { return environment; });
 var environment = {
     production: false,
+    ENV: 'test',
     APP_PREFIX: 'TO',
     PROJECT_ID: 'toei-test',
     SITE_URL: 'https://toei-frontend-test.azurewebsites.net',

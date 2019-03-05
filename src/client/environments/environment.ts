@@ -1,5 +1,6 @@
 export const environment = {
     production: true,
+    ENV: 'production',
     APP_PREFIX: 'TO',
     PROJECT_ID: 'toei-production',
     SITE_URL: 'https://ticket.toeitheaters.com',

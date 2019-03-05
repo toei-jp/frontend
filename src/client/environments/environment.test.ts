@@ -1,5 +1,6 @@
 export const environment = {
     production: false,
+    ENV: 'test',
     APP_PREFIX: 'TO',
     PROJECT_ID: 'toei-test',
     SITE_URL: 'https://toei-frontend-test.azurewebsites.net',

@@ -88,6 +88,10 @@ export class PurchaseScheduleComponent implements OnInit {
      * @returns {Promise<void>}
      */
     public async ngOnInit(): Promise<void> {
+        if (environment.ENV !== 'local') {
+            location.href = environment.PORTAL_SITE_URL;
+            return;
+        }
         window.scrollTo(0, 0);
         moment.locale('ja');
         this.isLoading = true;

@@ -6252,27 +6252,34 @@ var PurchaseFilmOrderPerformanceComponent = /** @class */ (function () {
         var now = moment__WEBPACK_IMPORTED_MODULE_2__();
         this.isEndSale = (this.data.offers === undefined) ? false : moment__WEBPACK_IMPORTED_MODULE_2__(this.data.offers.validThrough) < now;
         this.isStartSale = (this.data.offers === undefined) ? false : moment__WEBPACK_IMPORTED_MODULE_2__(this.data.offers.validFrom) < now;
-        this.availability = this.getAvailability(this.data.remainingAttendeeCapacity);
+        this.availability = this.getAvailability();
     };
     /**
      * @method getAvailability
      * @param {number | undefined} remaining
      * @returns {Iavailability}
      */
-    PurchaseFilmOrderPerformanceComponent.prototype.getAvailability = function (remaining) {
+    PurchaseFilmOrderPerformanceComponent.prototype.getAvailability = function () {
+        var remainingAttendeeCapacity = this.data.remainingAttendeeCapacity;
+        var maximumAttendeeCapacity = this.data.maximumAttendeeCapacity;
         var isNotSale = moment__WEBPACK_IMPORTED_MODULE_2__(this.data.startDate).add(-20, 'minutes').unix() < moment__WEBPACK_IMPORTED_MODULE_2__().unix();
-        var availabilityList = [
-            { text: '完売', className: 'vacancy-full', textClassName: '' },
-            { text: (isNotSale) ? '窓口' : '購入', className: 'vacancy-little', textClassName: (isNotSale) ? 'text-gray' : '' },
-            { text: (isNotSale) ? '窓口' : '購入', className: 'vacancy-large', textClassName: (isNotSale) ? 'text-gray' : '' },
-            { text: '販売終了', className: 'outside-sales', textClassName: '' },
-            { text: '販売期間外', className: 'outside-sales', textClassName: '' }
-        ];
-        return (this.isEndSale)
-            ? availabilityList[3] : (!this.isStartSale)
-            ? availabilityList[4] : (remaining === 0 || remaining === undefined)
-            ? availabilityList[0] : (remaining <= 10)
-            ? availabilityList[1] : availabilityList[2];
+        if (this.isEndSale) {
+            return { text: '販売終了', className: 'outside-sales', textClassName: '' };
+        }
+        else if (!this.isStartSale) {
+            return { text: '販売期間外', className: 'outside-sales', textClassName: '' };
+        }
+        else if (remainingAttendeeCapacity === 0
+            || remainingAttendeeCapacity === undefined
+            || maximumAttendeeCapacity === undefined) {
+            return { text: '完売', className: 'vacancy-full', textClassName: '' };
+        }
+        else if (Math.round(remainingAttendeeCapacity / maximumAttendeeCapacity * 100) < 30) {
+            return { text: (isNotSale) ? '窓口' : '購入', className: 'vacancy-little', textClassName: (isNotSale) ? 'text-gray' : '' };
+        }
+        else {
+            return { text: (isNotSale) ? '窓口' : '購入', className: 'vacancy-large', textClassName: (isNotSale) ? 'text-gray' : '' };
+        }
     };
     PurchaseFilmOrderPerformanceComponent.prototype.selectSchedule = function () {
         var availability = this.data.remainingAttendeeCapacity;

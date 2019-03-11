@@ -4799,7 +4799,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "../../node_modules/@angular/router/fesm5/router.js");
 /* harmony import */ var _cinerino_api_javascript_client_lib_abstract__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @cinerino/api-javascript-client/lib/abstract */ "../../node_modules/@cinerino/api-javascript-client/lib/abstract.js");
 /* harmony import */ var _cinerino_api_javascript_client_lib_abstract__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_cinerino_api_javascript_client_lib_abstract__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _services__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../services */ "./app/services/index.ts");
+/* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../../environments/environment */ "./environments/environment.ts");
+/* harmony import */ var _services__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../services */ "./app/services/index.ts");
 var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -4835,6 +4836,7 @@ var __generator = (undefined && undefined.__generator) || function (thisArg, bod
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+
 
 
 
@@ -4952,6 +4954,10 @@ var PurchaseTicketComponent = /** @class */ (function () {
                 .shift();
             if (movieTicketTypeChargeSpecification === undefined) {
                 // ムビチケ以外
+                if (_environments_environment__WEBPACK_IMPORTED_MODULE_4__["environment"].SPECIAL_TICKET_CODE.find(function (c) { return c === ticketOffer.id; }) !== undefined) {
+                    _this.tickets.unshift({ ticketOffer: ticketOffer });
+                    return;
+                }
                 _this.tickets.push({ ticketOffer: ticketOffer });
                 return;
             }
@@ -9281,7 +9287,8 @@ var environment = {
     PORTAL_SITE_URL: 'http://theaters.toei.co.jp',
     WAITER_SERVER_URL: 'https://waiter-development.appspot.com',
     CINERINO_API_ENDPOINT: 'https://toei-cinerino-api-development.azurewebsites.net',
-    TRANSACTION_TIME: '15'
+    TRANSACTION_TIME: '15',
+    SPECIAL_TICKET_CODE: ['236', '250', '251', '255']
 };
 
 

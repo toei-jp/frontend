@@ -10,5 +10,7 @@ export const environment = {
 
     ANALYTICS_ID: '',
 
-    TRANSACTION_TIME: '15'
+    TRANSACTION_TIME: '15',
+
+    SPECIAL_TICKET_CODE: ['236', '250', '251', '255']
 };

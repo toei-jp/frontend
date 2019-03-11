@@ -10,5 +10,7 @@ export const environment = {
     CINERINO_API_ENDPOINT: 'https://toei-cinerino-api-development.azurewebsites.net',
     ANALYTICS_ID: '',
 
-    TRANSACTION_TIME: '120'
+    TRANSACTION_TIME: '120',
+
+    SPECIAL_TICKET_CODE: ['236', '250', '251', '255']
 };

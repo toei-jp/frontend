@@ -16,6 +16,7 @@ export class PurchaseSeatComponent implements OnInit {
     public seatForm: FormGroup;
     public notSelectSeatModal: boolean;
     public upperLimitModal: boolean;
+    public reserveAlertModal: boolean;
     public disable: boolean;
     public screenData: IInputScreenData;
     public environment = environment;
@@ -33,6 +34,7 @@ export class PurchaseSeatComponent implements OnInit {
         window.scrollTo(0, 0);
         this.isLoading = true;
         this.notSelectSeatModal = false;
+        this.reserveAlertModal = false;
         this.seatForm = this.formBuilder.group({
             terms: [false, [Validators.requiredTrue]]
         });
@@ -137,7 +139,8 @@ export class PurchaseSeatComponent implements OnInit {
             await this.purchase.seatRegistrationProcess();
             this.router.navigate(['/purchase/ticket']);
         } catch (err) {
-            this.error.redirect(err);
+            this.isLoading = false;
+            this.reserveAlertModal = true;
         }
     }
 

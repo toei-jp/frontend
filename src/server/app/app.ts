@@ -8,7 +8,6 @@ import * as helmet from 'helmet';
 import basicAuth from './middlewares/basicAuth/basic-auth.middleware';
 import benchmarks from './middlewares/benchmarks/benchmarks.middleware';
 import ipFilter from './middlewares/ipFilter/ip-filter.middleware';
-import * as locales from './middlewares/locales/locales.middleware';
 import session from './middlewares/session/session.middleware';
 import whiteList from './middlewares/whiteList/white-list.middleware';
 import router from './routes/router';
@@ -26,7 +25,6 @@ app.use(whiteList); // 許可設定
 app.use(benchmarks); // ベンチマーク的な
 app.set('trust proxy', 1);
 app.use(session); // セッション
-app.use(locales.setLocale); // 言語
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());

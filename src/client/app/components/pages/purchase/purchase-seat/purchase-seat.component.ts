@@ -140,6 +140,7 @@ export class PurchaseSeatComponent implements OnInit {
             this.router.navigate(['/purchase/ticket']);
         } catch (err) {
             this.isLoading = false;
+            this.disable = false;
             this.reserveAlertModal = true;
         }
     }

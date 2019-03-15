@@ -6286,7 +6286,7 @@ var PurchaseFilmOrderPerformanceComponent = /** @class */ (function () {
             || maximumAttendeeCapacity === undefined) {
             return { text: '完売', className: 'vacancy-full', textClassName: '' };
         }
-        else if (Math.round(remainingAttendeeCapacity / maximumAttendeeCapacity * 100) < 30) {
+        else if (Math.floor(remainingAttendeeCapacity / maximumAttendeeCapacity * 100) < 30) {
             return { text: (isNotSale) ? '窓口' : '購入', className: 'vacancy-little', textClassName: (isNotSale) ? 'text-gray' : '' };
         }
         else {

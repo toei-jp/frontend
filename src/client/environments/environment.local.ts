@@ -7,7 +7,7 @@ export const environment = {
     // WAITER_SERVER_URL: '',
     // CINERINO_API_ENDPOINT: 'https://toei-cinerino-api-test.azurewebsites.net',
     WAITER_SERVER_URL: 'https://waiter-development.appspot.com',
-    CINERINO_API_ENDPOINT: 'https://toei-cinerino-api-development.azurewebsites.net',
+    CINERINO_API_ENDPOINT: 'https://toei-cinerino-api-test.azurewebsites.net',
     ANALYTICS_ID: '',
 
     TRANSACTION_TIME: '120',

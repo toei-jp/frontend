@@ -14,6 +14,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Removed
 
+## 1.5.0 - 2019-03-19
+### Changed
+ - 特定の券種の並び順を先頭に変更
+ - △の閾値を30％未満へ変更
+ - 予備席を販売不可表示へ変更
+### Fixed
+ - 座席選択画面文言修正
+
 ## 1.4.1 - 2019-02-14
 ### Fixed
  - クレジットカードエラーメッセージ修正

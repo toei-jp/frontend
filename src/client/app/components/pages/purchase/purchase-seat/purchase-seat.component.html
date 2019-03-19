@@ -2,12 +2,17 @@
     <h1 class="page-ttl">座席選択</h1>
     <p class="read">ご希望の座席を選択して「次へ」ボタンを押してください。
         <br>選択できる座席数は最大
-        <span class="seat-limit-text">{{ purchase.data.screeningEvent?.offers?.eligibleQuantity.maxValue }}</span>席までとなります。
+        <span
+            class="seat-limit-text">{{ purchase.data.screeningEvent?.offers?.eligibleQuantity.maxValue }}</span>席までとなります。
         <br>
         <span class="sp-text">画面をタッチすると画面がズームしますので座席を選択してください。
             <br>
         </span>
-        <span class="small-x-text">※車椅子席をご希望の方は、お手数ですが直接劇場にお電話下さい。</span>
+        <span class="small-x-text">
+            ※車椅子席をご希望の方は、お手数ですが直接劇場にお電話下さい。<br>
+            ※15分以上操作をしないと、最初から購入手続きをしていただく場合がございます。<br>
+            ※ブラウザで購入画面を複数立ち上げないでください。
+        </span>
     </p>
 
     <div class="film-info mb-small">
@@ -41,15 +46,16 @@
 
 
     <div class="mb-large">
-        <app-screen *ngIf="screenData" [inputData]="screenData" [test]="false" (select)="seatSelect($event)" (alert)="seatSelectionAlert()"
-            (load)="loadScreen()">
+        <app-screen *ngIf="screenData" [inputData]="screenData" [test]="false" (select)="seatSelect($event)"
+            (alert)="seatSelectionAlert()" (load)="loadScreen()">
         </app-screen>
     </div>
 
     <h2 class="page-ttl">利用規約</h2>
     <p class="mb-small read">利用規約に同意した上で「次へ」ボタンを押してください。</p>
 
-    <app-purchase-term class="mb-middle" [theaterCode]="purchase.data.screeningEvent?.superEvent.location.branchCode.slice(-2)"></app-purchase-term>
+    <app-purchase-term class="mb-middle"
+        [theaterCode]="purchase.data.screeningEvent?.superEvent.location.branchCode.slice(-2)"></app-purchase-term>
 
     <form [formGroup]="seatForm" (ngSubmit)="onSubmit()">
         <div class="mb-x-large text-center">
@@ -78,7 +84,20 @@
         <strong>予約座席数が上限です</strong>
     </div>
     <p class="text-center">予約座席数は最大
-        <span class="seat-limit-text">{{ purchase.data.screeningEvent?.offers?.eligibleQuantity.maxValue }}</span>席までとなります。</p>
+        <span
+            class="seat-limit-text">{{ purchase.data.screeningEvent?.offers?.eligibleQuantity.maxValue }}</span>席までとなります。
+    </p>
+</app-modal>
+
+<app-modal [open]="reserveAlertModal" [layout]="true" (close)="reserveAlertModal = false">
+    <div class="modal-title large-text text-center mb-middle">
+        <strong>エラーが発生しました</strong>
+    </div>
+    <p class="text-center">
+        お手続きの途中でエラーが発生いたしました。<br>
+        お手数をおかけいたしますが、もう一度最初から操作をお願いいたします。<br>
+        ※すでに他のお客様が同じ席を選択した場合もこのエラーが表示されます。<br>
+    </p>
 </app-modal>
 
 <app-loading [show]="isLoading"></app-loading>

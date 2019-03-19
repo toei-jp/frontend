@@ -120,7 +120,7 @@ function auth(req, res) {
                 res.locals.error = getInquiryError(req);
                 return res.render('inquiry/login');
             }
-            res.locals.error = err;
+            res.locals.error = (err.message === undefined) ? err : { message: err.message };
             res.render('error/index');
         }
     });
@@ -155,11 +155,11 @@ exports.confirm = confirm;
  */
 function loginForm(req) {
     const minLength = 9;
-    req.checkBody('reserveNum', `${req.__('common.purchaseNumber')}${req.__('common.validation.required')}`).notEmpty();
-    req.checkBody('reserveNum', `${req.__('common.purchaseNumber')}${req.__('common.validation.isNumber')}`).matches(/^[0-9]+$/);
-    req.checkBody('telephone', `${req.__('common.telNum')}${req.__('common.validation.required')}`).notEmpty();
-    req.checkBody('telephone', `${req.__('common.telNum')}${req.__('common.validation.isNumber')}`).matches(/^[0-9]+$/);
-    req.checkBody('telephone', `${req.__('common.telNum')}${req.__('common.validation.minlength %s', String(minLength))}`).isLength({
+    req.checkBody('reserveNum', `予約番号が未入力です`).notEmpty();
+    req.checkBody('reserveNum', `予約番号は数字で入力してください`).matches(/^[0-9]+$/);
+    req.checkBody('telephone', `電話番号が未入力です`).notEmpty();
+    req.checkBody('telephone', `電話番号は数字で入力してください`).matches(/^[0-9]+$/);
+    req.checkBody('telephone', `電話番号は${String(minLength)}文字以上で入力してください`).isLength({
         min: minLength
     });
 }
@@ -169,16 +169,16 @@ function loginForm(req) {
  * @param {Request} req
  * @returns {any}
  */
-function getInquiryError(req) {
+function getInquiryError(_req) {
     return {
         reserveNum: {
             parm: 'reserveNum',
-            msg: `${req.__('common.purchaseNumber')}${req.__('common.validation.inquiry')}`,
+            msg: `予約番号をご確認ください`,
             value: ''
         },
         telephone: {
             parm: 'telephone',
-            msg: `${req.__('common.telNum')}${req.__('common.validation.inquiry')}`,
+            msg: `電話番号をご確認ください`,
             value: ''
         }
     };

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { factory } from '@cinerino/api-javascript-client/lib/abstract';
+import { environment } from '../../../../../environments/environment';
 import { IReservationTicket, Reservation } from '../../../../models';
 import { ErrorService, PurchaseService, UserService } from '../../../../services';
 
@@ -131,6 +132,10 @@ export class PurchaseTicketComponent implements OnInit {
                 .shift();
             if (movieTicketTypeChargeSpecification === undefined) {
                 // ムビチケ以外
+                if (environment.SPECIAL_TICKET_CODE.find(c => c === ticketOffer.id) !== undefined) {
+                    this.tickets.unshift({ ticketOffer });
+                    return;
+                }
                 this.tickets.push({ ticketOffer });
                 return;
             }

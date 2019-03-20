@@ -7,5 +7,6 @@ export const environment = {
     PORTAL_SITE_URL: 'https://toei-portal-development.azurewebsites.net',
     WAITER_SERVER_URL: 'https://waiter-development.appspot.com',
     ANALYTICS_ID: '',
-    TRANSACTION_TIME: '120'
+    TRANSACTION_TIME: '120',
+    SPECIAL_TICKET_CODE: ['236', '250', '251', '255']
 };

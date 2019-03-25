@@ -53,7 +53,7 @@ interface IData {
     /**
      * 劇場ショップ
      */
-    movieTheaterOrganization?: factory.organization.movieTheater.IOrganization;
+    seller?: factory.seller.IOrganization<factory.seller.IAttributes<factory.organizationType>>;
     /**
      * 販売可能チケット情報
      */
@@ -61,7 +61,7 @@ interface IData {
     /**
      * 予約座席
      */
-    seatReservationAuthorization?: factory.action.authorize.offer.seatReservation.IAction;
+    seatReservationAuthorization?: factory.action.authorize.offer.seatReservation.IAction<factory.service.webAPI.Identifier>;
     /**
      * オーダー回数
      */
@@ -492,7 +492,7 @@ export class PurchaseService {
         this.data.screeningEvent = args.screeningEvent;
         await this.cinerino.getServices();
         // 劇場のショップを検索
-        this.data.movieTheaterOrganization = (await this.cinerino.organization.searchMovieTheaters({
+        this.data.seller = (await this.cinerino.seller.search({
             location: { branchCodes: [this.data.screeningEvent.superEvent.location.branchCode] }
         })).data[0];
         // 取引期限
@@ -503,8 +503,8 @@ export class PurchaseService {
         this.data.transaction = await this.cinerino.transaction.placeOrder.start({
             expires: expires,
             seller: {
-                id: this.data.movieTheaterOrganization.id,
-                typeOf: this.data.movieTheaterOrganization.typeOf
+                id: this.data.seller.id,
+                typeOf: this.data.seller.typeOf
             },
             object: { passport }
         });
@@ -562,10 +562,7 @@ export class PurchaseService {
         this.data.seatReservationAuthorization =
             await this.cinerino.transaction.placeOrder.authorizeSeatReservation({
                 object: {
-                    event: {
-                        id: this.data.screeningEvent.id
-                    },
-                    notes: '',
+                    event: { id: this.data.screeningEvent.id },
                     clientUser: this.data.transaction.object.clientUser,
                     acceptedOffer: this.data.reservations.map((reservation) => ({
                         ticketedSeat: {
@@ -575,7 +572,8 @@ export class PurchaseService {
                             seatingType: <any>'',
                             typeOf: factory.chevre.placeType.Seat
                         },
-                        id: (reservation.ticket === undefined) ? this.data.salesTickets[0].id : reservation.ticket.ticketOffer.id
+                        id: (reservation.ticket === undefined) ? this.data.salesTickets[0].id : reservation.ticket.ticketOffer.id,
+                        additionalProperty: []
                     }))
                 },
                 purpose: this.data.transaction
@@ -610,7 +608,6 @@ export class PurchaseService {
                     event: {
                         id: this.data.screeningEvent.id
                     },
-                    notes: '',
                     clientUser: this.data.transaction.object.clientUser,
                     acceptedOffer: this.data.reservations.map((reservation) => ({
                         ticketedSeat: {
@@ -620,7 +617,8 @@ export class PurchaseService {
                             seatingType: <any>'',
                             typeOf: factory.chevre.placeType.Seat
                         },
-                        id: (<IReservationTicket>reservation.ticket).ticketOffer.id
+                        id: (<IReservationTicket>reservation.ticket).ticketOffer.id,
+                        additionalProperty: []
                     }))
                 },
                 purpose: this.data.transaction
@@ -706,7 +704,7 @@ export class PurchaseService {
         if (this.data.transaction === undefined
             || this.data.screeningEvent === undefined
             || this.data.seatReservationAuthorization === undefined
-            || this.data.movieTheaterOrganization === undefined) {
+            || this.data.seller === undefined) {
             throw new Error('status is different');
         }
         const transaction = this.data.transaction;
@@ -782,8 +780,11 @@ export class PurchaseService {
                     }).join('\n| '),
                     inquiryUrl: `${environment.SITE_URL}/inquiry/login`,
                     seller: {
-                        branchCode: this.data.movieTheaterOrganization.location.branchCode,
-                        telephone: new LibphonenumberFormatPipe().transform(this.data.movieTheaterOrganization.telephone)
+                        branchCode: (this.data.seller.location === undefined
+                            || this.data.seller.location.branchCode === undefined)
+                            ? '' : this.data.seller.location.branchCode,
+                        telephone: (this.data.seller.telephone === undefined)
+                            ? '' : new LibphonenumberFormatPipe().transform(this.data.seller.telephone)
                     }
                 })
             }
@@ -791,7 +792,7 @@ export class PurchaseService {
         const complete = {
             order,
             transaction,
-            movieTheaterOrganization: this.data.movieTheaterOrganization
+            seller: this.data.seller
         };
         this.storage.save('complete', complete, SaveType.Session);
 
@@ -803,7 +804,7 @@ export class PurchaseService {
      * 予約情報からムビチケ情報作成
      */
     private createMovieTicketsFromAuthorizeSeatReservation(args: {
-        authorizeSeatReservation: factory.action.authorize.offer.seatReservation.IAction;
+        authorizeSeatReservation: factory.action.authorize.offer.seatReservation.IAction<factory.service.webAPI.Identifier>;
         reservations: Reservation[];
     }) {
         const results: factory.paymentMethod.paymentCard.movieTicket.IMovieTicket[] = [];
@@ -812,16 +813,22 @@ export class PurchaseService {
         if (authorizeSeatReservation.result === undefined) {
             return results;
         }
-        const pendingReservations = authorizeSeatReservation.result.responseBody.object.reservations;
+        const pendingReservations =
+            (<factory.chevre.reservation.IReservation<factory.chevre.event.screeningEvent.ITicketPriceSpecification>[]>
+                (<any>authorizeSeatReservation.result.responseBody).object.reservations);
 
         pendingReservations.forEach((pendingReservation) => {
             const findReservationResult = reservations.find((reservation) => {
-                return (reservation.seat.seatNumber === pendingReservation.reservedTicket.ticketedSeat.seatNumber);
+                return (pendingReservation.reservedTicket.ticketedSeat !== undefined
+                    && reservation.seat.seatNumber === pendingReservation.reservedTicket.ticketedSeat.seatNumber);
             });
             if (findReservationResult === undefined
                 || findReservationResult.ticket === undefined
                 || findReservationResult.ticket.movieTicket === undefined) {
                 return;
+            }
+            if (pendingReservation.reservedTicket.ticketedSeat === undefined) {
+                throw new Error('ticketedSeat is undefined');
             }
 
             results.push({

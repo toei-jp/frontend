@@ -1903,7 +1903,10 @@ var PurchaseCompleteComponent = /** @class */ (function () {
      * @returns {string}
      */
     PurchaseCompleteComponent.prototype.getInquiryUrl = function () {
-        var params = "theater=" + this.data.movieTheaterOrganization.location.branchCode + "&reserve=" + this.data.order.confirmationNumber;
+        if (this.data.seller.location === undefined) {
+            return '/inquiry/login';
+        }
+        var params = "theater=" + this.data.seller.location.branchCode + "&reserve=" + this.data.order.confirmationNumber;
         return "/inquiry/login?" + params;
     };
     return PurchaseCompleteComponent;
@@ -2727,8 +2730,8 @@ var PurchaseInputComponent = /** @class */ (function () {
                 };
                 // console.log(sendParam);
                 return [2 /*return*/, new Promise(function (resolve, reject) {
-                        if (_this.purchase.data.movieTheaterOrganization === undefined ||
-                            _this.purchase.data.movieTheaterOrganization.paymentAccepted === undefined) {
+                        if (_this.purchase.data.seller === undefined ||
+                            _this.purchase.data.seller.paymentAccepted === undefined) {
                             return reject(new Error('status is different'));
                         }
                         window.someCallbackFunction = function someCallbackFunction(response) {
@@ -2739,7 +2742,7 @@ var PurchaseInputComponent = /** @class */ (function () {
                                 reject(new Error(response.resultCode));
                             }
                         };
-                        var creditCardPayment = _this.purchase.data.movieTheaterOrganization.paymentAccepted.find(function (payment) {
+                        var creditCardPayment = _this.purchase.data.seller.paymentAccepted.find(function (payment) {
                             return payment.paymentMethodType === _cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_3__["factory"].paymentMethodType.CreditCard;
                         });
                         if (creditCardPayment === undefined) {
@@ -2822,7 +2825,11 @@ var PurchaseInputComponent = /** @class */ (function () {
             securityCode: { value: '', validators: [_angular_forms__WEBPACK_IMPORTED_MODULE_1__["Validators"].required] },
             holderName: { value: '', validators: [_angular_forms__WEBPACK_IMPORTED_MODULE_1__["Validators"].required] }
         };
-        if (this.purchase.data.customerContact !== undefined) {
+        if (this.purchase.data.customerContact !== undefined
+            && this.purchase.data.customerContact.familyName !== undefined
+            && this.purchase.data.customerContact.givenName !== undefined
+            && this.purchase.data.customerContact.email !== undefined
+            && this.purchase.data.customerContact.telephone !== undefined) {
             // 購入者情報入力済み
             customerContact.familyName.value = this.purchase.data.customerContact.familyName;
             customerContact.givenName.value = this.purchase.data.customerContact.givenName;
@@ -3745,9 +3752,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _parts_loading_loading_component__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../../parts/loading/loading.component */ "./app/components/parts/loading/loading.component.ts");
 /* harmony import */ var _purchase_schedule_component__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./purchase-schedule.component */ "./app/components/pages/purchase/purchase-schedule/purchase-schedule.component.ts");
 /* harmony import */ var _services_error_error_service__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../../../../services/error/error.service */ "./app/services/error/error.service.ts");
-/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @angular/router */ "../../node_modules/@angular/router/fesm5/router.js");
-/* harmony import */ var _services_purchase_purchase_service__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../../../../services/purchase/purchase.service */ "./app/services/purchase/purchase.service.ts");
-/* harmony import */ var _services_cinerino_cinerino_service__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../../../../services/cinerino/cinerino.service */ "./app/services/cinerino/cinerino.service.ts");
+/* harmony import */ var _services_purchase_purchase_service__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../../../../services/purchase/purchase.service */ "./app/services/purchase/purchase.service.ts");
+/* harmony import */ var _services_cinerino_cinerino_service__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../../../../services/cinerino/cinerino.service */ "./app/services/cinerino/cinerino.service.ts");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! @angular/router */ "../../node_modules/@angular/router/fesm5/router.js");
 /**
  * @fileoverview This file was generated by the Angular template compiler. Do not edit.
  *
@@ -3815,7 +3822,7 @@ function View_PurchaseScheduleComponent_0(_l) { return _angular_core__WEBPACK_IM
         var pd_0 = ((_co.reservationModal = false) !== false);
         ad = (pd_0 && ad);
     } return ad; }, _parts_modal_modal_component_ngfactory__WEBPACK_IMPORTED_MODULE_8__["View_ModalComponent_0"], _parts_modal_modal_component_ngfactory__WEBPACK_IMPORTED_MODULE_8__["RenderType_ModalComponent"])), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](37, 114688, null, 0, _parts_modal_modal_component__WEBPACK_IMPORTED_MODULE_9__["ModalComponent"], [], { open: [0, "open"], layout: [1, "layout"] }, { close: "close" }), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](38, 0, null, 0, 2, "div", [["class", "modal-title large-text text-center mb-middle"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](39, 0, null, null, 1, "strong", [], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](-1, null, ["\u4E88\u7D04\u30A8\u30E9\u30FC"])), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](41, 0, null, 0, 1, "p", [], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](-1, null, ["\u8CA9\u58F2\u53D7\u4ED8\u306F\u4E0A\u6620\u6642\u9593\u306E20\u5206\u524D\u307E\u3067\u3068\u306A\u308A\u307E\u3059\u3002\u7A93\u53E3\u3067\u306E\u8CFC\u5165\u3092\u304A\u9858\u3044\u3057\u307E\u3059\u3002"])), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](43, 0, null, null, 1, "app-loading", [], null, null, null, _parts_loading_loading_component_ngfactory__WEBPACK_IMPORTED_MODULE_10__["View_LoadingComponent_0"], _parts_loading_loading_component_ngfactory__WEBPACK_IMPORTED_MODULE_10__["RenderType_LoadingComponent"])), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](44, 114688, null, 0, _parts_loading_loading_component__WEBPACK_IMPORTED_MODULE_11__["LoadingComponent"], [], { show: [0, "show"] }, null)], function (_ck, _v) { var _co = _v.component; var currVal_1 = (!_co.isPreSaleSchedules && (_co.preSaleDateList.length > 0)); _ck(_v, 9, 0, currVal_1); var currVal_2 = (_co.isPreSaleSchedules && (_co.preSaleDateList.length > 0)); _ck(_v, 11, 0, currVal_2); var currVal_3 = !_co.isPreSaleSchedules; _ck(_v, 13, 0, currVal_3); var currVal_4 = _co.isPreSaleSchedules; _ck(_v, 15, 0, currVal_4); var currVal_5 = !_co.isLoading; _ck(_v, 18, 0, currVal_5); _ck(_v, 35, 0); var currVal_6 = _co.reservationModal; var currVal_7 = true; _ck(_v, 37, 0, currVal_6, currVal_7); var currVal_8 = _co.isLoading; _ck(_v, 44, 0, currVal_8); }, function (_ck, _v) { var _co = _v.component; var currVal_0 = (_co.environment.ENV !== "local"); _ck(_v, 2, 0, currVal_0); }); }
-function View_PurchaseScheduleComponent_Host_0(_l) { return _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵvid"](0, [(_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](0, 0, null, null, 1, "app-purchase-schedule", [], null, null, null, View_PurchaseScheduleComponent_0, RenderType_PurchaseScheduleComponent)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](1, 114688, null, 0, _purchase_schedule_component__WEBPACK_IMPORTED_MODULE_12__["PurchaseScheduleComponent"], [_services_error_error_service__WEBPACK_IMPORTED_MODULE_13__["ErrorService"], _angular_router__WEBPACK_IMPORTED_MODULE_14__["ActivatedRoute"], _services_purchase_purchase_service__WEBPACK_IMPORTED_MODULE_15__["PurchaseService"], _services_cinerino_cinerino_service__WEBPACK_IMPORTED_MODULE_16__["CinerinoService"], _angular_router__WEBPACK_IMPORTED_MODULE_14__["Router"]], null, null)], function (_ck, _v) { _ck(_v, 1, 0); }, null); }
+function View_PurchaseScheduleComponent_Host_0(_l) { return _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵvid"](0, [(_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](0, 0, null, null, 1, "app-purchase-schedule", [], null, null, null, View_PurchaseScheduleComponent_0, RenderType_PurchaseScheduleComponent)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](1, 114688, null, 0, _purchase_schedule_component__WEBPACK_IMPORTED_MODULE_12__["PurchaseScheduleComponent"], [_services_error_error_service__WEBPACK_IMPORTED_MODULE_13__["ErrorService"], _services_purchase_purchase_service__WEBPACK_IMPORTED_MODULE_14__["PurchaseService"], _services_cinerino_cinerino_service__WEBPACK_IMPORTED_MODULE_15__["CinerinoService"], _angular_router__WEBPACK_IMPORTED_MODULE_16__["Router"]], null, null)], function (_ck, _v) { _ck(_v, 1, 0); }, null); }
 var PurchaseScheduleComponentNgFactory = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵccf"]("app-purchase-schedule", _purchase_schedule_component__WEBPACK_IMPORTED_MODULE_12__["PurchaseScheduleComponent"], View_PurchaseScheduleComponent_Host_0, {}, {}, []);
 
 
@@ -3923,9 +3930,8 @@ var ScheduleType;
     ScheduleType["Pre"] = "Pre";
 })(ScheduleType || (ScheduleType = {}));
 var PurchaseScheduleComponent = /** @class */ (function () {
-    function PurchaseScheduleComponent(error, activatedRoute, purchase, cinerino, router) {
+    function PurchaseScheduleComponent(error, purchase, cinerino, router) {
         this.error = error;
-        this.activatedRoute = activatedRoute;
         this.purchase = purchase;
         this.cinerino = cinerino;
         this.router = router;
@@ -3950,7 +3956,7 @@ var PurchaseScheduleComponent = /** @class */ (function () {
      */
     PurchaseScheduleComponent.prototype.ngOnInit = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var theaterQs_1, _a, theater, now, today, _b, err_1;
+            var _a, theater, branchCode, now, today, _b, err_1;
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
@@ -3982,25 +3988,23 @@ var PurchaseScheduleComponent = /** @class */ (function () {
                         return [4 /*yield*/, this.cinerino.getServices()];
                     case 2:
                         _c.sent();
-                        theaterQs_1 = this.activatedRoute.snapshot.queryParamMap.get('theater');
                         _a = this;
-                        return [4 /*yield*/, this.cinerino.organization.searchMovieTheaters({})];
+                        return [4 /*yield*/, this.cinerino.seller.search({})];
                     case 3:
                         _a.theaters = (_c.sent()).data;
-                        if (theaterQs_1 !== null) {
-                            theater = this.theaters.find(function (t) { return (t.name.en.toLocaleLowerCase().indexOf(theaterQs_1.toLocaleLowerCase()) >= 0); });
-                            if (theater !== undefined) {
-                                this.theaters = [theater];
-                                this.showTheaterList = false;
-                            }
+                        theater = this.theaters[0];
+                        if (theater.location === undefined || theater.location.branchCode === undefined) {
+                            throw new Error('theater not found');
                         }
+                        branchCode = theater.location.branchCode;
                         now = moment__WEBPACK_IMPORTED_MODULE_4__().toDate();
                         today = moment__WEBPACK_IMPORTED_MODULE_4__(moment__WEBPACK_IMPORTED_MODULE_4__().format('YYYY-MM-DD')).toDate();
                         _b = this;
                         return [4 /*yield*/, this.cinerino.event.searchScreeningEvents({
+                                typeOf: _cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_2__["factory"].chevre.eventType.ScreeningEvent,
                                 eventStatuses: [_cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_2__["factory"].chevre.eventStatusType.EventScheduled],
                                 superEvent: {
-                                    locationBranchCodes: [this.theaters[0].location.branchCode]
+                                    locationBranchCodes: [branchCode]
                                 },
                                 startFrom: moment__WEBPACK_IMPORTED_MODULE_4__(today).add(3, 'days').toDate(),
                                 offers: {
@@ -4018,7 +4022,7 @@ var PurchaseScheduleComponent = /** @class */ (function () {
                         }
                         this.dateList = this.getDateList(7);
                         this.conditions = {
-                            theater: this.theaters[0].location.branchCode,
+                            theater: branchCode,
                             date: this.dateList[0].value
                         };
                         this.directiveRef.update();
@@ -4141,15 +4145,18 @@ var PurchaseScheduleComponent = /** @class */ (function () {
                         return [4 /*yield*/, this.cinerino.getServices()];
                     case 2:
                         _b.sent();
-                        theater = this.theaters.find(function (target) {
-                            return (target.location.branchCode === _this.conditions.theater);
+                        theater = this.theaters.find(function (t) {
+                            return (t.location !== undefined && t.location.branchCode === _this.conditions.theater);
                         });
-                        if (theater === undefined) {
+                        if (theater === undefined
+                            || theater.location === undefined
+                            || theater.location.branchCode === undefined) {
                             throw new Error('theater is not found');
                         }
                         today = moment__WEBPACK_IMPORTED_MODULE_4__(moment__WEBPACK_IMPORTED_MODULE_4__().format('YYYY-MM-DD')).toDate();
                         _a = this;
                         return [4 /*yield*/, this.cinerino.event.searchScreeningEvents({
+                                typeOf: _cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_2__["factory"].chevre.eventType.ScreeningEvent,
                                 eventStatuses: [_cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_2__["factory"].chevre.eventStatusType.EventScheduled],
                                 superEvent: {
                                     locationBranchCodes: [theater.location.branchCode]
@@ -4244,7 +4251,7 @@ var PurchaseScheduleComponent = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         this.isLoading = true;
-                        findResult = this.theaters.find(function (theater) { return theater.location.branchCode === _this.conditions.theater; });
+                        findResult = this.theaters.find(function (t) { return t.location !== undefined && t.location.branchCode === _this.conditions.theater; });
                         if (findResult === undefined) {
                             this.isLoading = false;
                             return [2 /*return*/];
@@ -4400,7 +4407,7 @@ function View_PurchaseSeatComponent_0(_l) { return _angular_core__WEBPACK_IMPORT
     } return ad; }, _parts_modal_modal_component_ngfactory__WEBPACK_IMPORTED_MODULE_20__["View_ModalComponent_0"], _parts_modal_modal_component_ngfactory__WEBPACK_IMPORTED_MODULE_20__["RenderType_ModalComponent"])), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](90, 114688, null, 0, _parts_modal_modal_component__WEBPACK_IMPORTED_MODULE_21__["ModalComponent"], [], { open: [0, "open"], layout: [1, "layout"] }, { close: "close" }), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](91, 0, null, 0, 2, "div", [["class", "modal-title large-text text-center mb-middle"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](92, 0, null, null, 1, "strong", [], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](-1, null, ["\u4E88\u7D04\u5EA7\u5E2D\u6570\u304C\u4E0A\u9650\u3067\u3059"])), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](94, 0, null, 0, 4, "p", [["class", "text-center"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](-1, null, ["\u4E88\u7D04\u5EA7\u5E2D\u6570\u306F\u6700\u5927 "])), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](96, 0, null, null, 1, "span", [["class", "seat-limit-text"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](97, null, ["", ""])), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](-1, null, ["\u5E2D\u307E\u3067\u3068\u306A\u308A\u307E\u3059\u3002 "])), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](99, 0, null, null, 11, "app-modal", [], null, [[null, "close"]], function (_v, en, $event) { var ad = true; var _co = _v.component; if (("close" === en)) {
         var pd_0 = ((_co.reserveAlertModal = false) !== false);
         ad = (pd_0 && ad);
-    } return ad; }, _parts_modal_modal_component_ngfactory__WEBPACK_IMPORTED_MODULE_20__["View_ModalComponent_0"], _parts_modal_modal_component_ngfactory__WEBPACK_IMPORTED_MODULE_20__["RenderType_ModalComponent"])), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](100, 114688, null, 0, _parts_modal_modal_component__WEBPACK_IMPORTED_MODULE_21__["ModalComponent"], [], { open: [0, "open"], layout: [1, "layout"] }, { close: "close" }), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](101, 0, null, 0, 2, "div", [["class", "modal-title large-text text-center mb-middle"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](102, 0, null, null, 1, "strong", [], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](-1, null, ["\u30A8\u30E9\u30FC\u304C\u767A\u751F\u3057\u307E\u3057\u305F"])), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](104, 0, null, 0, 6, "p", [["class", "text-center"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](-1, null, [" \u304A\u624B\u7D9A\u304D\u306E\u9014\u4E2D\u3067\u30A8\u30E9\u30FC\u304C\u767A\u751F\u3044\u305F\u3057\u307E\u3057\u305F\u3002"])), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](106, 0, null, null, 0, "br", [], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](-1, null, [" \u304A\u624B\u6570\u3092\u304A\u304B\u3051\u3044\u305F\u3057\u307E\u3059\u304C\u3001\u3082\u3046\u4E00\u5EA6\u6700\u521D\u304B\u3089\u64CD\u4F5C\u3092\u304A\u9858\u3044\u3044\u305F\u3057\u307E\u3059\u3002"])), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](108, 0, null, null, 0, "br", [], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](-1, null, [" \u203B\u3059\u3067\u306B\u4ED6\u306E\u304A\u5BA2\u69D8\u304C\u540C\u3058\u5E2D\u3092\u9078\u629E\u3057\u305F\u5834\u5408\u3082\u3053\u306E\u30A8\u30E9\u30FC\u304C\u8868\u793A\u3055\u308C\u307E\u3059\u3002"])), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](110, 0, null, null, 0, "br", [], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](111, 0, null, null, 1, "app-loading", [], null, null, null, _parts_loading_loading_component_ngfactory__WEBPACK_IMPORTED_MODULE_22__["View_LoadingComponent_0"], _parts_loading_loading_component_ngfactory__WEBPACK_IMPORTED_MODULE_22__["RenderType_LoadingComponent"])), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](112, 114688, null, 0, _parts_loading_loading_component__WEBPACK_IMPORTED_MODULE_23__["LoadingComponent"], [], { show: [0, "show"] }, null)], function (_ck, _v) { var _co = _v.component; var currVal_2 = _co.purchase.getSubTitle(); _ck(_v, 30, 0, currVal_2); _ck(_v, 44, 0); var currVal_8 = _co.screenData; _ck(_v, 47, 0, currVal_8); var currVal_9 = ((_co.purchase.data.screeningEvent == null) ? null : _co.purchase.data.screeningEvent.superEvent.location.branchCode.slice((0 - 2))); _ck(_v, 53, 0, currVal_9); var currVal_17 = _co.seatForm; _ck(_v, 56, 0, currVal_17); var currVal_25 = "terms"; _ck(_v, 63, 0, currVal_25); var currVal_26 = (_co.seatForm.controls["terms"].invalid && (_co.seatForm.controls["terms"].dirty || _co.seatForm.controls["terms"].touched)); _ck(_v, 70, 0, currVal_26); _ck(_v, 73, 0); var currVal_28 = "prev-black"; _ck(_v, 78, 0, currVal_28); _ck(_v, 81, 0); var currVal_29 = _co.notSelectSeatModal; var currVal_30 = true; _ck(_v, 83, 0, currVal_29, currVal_30); var currVal_31 = _co.upperLimitModal; var currVal_32 = true; _ck(_v, 90, 0, currVal_31, currVal_32); var currVal_34 = _co.reserveAlertModal; var currVal_35 = true; _ck(_v, 100, 0, currVal_34, currVal_35); var currVal_36 = _co.isLoading; _ck(_v, 112, 0, currVal_36); }, function (_ck, _v) { var _co = _v.component; var currVal_0 = ((_co.purchase.data.screeningEvent == null) ? null : ((_co.purchase.data.screeningEvent.offers == null) ? null : _co.purchase.data.screeningEvent.offers.eligibleQuantity.maxValue)); _ck(_v, 8, 0, currVal_0); var currVal_1 = _co.purchase.getTitle(); _ck(_v, 28, 0, currVal_1); var currVal_3 = _co.purchase.getAppreciationDate(); var currVal_4 = _co.purchase.getStartDate(); var currVal_5 = _co.purchase.getEndDate(); _ck(_v, 36, 0, currVal_3, currVal_4, currVal_5); var currVal_6 = _co.purchase.getTheaterName(); var currVal_7 = _co.purchase.getScreenName(); _ck(_v, 41, 0, currVal_6, currVal_7); var currVal_10 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 58).ngClassUntouched; var currVal_11 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 58).ngClassTouched; var currVal_12 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 58).ngClassPristine; var currVal_13 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 58).ngClassDirty; var currVal_14 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 58).ngClassValid; var currVal_15 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 58).ngClassInvalid; var currVal_16 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 58).ngClassPending; _ck(_v, 54, 0, currVal_10, currVal_11, currVal_12, currVal_13, currVal_14, currVal_15, currVal_16); var currVal_18 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 65).ngClassUntouched; var currVal_19 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 65).ngClassTouched; var currVal_20 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 65).ngClassPristine; var currVal_21 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 65).ngClassDirty; var currVal_22 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 65).ngClassValid; var currVal_23 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 65).ngClassInvalid; var currVal_24 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 65).ngClassPending; _ck(_v, 60, 0, currVal_18, currVal_19, currVal_20, currVal_21, currVal_22, currVal_23, currVal_24); var currVal_27 = ((_co.purchase.data.movieTheaterOrganization == null) ? null : _co.purchase.data.movieTheaterOrganization.url); _ck(_v, 76, 0, currVal_27); var currVal_33 = ((_co.purchase.data.screeningEvent == null) ? null : ((_co.purchase.data.screeningEvent.offers == null) ? null : _co.purchase.data.screeningEvent.offers.eligibleQuantity.maxValue)); _ck(_v, 97, 0, currVal_33); }); }
+    } return ad; }, _parts_modal_modal_component_ngfactory__WEBPACK_IMPORTED_MODULE_20__["View_ModalComponent_0"], _parts_modal_modal_component_ngfactory__WEBPACK_IMPORTED_MODULE_20__["RenderType_ModalComponent"])), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](100, 114688, null, 0, _parts_modal_modal_component__WEBPACK_IMPORTED_MODULE_21__["ModalComponent"], [], { open: [0, "open"], layout: [1, "layout"] }, { close: "close" }), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](101, 0, null, 0, 2, "div", [["class", "modal-title large-text text-center mb-middle"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](102, 0, null, null, 1, "strong", [], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](-1, null, ["\u30A8\u30E9\u30FC\u304C\u767A\u751F\u3057\u307E\u3057\u305F"])), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](104, 0, null, 0, 6, "p", [["class", "text-center"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](-1, null, [" \u304A\u624B\u7D9A\u304D\u306E\u9014\u4E2D\u3067\u30A8\u30E9\u30FC\u304C\u767A\u751F\u3044\u305F\u3057\u307E\u3057\u305F\u3002"])), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](106, 0, null, null, 0, "br", [], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](-1, null, [" \u304A\u624B\u6570\u3092\u304A\u304B\u3051\u3044\u305F\u3057\u307E\u3059\u304C\u3001\u3082\u3046\u4E00\u5EA6\u6700\u521D\u304B\u3089\u64CD\u4F5C\u3092\u304A\u9858\u3044\u3044\u305F\u3057\u307E\u3059\u3002"])), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](108, 0, null, null, 0, "br", [], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](-1, null, [" \u203B\u3059\u3067\u306B\u4ED6\u306E\u304A\u5BA2\u69D8\u304C\u540C\u3058\u5E2D\u3092\u9078\u629E\u3057\u305F\u5834\u5408\u3082\u3053\u306E\u30A8\u30E9\u30FC\u304C\u8868\u793A\u3055\u308C\u307E\u3059\u3002"])), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](110, 0, null, null, 0, "br", [], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](111, 0, null, null, 1, "app-loading", [], null, null, null, _parts_loading_loading_component_ngfactory__WEBPACK_IMPORTED_MODULE_22__["View_LoadingComponent_0"], _parts_loading_loading_component_ngfactory__WEBPACK_IMPORTED_MODULE_22__["RenderType_LoadingComponent"])), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](112, 114688, null, 0, _parts_loading_loading_component__WEBPACK_IMPORTED_MODULE_23__["LoadingComponent"], [], { show: [0, "show"] }, null)], function (_ck, _v) { var _co = _v.component; var currVal_2 = _co.purchase.getSubTitle(); _ck(_v, 30, 0, currVal_2); _ck(_v, 44, 0); var currVal_8 = _co.screenData; _ck(_v, 47, 0, currVal_8); var currVal_9 = ((_co.purchase.data.screeningEvent == null) ? null : _co.purchase.data.screeningEvent.superEvent.location.branchCode.slice((0 - 2))); _ck(_v, 53, 0, currVal_9); var currVal_17 = _co.seatForm; _ck(_v, 56, 0, currVal_17); var currVal_25 = "terms"; _ck(_v, 63, 0, currVal_25); var currVal_26 = (_co.seatForm.controls["terms"].invalid && (_co.seatForm.controls["terms"].dirty || _co.seatForm.controls["terms"].touched)); _ck(_v, 70, 0, currVal_26); _ck(_v, 73, 0); var currVal_28 = "prev-black"; _ck(_v, 78, 0, currVal_28); _ck(_v, 81, 0); var currVal_29 = _co.notSelectSeatModal; var currVal_30 = true; _ck(_v, 83, 0, currVal_29, currVal_30); var currVal_31 = _co.upperLimitModal; var currVal_32 = true; _ck(_v, 90, 0, currVal_31, currVal_32); var currVal_34 = _co.reserveAlertModal; var currVal_35 = true; _ck(_v, 100, 0, currVal_34, currVal_35); var currVal_36 = _co.isLoading; _ck(_v, 112, 0, currVal_36); }, function (_ck, _v) { var _co = _v.component; var currVal_0 = ((_co.purchase.data.screeningEvent == null) ? null : ((_co.purchase.data.screeningEvent.offers == null) ? null : _co.purchase.data.screeningEvent.offers.eligibleQuantity.maxValue)); _ck(_v, 8, 0, currVal_0); var currVal_1 = _co.purchase.getTitle(); _ck(_v, 28, 0, currVal_1); var currVal_3 = _co.purchase.getAppreciationDate(); var currVal_4 = _co.purchase.getStartDate(); var currVal_5 = _co.purchase.getEndDate(); _ck(_v, 36, 0, currVal_3, currVal_4, currVal_5); var currVal_6 = _co.purchase.getTheaterName(); var currVal_7 = _co.purchase.getScreenName(); _ck(_v, 41, 0, currVal_6, currVal_7); var currVal_10 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 58).ngClassUntouched; var currVal_11 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 58).ngClassTouched; var currVal_12 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 58).ngClassPristine; var currVal_13 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 58).ngClassDirty; var currVal_14 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 58).ngClassValid; var currVal_15 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 58).ngClassInvalid; var currVal_16 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 58).ngClassPending; _ck(_v, 54, 0, currVal_10, currVal_11, currVal_12, currVal_13, currVal_14, currVal_15, currVal_16); var currVal_18 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 65).ngClassUntouched; var currVal_19 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 65).ngClassTouched; var currVal_20 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 65).ngClassPristine; var currVal_21 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 65).ngClassDirty; var currVal_22 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 65).ngClassValid; var currVal_23 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 65).ngClassInvalid; var currVal_24 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 65).ngClassPending; _ck(_v, 60, 0, currVal_18, currVal_19, currVal_20, currVal_21, currVal_22, currVal_23, currVal_24); var currVal_27 = ((_co.purchase.data.seller == null) ? null : _co.purchase.data.seller.url); _ck(_v, 76, 0, currVal_27); var currVal_33 = ((_co.purchase.data.screeningEvent == null) ? null : ((_co.purchase.data.screeningEvent.offers == null) ? null : _co.purchase.data.screeningEvent.offers.eligibleQuantity.maxValue)); _ck(_v, 97, 0, currVal_33); }); }
 function View_PurchaseSeatComponent_Host_0(_l) { return _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵvid"](0, [(_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](0, 0, null, null, 1, "app-purchase-seat", [], null, null, null, View_PurchaseSeatComponent_0, RenderType_PurchaseSeatComponent)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](1, 114688, null, 0, _purchase_seat_component__WEBPACK_IMPORTED_MODULE_24__["PurchaseSeatComponent"], [_services_purchase_purchase_service__WEBPACK_IMPORTED_MODULE_5__["PurchaseService"], _angular_router__WEBPACK_IMPORTED_MODULE_25__["Router"], _angular_forms__WEBPACK_IMPORTED_MODULE_13__["FormBuilder"], _services_cinerino_cinerino_service__WEBPACK_IMPORTED_MODULE_6__["CinerinoService"], _services_error_error_service__WEBPACK_IMPORTED_MODULE_7__["ErrorService"]], null, null)], function (_ck, _v) { _ck(_v, 1, 0); }, null); }
 var PurchaseSeatComponentNgFactory = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵccf"]("app-purchase-seat", _purchase_seat_component__WEBPACK_IMPORTED_MODULE_24__["PurchaseSeatComponent"], View_PurchaseSeatComponent_Host_0, {}, {}, []);
 
@@ -7894,7 +7901,7 @@ var CinerinoService = /** @class */ (function () {
                         option = _a.sent();
                         this.event = new _cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_1__["service"].Event(option);
                         this.order = new _cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_1__["service"].Order(option);
-                        this.organization = new _cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_1__["service"].Organization(option);
+                        this.seller = new _cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_1__["service"].Seller(option);
                         this.person = new _cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_1__["service"].Person(option);
                         this.payment = new _cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_1__["service"].Payment(option);
                         this.transaction = {
@@ -8532,12 +8539,12 @@ var PurchaseService = /** @class */ (function () {
                         _c.sent();
                         // 劇場のショップを検索
                         _a = this.data;
-                        return [4 /*yield*/, this.cinerino.organization.searchMovieTheaters({
+                        return [4 /*yield*/, this.cinerino.seller.search({
                                 location: { branchCodes: [this.data.screeningEvent.superEvent.location.branchCode] }
                             })];
                     case 2:
                         // 劇場のショップを検索
-                        _a.movieTheaterOrganization = (_c.sent()).data[0];
+                        _a.seller = (_c.sent()).data[0];
                         VALID_TIME = _environments_environment__WEBPACK_IMPORTED_MODULE_4__["environment"].TRANSACTION_TIME;
                         expires = moment__WEBPACK_IMPORTED_MODULE_2__().add(VALID_TIME, 'minutes').toDate();
                         passport = args.passport;
@@ -8546,8 +8553,8 @@ var PurchaseService = /** @class */ (function () {
                         return [4 /*yield*/, this.cinerino.transaction.placeOrder.start({
                                 expires: expires,
                                 seller: {
-                                    id: this.data.movieTheaterOrganization.id,
-                                    typeOf: this.data.movieTheaterOrganization.typeOf
+                                    id: this.data.seller.id,
+                                    typeOf: this.data.seller.typeOf
                                 },
                                 object: { passport: passport }
                             })];
@@ -8644,10 +8651,7 @@ var PurchaseService = /** @class */ (function () {
                         _a = this.data;
                         return [4 /*yield*/, this.cinerino.transaction.placeOrder.authorizeSeatReservation({
                                 object: {
-                                    event: {
-                                        id: this.data.screeningEvent.id
-                                    },
-                                    notes: '',
+                                    event: { id: this.data.screeningEvent.id },
                                     clientUser: this.data.transaction.object.clientUser,
                                     acceptedOffer: this.data.reservations.map(function (reservation) { return ({
                                         ticketedSeat: {
@@ -8657,7 +8661,8 @@ var PurchaseService = /** @class */ (function () {
                                             seatingType: '',
                                             typeOf: _cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_1__["factory"].chevre.placeType.Seat
                                         },
-                                        id: (reservation.ticket === undefined) ? _this.data.salesTickets[0].id : reservation.ticket.ticketOffer.id
+                                        id: (reservation.ticket === undefined) ? _this.data.salesTickets[0].id : reservation.ticket.ticketOffer.id,
+                                        additionalProperty: []
                                     }); })
                                 },
                                 purpose: this.data.transaction
@@ -8706,7 +8711,6 @@ var PurchaseService = /** @class */ (function () {
                                     event: {
                                         id: this.data.screeningEvent.id
                                     },
-                                    notes: '',
                                     clientUser: this.data.transaction.object.clientUser,
                                     acceptedOffer: this.data.reservations.map(function (reservation) { return ({
                                         ticketedSeat: {
@@ -8716,7 +8720,8 @@ var PurchaseService = /** @class */ (function () {
                                             seatingType: '',
                                             typeOf: _cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_1__["factory"].chevre.placeType.Seat
                                         },
-                                        id: reservation.ticket.ticketOffer.id
+                                        id: reservation.ticket.ticketOffer.id,
+                                        additionalProperty: []
                                     }); })
                                 },
                                 purpose: this.data.transaction
@@ -8841,7 +8846,7 @@ var PurchaseService = /** @class */ (function () {
                         if (this.data.transaction === undefined
                             || this.data.screeningEvent === undefined
                             || this.data.seatReservationAuthorization === undefined
-                            || this.data.movieTheaterOrganization === undefined) {
+                            || this.data.seller === undefined) {
                             throw new Error('status is different');
                         }
                         transaction = this.data.transaction;
@@ -8926,8 +8931,11 @@ var PurchaseService = /** @class */ (function () {
                                     }).join('\n| '),
                                     inquiryUrl: _environments_environment__WEBPACK_IMPORTED_MODULE_4__["environment"].SITE_URL + "/inquiry/login",
                                     seller: {
-                                        branchCode: this.data.movieTheaterOrganization.location.branchCode,
-                                        telephone: new _pipes_libphonenumber_format_libphonenumber_format_pipe__WEBPACK_IMPORTED_MODULE_7__["LibphonenumberFormatPipe"]().transform(this.data.movieTheaterOrganization.telephone)
+                                        branchCode: (this.data.seller.location === undefined
+                                            || this.data.seller.location.branchCode === undefined)
+                                            ? '' : this.data.seller.location.branchCode,
+                                        telephone: (this.data.seller.telephone === undefined)
+                                            ? '' : new _pipes_libphonenumber_format_libphonenumber_format_pipe__WEBPACK_IMPORTED_MODULE_7__["LibphonenumberFormatPipe"]().transform(this.data.seller.telephone)
                                     }
                                 })
                             }
@@ -8938,7 +8946,7 @@ var PurchaseService = /** @class */ (function () {
                         complete = {
                             order: order,
                             transaction: transaction,
-                            movieTheaterOrganization: this.data.movieTheaterOrganization
+                            seller: this.data.seller
                         };
                         this.storage.save('complete', complete, _storage_storage_service__WEBPACK_IMPORTED_MODULE_10__["SaveType"].Session);
                         // 購入情報削除
@@ -8961,12 +8969,16 @@ var PurchaseService = /** @class */ (function () {
         var pendingReservations = authorizeSeatReservation.result.responseBody.object.reservations;
         pendingReservations.forEach(function (pendingReservation) {
             var findReservationResult = reservations.find(function (reservation) {
-                return (reservation.seat.seatNumber === pendingReservation.reservedTicket.ticketedSeat.seatNumber);
+                return (pendingReservation.reservedTicket.ticketedSeat !== undefined
+                    && reservation.seat.seatNumber === pendingReservation.reservedTicket.ticketedSeat.seatNumber);
             });
             if (findReservationResult === undefined
                 || findReservationResult.ticket === undefined
                 || findReservationResult.ticket.movieTicket === undefined) {
                 return;
+            }
+            if (pendingReservation.reservedTicket.ticketedSeat === undefined) {
+                throw new Error('ticketedSeat is undefined');
             }
             results.push({
                 typeOf: _cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_1__["factory"].paymentMethodType.MovieTicket,

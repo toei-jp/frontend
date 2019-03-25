@@ -34,7 +34,7 @@ function login(req, res) {
             const options = base_controller_1.getOptions(req);
             const args = { location: { branchCodes: [req.query.theater] } };
             log('searchMovieTheaters', args);
-            inquiryModel.movieTheater = (yield new cinerino.service.Organization(options).searchMovieTheaters(args)).data[0];
+            inquiryModel.seller = (yield new cinerino.service.Organization(options).searchMovieTheaters(args)).data[0];
             inquiryModel.input.reserveNum = (req.query.reserve !== undefined) ? req.query.reserve : '';
             inquiryModel.save(req.session);
             res.locals.inquiryModel = inquiryModel;
@@ -64,8 +64,8 @@ function auth(req, res) {
         const inquiryModel = new inquiry_model_1.InquiryModel(req.session.inquiry);
         try {
             loginForm(req);
-            if (inquiryModel.movieTheater === undefined) {
-                throw new Error('movieTheater is undefined');
+            if (inquiryModel.seller === undefined) {
+                throw new Error('seller is undefined');
             }
             const validationResult = yield req.getValidationResult();
             inquiryModel.input = {
@@ -74,7 +74,7 @@ function auth(req, res) {
             };
             inquiryModel.save(req.session);
             if (validationResult.isEmpty()) {
-                const theaterCode = inquiryModel.movieTheater.location.branchCode;
+                const theaterCode = inquiryModel.seller.location.branchCode;
                 const phoneNumber = libphonenumber_js_1.parseNumber(req.body.telephone, 'JP');
                 const telephone = libphonenumber_js_1.formatNumber(phoneNumber, 'E.164');
                 const args = {

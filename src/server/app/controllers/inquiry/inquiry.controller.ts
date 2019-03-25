@@ -25,7 +25,7 @@ export async function login(req: Request, res: Response): Promise<void> {
         const options = getOptions(req);
         const args = { location: { branchCodes: [req.query.theater] } };
         log('searchMovieTheaters', args);
-        inquiryModel.seller = (await new cinerino.service.Organization(options).searchMovieTheaters(args)).data[0];
+        inquiryModel.seller = (await new cinerino.service.Seller(options).search(args)).data[0];
         inquiryModel.input.reserveNum = (req.query.reserve !== undefined) ? req.query.reserve : '';
         inquiryModel.save(req.session);
         res.locals.inquiryModel = inquiryModel;

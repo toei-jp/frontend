@@ -34,7 +34,7 @@ function login(req, res) {
             const options = base_controller_1.getOptions(req);
             const args = { location: { branchCodes: [req.query.theater] } };
             log('searchMovieTheaters', args);
-            inquiryModel.seller = (yield new cinerino.service.Organization(options).searchMovieTheaters(args)).data[0];
+            inquiryModel.seller = (yield new cinerino.service.Seller(options).search(args)).data[0];
             inquiryModel.input.reserveNum = (req.query.reserve !== undefined) ? req.query.reserve : '';
             inquiryModel.save(req.session);
             res.locals.inquiryModel = inquiryModel;

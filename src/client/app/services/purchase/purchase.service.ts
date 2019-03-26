@@ -766,7 +766,8 @@ export class PurchaseService {
                     workPerformedName: this.data.screeningEvent.workPerformed.name,
                     screen: {
                         name: this.data.screeningEvent.location.name.ja,
-                        address: (this.data.screeningEvent.location.address !== undefined)
+                        address: (this.data.screeningEvent.location.address !== undefined
+                            && this.data.screeningEvent.location.address.ja !== '')
                             ? `(${this.data.screeningEvent.location.address.ja})`
                             : ''
                     },

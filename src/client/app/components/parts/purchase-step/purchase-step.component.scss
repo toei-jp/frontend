@@ -1,5 +1,6 @@
 $tablet: 1024px;
 $mobile: 767px;
+$step: 4;
 .steps {
     position: absolute;
     right: 30px;
@@ -43,23 +44,23 @@ $mobile: 767px;
             }
         }
     }
-    .step-01 {
-        left: 0;
+    .step:nth-child(1) {
+        left: 100% / $step * 0;
     }
-    .step-02 {
-        left: 20%;
+    .step:nth-child(2) {
+        left: 100% / $step * 1;
     }
-    .step-03 {
-        left: 40%;
+    .step:nth-child(3) {
+        left: 100% / $step * 2;
     }
-    .step-04 {
-        left: 60%;
+    .step:nth-child(4) {
+        left: 100% / $step * 3;
     }
-    .step-05 {
-        left: 80%;
+    .step:nth-child(5) {
+        left: 100% / $step * 4;
     }
-    .step-06 {
-        left: 100%;
+    .step:nth-child(6) {
+        left: 100% / $step * 5;
     }
     .active {
         background-color: #727272;

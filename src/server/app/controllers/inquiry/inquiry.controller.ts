@@ -25,7 +25,7 @@ export async function login(req: Request, res: Response): Promise<void> {
         const options = getOptions(req);
         const args = { location: { branchCodes: [req.query.theater] } };
         log('searchMovieTheaters', args);
-        inquiryModel.movieTheater = (await new cinerino.service.Organization(options).searchMovieTheaters(args)).data[0];
+        inquiryModel.seller = (await new cinerino.service.Seller(options).search(args)).data[0];
         inquiryModel.input.reserveNum = (req.query.reserve !== undefined) ? req.query.reserve : '';
         inquiryModel.save(req.session);
         res.locals.inquiryModel = inquiryModel;
@@ -52,8 +52,8 @@ export async function auth(req: Request, res: Response): Promise<void> {
     const inquiryModel = new InquiryModel((<Express.Session>req.session).inquiry);
     try {
         loginForm(req);
-        if (inquiryModel.movieTheater === undefined) {
-            throw new Error('movieTheater is undefined');
+        if (inquiryModel.seller === undefined) {
+            throw new Error('seller is undefined');
         }
         const validationResult = await req.getValidationResult();
         inquiryModel.input = {
@@ -62,13 +62,13 @@ export async function auth(req: Request, res: Response): Promise<void> {
         };
         inquiryModel.save(req.session);
         if (validationResult.isEmpty()) {
-            const theaterCode = inquiryModel.movieTheater.location.branchCode;
+            const theaterCode = (<any>inquiryModel.seller.location).branchCode;
             const phoneNumber = parseNumber(req.body.telephone, 'JP');
             const telephone = formatNumber(phoneNumber, 'E.164');
             const args = {
                 customer: { telephone },
                 confirmationNumber: Number(inquiryModel.input.reserveNum),
-                // theaterCode: inquiryModel.movieTheater.branchCode
+                // theaterCode: inquiryModel.seller.branchCode
             };
             log('findByOrderInquiryKey', args);
             const orderService = new cinerino.service.Order(options);

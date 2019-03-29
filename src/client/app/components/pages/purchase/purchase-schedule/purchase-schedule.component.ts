@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { factory } from '@cinerino/api-javascript-client';
 import { SERVICE_UNAVAILABLE, TOO_MANY_REQUESTS } from 'http-status';
 import * as moment from 'moment';
@@ -7,7 +7,7 @@ import { SwiperComponent, SwiperConfigInterface, SwiperDirective } from 'ngx-swi
 import { environment } from '../../../../../environments/environment';
 import { CinerinoService, ErrorService, PurchaseService } from '../../../../services';
 
-type IMovieTheater = factory.organization.movieTheater.IOrganization;
+type ISeller = factory.seller.IOrganization<factory.seller.IAttributes<factory.organizationType>>;
 type IScreeningEvent = factory.chevre.event.screeningEvent.IEvent;
 interface IFilmOrder {
     id: string;
@@ -44,7 +44,7 @@ enum ScheduleType {
 })
 export class PurchaseScheduleComponent implements OnInit {
     public moment: typeof moment = moment;
-    public theaters: IMovieTheater[];
+    public theaters: ISeller[];
     public isLoading: boolean;
     public showTheaterList: boolean;
     public dateList: IDate[];
@@ -65,7 +65,6 @@ export class PurchaseScheduleComponent implements OnInit {
 
     constructor(
         private error: ErrorService,
-        private activatedRoute: ActivatedRoute,
         private purchase: PurchaseService,
         private cinerino: CinerinoService,
         private router: Router
@@ -88,6 +87,10 @@ export class PurchaseScheduleComponent implements OnInit {
      * @returns {Promise<void>}
      */
     public async ngOnInit(): Promise<void> {
+        if (environment.ENV !== 'local') {
+            location.href = environment.PORTAL_SITE_URL;
+            return;
+        }
         window.scrollTo(0, 0);
         moment.locale('ja');
         this.isLoading = true;
@@ -108,24 +111,19 @@ export class PurchaseScheduleComponent implements OnInit {
         };
         try {
             await this.cinerino.getServices();
-            const theaterQs = this.activatedRoute.snapshot.queryParamMap.get('theater');
-            this.theaters = (await this.cinerino.organization.searchMovieTheaters({})).data;
-            if (theaterQs !== null) {
-                const theater = this.theaters.find((t) => (
-                    t.name.en.toLocaleLowerCase().indexOf(theaterQs.toLocaleLowerCase()) >= 0
-                ));
-                if (theater !== undefined) {
-                    this.theaters = [theater];
-                    this.showTheaterList = false;
-                }
+            this.theaters = (await this.cinerino.seller.search({})).data;
+            const theater = this.theaters[0];
+            if (theater.location === undefined || theater.location.branchCode === undefined) {
+                throw new Error('theater not found');
             }
-
+            const branchCode = theater.location.branchCode;
             const now = moment().toDate();
             const today = moment(moment().format('YYYY-MM-DD')).toDate();
             this.preSaleSchedules = (await this.cinerino.event.searchScreeningEvents({
+                typeOf: factory.chevre.eventType.ScreeningEvent,
                 eventStatuses: [factory.chevre.eventStatusType.EventScheduled],
                 superEvent: {
-                    locationBranchCodes: [this.theaters[0].location.branchCode]
+                    locationBranchCodes: [branchCode]
                 },
                 startFrom: moment(today).add(3, 'days').toDate(),
                 offers: {
@@ -141,7 +139,7 @@ export class PurchaseScheduleComponent implements OnInit {
             }
             this.dateList = this.getDateList(7);
             this.conditions = {
-                theater: this.theaters[0].location.branchCode,
+                theater: branchCode,
                 date: this.dateList[0].value
             };
 
@@ -244,14 +242,17 @@ export class PurchaseScheduleComponent implements OnInit {
         this.filmOrder = [];
         try {
             await this.cinerino.getServices();
-            const theater = this.theaters.find((target) => {
-                return (target.location.branchCode === this.conditions.theater);
+            const theater = this.theaters.find((t) => {
+                return (t.location !== undefined && t.location.branchCode === this.conditions.theater);
             });
-            if (theater === undefined) {
+            if (theater === undefined
+                || theater.location === undefined
+                || theater.location.branchCode === undefined) {
                 throw new Error('theater is not found');
             }
             const today = moment(moment().format('YYYY-MM-DD')).toDate();
             this.schedules = (await this.cinerino.event.searchScreeningEvents({
+                typeOf: factory.chevre.eventType.ScreeningEvent,
                 eventStatuses: [factory.chevre.eventStatusType.EventScheduled],
                 superEvent: {
                     locationBranchCodes: [theater.location.branchCode]
@@ -286,11 +287,11 @@ export class PurchaseScheduleComponent implements OnInit {
                 return;
             }
             const film = results.find((event) => {
-                return (event.id === screeningEvent.workPerformed.identifier);
+                return (event.id === screeningEvent.superEvent.id);
             });
             if (film === undefined) {
                 results.push({
-                    id: screeningEvent.workPerformed.identifier,
+                    id: screeningEvent.superEvent.id,
                     films: [screeningEvent]
                 });
             } else {
@@ -335,7 +336,7 @@ export class PurchaseScheduleComponent implements OnInit {
     public async selectSchedule(data: factory.chevre.event.screeningEvent.IEvent) {
         this.isLoading = true;
         const findResult =
-            this.theaters.find(theater => theater.location.branchCode === this.conditions.theater);
+            this.theaters.find(t => t.location !== undefined && t.location.branchCode === this.conditions.theater);
         if (findResult === undefined) {
             this.isLoading = false;
             return;

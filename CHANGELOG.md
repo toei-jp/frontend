@@ -14,6 +14,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Removed
 
+## 1.6.0 - 2019-03-29
+### Added
+ - 丸の内座席データ追加
+### Changed
+ - スケジュール選択を閉鎖
+
 ## 1.5.0 - 2019-03-19
 ### Changed
  - 特定の券種の並び順を先頭に変更

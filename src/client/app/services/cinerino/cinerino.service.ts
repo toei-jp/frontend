@@ -2,20 +2,20 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import * as cinerino from '@cinerino/api-javascript-client';
 import 'rxjs/add/operator/toPromise';
-import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class CinerinoService {
     public auth: cinerino.IImplicitGrantClient;
     public event: cinerino.service.Event;
     public order: cinerino.service.Order;
-    public organization: cinerino.service.Organization;
+    public seller: cinerino.service.Seller;
     public person: cinerino.service.Person;
     public personOwnershipInfo: cinerino.service.person.OwnershipInfo;
     public payment: cinerino.service.Payment;
     public transaction: {
         placeOrder: cinerino.service.txn.PlaceOrder
     };
+    private endpoint: string;
 
     constructor(
         private http: HttpClient
@@ -29,7 +29,7 @@ export class CinerinoService {
             const option = await this.createOption();
             this.event = new cinerino.service.Event(option);
             this.order = new cinerino.service.Order(option);
-            this.organization = new cinerino.service.Organization(option);
+            this.seller = new cinerino.service.Seller(option);
             this.person = new cinerino.service.Person(option);
             this.payment = new cinerino.service.Payment(option);
             this.transaction = {
@@ -47,7 +47,7 @@ export class CinerinoService {
     public async createOption() {
         await this.authorize();
         return {
-            endpoint: environment.CINERINO_API_ENDPOINT,
+            endpoint: this.endpoint,
             auth: this.auth
         };
     }
@@ -62,6 +62,7 @@ export class CinerinoService {
             accessToken: string;
             userName: string;
             clientId: string;
+            endpoint: string;
         }>(url, body).toPromise();
         const option = {
             domain: '',
@@ -76,6 +77,7 @@ export class CinerinoService {
         };
         this.auth = cinerino.createAuthInstance(option);
         this.auth.setCredentials({ accessToken: result.accessToken });
+        this.endpoint = result.endpoint;
     }
 
     /**

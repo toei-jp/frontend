@@ -20,7 +20,7 @@ export class PurchaseCompleteComponent implements OnInit {
     public data: {
         order: factory.order.IOrder;
         transaction: factory.transaction.placeOrder.ITransaction;
-        movieTheaterOrganization: factory.organization.movieTheater.IOrganization;
+        seller: factory.seller.IOrganization<factory.seller.IAttributes<factory.organizationType>>;
         // sendEmailNotification?: factory.task.sendEmailMessage.ITask
     };
     public environment = environment;
@@ -165,7 +165,10 @@ export class PurchaseCompleteComponent implements OnInit {
      * @returns {string}
      */
     public getInquiryUrl() {
-        const params = `theater=${this.data.movieTheaterOrganization.location.branchCode}&reserve=${this.data.order.confirmationNumber}`;
+        if (this.data.seller.location === undefined) {
+            return '/inquiry/login';
+        }
+        const params = `theater=${this.data.seller.location.branchCode}&reserve=${this.data.order.confirmationNumber}`;
         return `/inquiry/login?${params}`;
     }
 

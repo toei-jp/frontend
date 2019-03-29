@@ -197,8 +197,8 @@ export class PurchaseInputComponent implements OnInit {
         // console.log(sendParam);
         return new Promise<IGmoTokenObject>((resolve, reject) => {
             if (
-                this.purchase.data.movieTheaterOrganization === undefined ||
-                this.purchase.data.movieTheaterOrganization.paymentAccepted === undefined
+                this.purchase.data.seller === undefined ||
+                this.purchase.data.seller.paymentAccepted === undefined
             ) {
                 return reject(new Error('status is different'));
             }
@@ -209,13 +209,13 @@ export class PurchaseInputComponent implements OnInit {
                     reject(new Error(response.resultCode));
                 }
             };
-            const creditCardPayment = this.purchase.data.movieTheaterOrganization.paymentAccepted.find((payment) => {
+            const creditCardPayment = this.purchase.data.seller.paymentAccepted.find((payment) => {
                 return payment.paymentMethodType === factory.paymentMethodType.CreditCard;
             });
             if (creditCardPayment === undefined) {
                 return reject(new Error('status is different'));
             }
-            const { shopId } = (<factory.organization.IPaymentAccepted<factory.paymentMethodType.CreditCard>>creditCardPayment).gmoInfo;
+            const { shopId } = (<factory.seller.ICreditCardPaymentAccepted>creditCardPayment).gmoInfo;
             const Multipayment = (<any>window).Multipayment;
             Multipayment.init(shopId);
             Multipayment.getToken(sendParam, (<any>window).someCallbackFunction);
@@ -293,7 +293,11 @@ export class PurchaseInputComponent implements OnInit {
             holderName: { value: '', validators: [Validators.required] }
         };
 
-        if (this.purchase.data.customerContact !== undefined) {
+        if (this.purchase.data.customerContact !== undefined
+            && this.purchase.data.customerContact.familyName !== undefined
+            && this.purchase.data.customerContact.givenName !== undefined
+            && this.purchase.data.customerContact.email !== undefined
+            && this.purchase.data.customerContact.telephone !== undefined) {
             // 購入者情報入力済み
             customerContact.familyName.value = this.purchase.data.customerContact.familyName;
             customerContact.givenName.value = this.purchase.data.customerContact.givenName;

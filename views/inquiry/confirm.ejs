@@ -61,7 +61,7 @@
                         <%= date %> <%= startTime %> - <%= endTime %>
                     </div>
                     <div class="small-text"><strong>劇場</strong></div>
-                    <div class="mb-xx-small"><%= inquiryModel.movieTheater.location.name.ja %></div>
+                    <div class="mb-xx-small"><%= inquiryModel.seller.location.name.ja %></div>
                     <div class="small-text"><strong>作品名</strong></div>
                     <div><%= offer.itemOffered.reservationFor.workPerformed.name %></div>
                     <% if (offer.itemOffered.reservationFor.workPerformed.headline) { %>
@@ -74,13 +74,13 @@
     </ul>
     
     <div class="button-area clearfix">
-        <div class="prev-link"><a class="icon-prev-black" href="/inquiry/login?theater=<%= inquiryModel.movieTheater.location.branchCode %>">戻る</a></div>
+        <div class="prev-link"><a class="icon-prev-black" href="/inquiry/login?theater=<%= inquiryModel.seller.location.branchCode %>">戻る</a></div>
     </div>
     <%- include('../layouts/siteSeal') %>
 </div>
 <div id="copy" style="display: none"></div>
 
-<input type="hidden" name="theaterCode" value="<%= inquiryModel.movieTheater.location.branchCode %>">
+<input type="hidden" name="theaterCode" value="<%= inquiryModel.seller.location.branchCode %>">
 <input type="hidden" name="reserveNum" value="<%= inquiryModel.input.reserveNum %>">
 <input type="hidden" name="telephone" value="<%= inquiryModel.input.telephone %>">
 <input type="hidden" name="orderNumber" value="<%= inquiryModel.order.orderNumber %>">

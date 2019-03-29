@@ -20,16 +20,18 @@ function getCredentials(_, res) {
     return __awaiter(this, void 0, void 0, function* () {
         log('getCredentials');
         try {
+            const endpoint = process.env.CINERINO_API_ENDPOINT;
             const authModel = new auth_model_1.AuthModel();
             const options = {
-                endpoint: process.env.CINERINO_API_ENDPOINT,
+                endpoint,
                 auth: authModel.create()
             };
             const accessToken = yield options.auth.getAccessToken();
             res.json({
-                accessToken: accessToken,
+                accessToken,
                 userName: undefined,
-                clientId: options.auth.options.clientId
+                clientId: options.auth.options.clientId,
+                endpoint
             });
         }
         catch (err) {

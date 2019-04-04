@@ -6491,7 +6491,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "../../node_modules/@angular/core/fesm5/core.js");
 
 var PURCHASE_NOTE = {
-    '01': { ordinance: '東京都青少年の健全な育成に関する条例', limit: '23:00' }
+    '01': { ordinance: '東京都青少年の健全な育成に関する条例', limit: '23:00' },
+    '02': { ordinance: '東京都青少年の健全な育成に関する条例', limit: '23:00' }
 };
 var PurchaseNoteComponent = /** @class */ (function () {
     function PurchaseNoteComponent() {
@@ -6499,7 +6500,7 @@ var PurchaseNoteComponent = /** @class */ (function () {
     PurchaseNoteComponent.prototype.ngOnInit = function () {
         this.ordinance = '';
         this.limit = '';
-        if (this.theaterCode === '01') {
+        if (PURCHASE_NOTE[this.theaterCode] !== undefined) {
             this.ordinance = PURCHASE_NOTE[this.theaterCode].ordinance;
             this.limit = PURCHASE_NOTE[this.theaterCode].limit;
         }
@@ -6683,7 +6684,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "../../node_modules/@angular/core/fesm5/core.js");
 
 var PURCHASE_TERM = {
-    '01': { ordinance: '東京都青少年健全育成条例', limit: '23:00' }
+    '01': { ordinance: '東京都青少年健全育成条例', limit: '23:00' },
+    '02': { ordinance: '東京都青少年健全育成条例', limit: '23:00' }
 };
 var PurchaseTermComponent = /** @class */ (function () {
     function PurchaseTermComponent() {
@@ -6691,7 +6693,7 @@ var PurchaseTermComponent = /** @class */ (function () {
     PurchaseTermComponent.prototype.ngOnInit = function () {
         this.ordinance = '';
         this.limit = '';
-        if (this.theaterCode === '01') {
+        if (PURCHASE_TERM[this.theaterCode] !== undefined) {
             this.ordinance = PURCHASE_TERM[this.theaterCode].ordinance;
             this.limit = PURCHASE_TERM[this.theaterCode].limit;
         }

@@ -14,6 +14,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Removed
 
+## 1.6.1 - 2019-04-04
+### Added
+ - 丸の内注意事項文言追加
+
 ## 1.6.0 - 2019-03-29
 ### Added
  - 丸の内座席データ追加

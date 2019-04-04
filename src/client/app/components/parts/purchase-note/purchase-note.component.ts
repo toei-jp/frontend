@@ -1,7 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 const PURCHASE_NOTE = {
-    '01': { ordinance: '東京都青少年の健全な育成に関する条例', limit: '23:00' }
+    '01': { ordinance: '東京都青少年の健全な育成に関する条例', limit: '23:00' },
+    '02': { ordinance: '東京都青少年の健全な育成に関する条例', limit: '23:00' }
 };
 
 @Component({
@@ -19,9 +20,9 @@ export class PurchaseNoteComponent implements OnInit {
     public ngOnInit() {
         this.ordinance = '';
         this.limit = '';
-        if (this.theaterCode === '01') {
-            this.ordinance = PURCHASE_NOTE[this.theaterCode].ordinance;
-            this.limit = PURCHASE_NOTE[this.theaterCode].limit;
+        if ((<any>PURCHASE_NOTE)[this.theaterCode] !== undefined) {
+            this.ordinance = (<any>PURCHASE_NOTE)[this.theaterCode].ordinance;
+            this.limit = (<any>PURCHASE_NOTE)[this.theaterCode].limit;
         }
     }
 

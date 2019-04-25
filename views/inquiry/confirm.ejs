@@ -34,11 +34,7 @@
                             <strong class="large-text"><%= offer.itemOffered.reservedTicket.ticketType.name.ja %></strong>
                     </div>
                 </div>
-                <% if (offer.itemOffered.attended) { %>
-                <div class="box radius border-bottom-dot not-qr-code bg-white">
-                    <p class="text-center">入場済み</p>
-                </div>
-                <% } else if (moment(offer.itemOffered.reservationFor.endDate).add(1, 'months').unix() < moment().unix()) { %>
+                <% if (moment(offer.itemOffered.reservationFor.endDate).add(1, 'months').unix() < moment().unix()) { %>
                 <div class="box radius border-bottom-dot not-qr-code bg-white">
                     <p class="text-center">上映日から1ヶ月以上経過しています。</p>
                 </div>

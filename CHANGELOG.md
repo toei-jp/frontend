@@ -14,6 +14,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Removed
 
+## 1.7.0 - 2019-04-25
+### Changed
+ - 照会ページの入場判定を削除
+ - 券種選択の注釈文言変更
+
 ## 1.6.1 - 2019-04-04
 ### Added
  - 丸の内注意事項文言追加

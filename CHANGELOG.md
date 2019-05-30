@@ -14,6 +14,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Removed
 
+## 1.7.1 - 2019-05-30
+### Changed
+ - 購入完了メール変更（アンケート追加）
+
 ## 1.7.0 - 2019-04-25
 ### Changed
  - 照会ページの入場判定を削除

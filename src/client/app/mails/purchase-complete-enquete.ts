@@ -1,13 +1,14 @@
 // tslint:disable:max-line-length
 
-export function getPurchaseCompleteTemplate(args: {
+export function getPurchaseCompleteEnqueteTemplate(args: {
     order: { date: string; };
     event: { startDate: string; endDate: string; };
     workPerformedName: string;
     screen: { name: string; address: string; };
     reservedSeats: string;
     inquiryUrl: string;
-    seller: { branchCode: string; telephone: string; }
+    seller: { branchCode: string; telephone: string; },
+    enqueteUrl: string;
 }) {
     return `
 | #{order.customer.familyName} #{order.customer.givenName} 様
@@ -57,7 +58,7 @@ export function getPurchaseCompleteTemplate(args: {
 | 映画製作、宣伝の参考にさせていただきたく、ご多忙中恐れ入りますが、以下のURLからアンケートにお答えいただき、率直なご意見・ご要望をお聞かせください。
 |
 | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-| https://questant.jp/q/Z6FTFZW8
+| ${args.enqueteUrl}
 | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 |
 | なお、アンケートの回答は統計的に処理され、特定の個人が識別できる情報として、公表されることはありません。

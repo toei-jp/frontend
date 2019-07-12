@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AuthSigninComponent } from './components/pages/auth/auth-signin/auth-signin.component';
 import { BaseComponent } from './components/pages/base/base.component';
 import { CompanyComponent } from './components/pages/company/company.component';
 import { CongestionComponent } from './components/pages/congestion/congestion.component';
@@ -26,10 +25,10 @@ import { PurchaseGuardService } from './services/purchase-guard/purchase-guard.s
 import { TestGuardService } from './services/test-guard/test-guard.service';
 
 const routes: Routes = [
-    { path: '', redirectTo: 'purchase/schedule', pathMatch: 'full' },
+    { path: '', redirectTo: 'purchase/transaction', pathMatch: 'full' },
+    { path: 'purchase/transaction', component: PurchaseTransactionComponent },
     { path: 'purchase/transaction/:performanceId', component: PurchaseTransactionComponent },
     { path: 'purchase/transaction/:performanceId/:passportToken', component: PurchaseTransactionComponent },
-    { path: 'auth/signin', component: AuthSigninComponent },
     {
         path: '',
         component: BaseComponent,

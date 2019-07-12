@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { factory } from '@cinerino/api-javascript-client';
 import * as moment from 'moment';
@@ -98,6 +97,13 @@ interface IData {
      * ムビチケ承認情報
      */
     authorizeMovieTicketPayments: factory.action.authorize.paymentMethod.movieTicket.IAction[];
+    /**
+     * 外部連携情報
+     */
+    external?: {
+        performanceId?: string;
+        passportToken?: string;
+    };
 }
 
 export interface IGmoTokenObject {
@@ -121,9 +127,8 @@ export class PurchaseService {
 
     constructor(
         private storage: StorageService,
-        private cinerino: CinerinoService,
-        private http: HttpClient
-    ) {
+        private cinerino: CinerinoService
+        ) {
         this.load();
     }
 
@@ -462,21 +467,6 @@ export class PurchaseService {
         const movieTickets = this.data.reservations.filter(reservation => reservation.isMovieTicket());
 
         return (movieTickets.length > 0);
-    }
-
-    /**
-     * パスポート取得
-     */
-    public async getPassport(selleId: string) {
-        if (environment.WAITER_SERVER_URL === undefined
-            || environment.WAITER_SERVER_URL === '') {
-            return { token: '' };
-        }
-        const url = `${environment.WAITER_SERVER_URL}/projects/${environment.PROJECT_ID}/passports`;
-        const body = { scope: `Transaction:PlaceOrder:${selleId}` };
-        const result = await this.http.post<{ token: string; }>(url, body).toPromise();
-
-        return result;
     }
 
     /**

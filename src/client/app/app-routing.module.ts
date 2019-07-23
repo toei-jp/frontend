@@ -33,6 +33,7 @@ const routes: Routes = [
         path: '',
         component: BaseComponent,
         children: [
+            { path: 'purchase/overlap/:performanceId', component: PurchaseOverlapComponent },
             { path: 'purchase/overlap/:performanceId/:passportToken', component: PurchaseOverlapComponent },
         ]
     },

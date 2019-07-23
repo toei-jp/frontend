@@ -75,7 +75,10 @@ export class PurchaseTransactionComponent implements OnInit {
 
             if (this.purchase.data.reservations.length > 0) {
                 // 重複確認へ
-                this.router.navigate([`/purchase/overlap/${performanceId}/${passport.token}`]);
+                const url = (passport.token === '')
+                    ? `/purchase/overlap/${performanceId}`
+                    : `/purchase/overlap/${performanceId}/${passport.token}`;
+                this.router.navigate([url]);
 
                 return;
             }

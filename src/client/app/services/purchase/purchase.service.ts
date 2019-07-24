@@ -790,7 +790,7 @@ export class PurchaseService {
                         telephone: (this.data.seller.telephone === undefined)
                             ? '' : new LibphonenumberFormatPipe().transform(this.data.seller.telephone)
                     },
-                    enqueteUrl: 'https://questant.jp/q/7HNCUEF8'
+                    enqueteUrl: 'https://questant.jp/q/53ZT9FSR'
                 })
             }
         })).order;

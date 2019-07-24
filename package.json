@@ -25,9 +25,9 @@
     "ssl": "node dist/server/ssl",
     "build-server": "tsc --project src/server --outDir dist/server --locale ja-jp",
     "lint-server": "tslint --config tslint.json src/server/**/**.ts --exclude **/**.spec.ts --project src/server/tsconfig.json",
-    "build": "npm run css-server && npm run build-server && npm run build-client",
+    "build": "",
     "version": "git add -A",
-    "preversion": "npm run build",
+    "preversion": "npm run css-server && npm run build-server && npm run build-client",
     "check": "npm run lint",
     "lint": "npm run lint-client && npm run lint-server",
     "test": "npm run check"

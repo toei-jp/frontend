@@ -10,6 +10,7 @@ import { LibphonenumberFormatPipe } from '../../pipes/libphonenumber-format/libp
 import { TimeFormatPipe } from '../../pipes/time-format/time-format.pipe';
 import { CinerinoService } from '../cinerino/cinerino.service';
 import { SaveType, StorageService } from '../storage/storage.service';
+import { UtilService } from '../util/util.service';
 
 export type ICustomerContact = factory.transaction.placeOrder.ICustomerContact;
 export type ISalesTicketResult = factory.chevre.event.screeningEvent.ITicketOffer;
@@ -122,7 +123,8 @@ export class PurchaseService {
     constructor(
         private storage: StorageService,
         private cinerino: CinerinoService,
-        private http: HttpClient
+        private http: HttpClient,
+        private utilService: UtilService
     ) {
         this.load();
     }
@@ -496,8 +498,9 @@ export class PurchaseService {
             location: { branchCodes: [this.data.screeningEvent.superEvent.location.branchCode] }
         })).data[0];
         // 取引期限
+        const now = (await this.utilService.getServerDate()).date;
         const VALID_TIME = environment.TRANSACTION_TIME;
-        const expires = moment().add(VALID_TIME, 'minutes').toDate();
+        const expires = moment(now).add(VALID_TIME, 'minutes').toDate();
         const passport = args.passport;
         // 取引開始
         this.data.transaction = await this.cinerino.transaction.placeOrder.start({

@@ -14,6 +14,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Removed
 
+## 1.7.3 - 2019-07-24
+### Changed
+ - 取引期限をサーバータイムから算出
+
 ## 1.7.2 - 2019-06-07
 ### Changed
  - 購入完了メール変更（アンケート削除）

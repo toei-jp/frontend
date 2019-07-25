@@ -3,7 +3,10 @@ import { factory } from '@cinerino/api-javascript-client';
 import * as moment from 'moment';
 import * as util from 'util';
 import { environment } from '../../../environments/environment';
-import { getPurchaseCompleteTemplate } from '../../mails';
+import {
+    getPurchaseCompleteEnqueteTemplate,
+    // getPurchaseCompleteTemplate
+} from '../../mails';
 import { IReservationTicket, Reservation } from '../../models';
 import { LibphonenumberFormatPipe } from '../../pipes/libphonenumber-format/libphonenumber-format.pipe';
 import { TimeFormatPipe } from '../../pipes/time-format/time-format.pipe';
@@ -750,7 +753,7 @@ export class PurchaseService {
             id: transaction.id,
             options: {
                 sendEmailMessage: true,
-                emailTemplate: getPurchaseCompleteTemplate({
+                emailTemplate: getPurchaseCompleteEnqueteTemplate({
                     order: { date: moment().format('YYYY年MM月DD日(ddd) HH:mm') },
                     event: {
                         startDate: moment(this.data.screeningEvent.startDate).format('YYYY年MM月DD日(ddd) HH:mm'),

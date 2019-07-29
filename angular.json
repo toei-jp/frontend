@@ -71,7 +71,12 @@
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
-              "index": "src/client/production.html"
+              "fileReplacements": [
+                {
+                  "replace": "src/client/index.html",
+                  "with": "src/client/index.production.html"
+                }
+              ]
             }
           }
         },

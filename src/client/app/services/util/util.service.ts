@@ -30,4 +30,16 @@ export class UtilService {
         });
     }
 
+    /**
+     * 外部連携情報取得
+     */
+    public async getExternal() {
+        const result = await this.http.post<{
+            performanceId?: string;
+            passportToken?: string;
+        }>('/api/external', {}).toPromise();
+
+        return result;
+    }
+
 }

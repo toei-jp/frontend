@@ -16,6 +16,7 @@ export class CinerinoService {
         placeOrder: cinerino.service.txn.PlaceOrder
     };
     private endpoint: string;
+    private waiterServerUrl: string;
 
     constructor(
         private http: HttpClient
@@ -63,6 +64,7 @@ export class CinerinoService {
             userName: string;
             clientId: string;
             endpoint: string;
+            waiterServerUrl: string;
         }>(url, body).toPromise();
         const option = {
             domain: '',
@@ -78,6 +80,7 @@ export class CinerinoService {
         this.auth = cinerino.createAuthInstance(option);
         this.auth.setCredentials({ accessToken: result.accessToken });
         this.endpoint = result.endpoint;
+        this.waiterServerUrl = result.waiterServerUrl;
     }
 
     /**
@@ -88,6 +91,21 @@ export class CinerinoService {
         const result = await this.http.get<any>(url, {}).toPromise();
         // console.log(result.url);
         location.href = result.url;
+    }
+
+    /**
+     * パスポート取得
+     */
+    public async getPassport(selleId: string) {
+        if (this.waiterServerUrl === undefined
+            || this.waiterServerUrl === '') {
+            return { token: '' };
+        }
+        const url = this.waiterServerUrl;
+        const body = { scope: `Transaction:PlaceOrder:${selleId}` };
+        const result = await this.http.post<{ token: string; }>(url, body).toPromise();
+
+        return result;
     }
 
 }

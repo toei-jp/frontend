@@ -1,6 +1,6 @@
 // tslint:disable:max-line-length
 
-export function getPurchaseCompleteTemplate(args: {
+export function getPurchaseCompleteEnqueteTemplate(args: {
     order: { date: string; };
     event: { startDate: string; endDate: string; };
     workPerformedName: string;
@@ -53,15 +53,17 @@ export function getPurchaseCompleteTemplate(args: {
 | ３　東京都青少年の健全な育成に関する条例の定めにより、終映が23：00を過ぎる上映回は18歳未満及び高校生の方のご入場をお断りいたします。保護者同伴でもご入場いただけません。
 |
 |
-|【アンケートご協力のお願い】
+| ☆☆☆アンケートご協力のお願い☆☆☆
+|
 | 映画製作、宣伝の参考にさせていただきたく、ご多忙中恐れ入りますが、以下のURLからアンケートにお答えいただき、率直なご意見・ご要望をお聞かせください。
+| 本アンケートにご回答いただきました方にはささやかながら、公式動画配信サービス［ミレール］にてご使用できる100円割引クーポンをプレゼントいたします。
+| ※割引クーポンは東映が提供する配信作品にてご利用いただけます。
 |
 | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-| https://questant.jp/q/Z6FTFZW8
+| https://questant.jp/q/53ZT9FSR
 | ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 |
 | なお、アンケートの回答は統計的に処理され、特定の個人が識別できる情報として、公表されることはありません。
-|
 | 何卒、ご協力よろしくお願い申し上げます。
 |
 |

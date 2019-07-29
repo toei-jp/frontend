@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const http_status_1 = require("http-status");
 const moment = require("moment");
 const path = require("path");
 const authorize_controller_1 = require("../controllers/authorize/authorize.controller");
@@ -11,13 +12,39 @@ function defaultSetting(req, res, next) {
     res.locals.isApp = (req.session.awsCognitoIdentityId !== undefined);
     next();
 }
-function root(_req, res, _next) {
-    const fileName = (process.env.NODE_ENV === 'production') ? 'production.html' : 'index.html';
-    res.sendFile(path.resolve(`${__dirname}/../../../client/${process.env.NODE_ENV}/${fileName}`));
+/**
+ * ルート
+ */
+function root(req, res, _next) {
+    if (req.xhr) {
+        res.status(httpStatus.NOT_FOUND).json('NOT FOUND');
+        return;
+    }
+    if (req.session !== undefined) {
+        req.session.external = req.query;
+    }
+    res.sendFile(path.resolve(`${__dirname}/../../../client/${process.env.NODE_ENV}/index.html`));
 }
+/**
+ * 外部連携情報取得
+ */
+function external(req, res, _next) {
+    if (req.session === undefined) {
+        res.sendStatus(http_status_1.BAD_REQUEST);
+        res.json({ error: 'session undefined' });
+        return;
+    }
+    res.json((req.session.external === undefined) ? {} : req.session.external);
+}
+/**
+ * NOT FOUND
+ */
 function notfound(_req, res, _next) {
     res.render('notfound/index');
 }
+/**
+ * ERROR
+ */
 function error(err, _req, res, _next) {
     res.locals.error = err;
     res.render('error/index');
@@ -35,6 +62,7 @@ exports.default = (app) => {
     app.use(defaultSetting);
     app.use('/api/authorize', authorize_1.default);
     app.get('/api/getServerDate', getServerDate);
+    app.post('/api/external', external);
     app.use('/inquiry', inquiry_1.default);
     app.get('/signIn', authorize_controller_1.signInRedirect);
     app.get('/', root);

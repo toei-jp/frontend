@@ -60,16 +60,40 @@ export class PurchaseOverlapComponent implements OnInit {
             } else {
                 await this.purchase.cancelSeatRegistrationProcess();
             }
+            const params = await this.getUrlParams();
+            if (params.performanceId === undefined) {
+                this.router.navigate(['/error']);
+                return;
+            }
+            const url = (params.passportToken === '')
+                ? `/purchase/transaction/${params.performanceId}`
+                : `/purchase/transaction/${params.performanceId}/${params.passportToken}`;
+            this.router.navigate([url]);
+            this.isLoading = false;
         } catch (err) {
             this.router.navigate(['/error']);
         }
-        this.activatedRoute.paramMap
-            .subscribe((params) => {
-                const passportToken = params.get('passportToken');
-                const performanceId = params.get('performanceId');
-                this.router.navigate([`/purchase/transaction/${performanceId}/${passportToken}`]);
-                this.isLoading = false;
-            }).unsubscribe();
+    }
+
+    /**
+     * URLパラメータ取得
+     */
+    private async getUrlParams() {
+        return new Promise<{
+            passportToken?: string;
+            performanceId?: string;
+        }>((resolve) => {
+            this.activatedRoute.paramMap
+                .subscribe(async (params) => {
+                    const passportToken = (params.get('passportToken'));
+                    const performanceId = params.get('performanceId');
+                    resolve({
+                        passportToken: (passportToken === null) ? undefined : passportToken,
+                        performanceId: (performanceId === null) ? undefined : performanceId
+                    });
+                })
+                .unsubscribe();
+        });
     }
 
     /**

@@ -18,12 +18,13 @@ export async function getCredentials(_: Request, res: Response) {
             auth: authModel.create()
         };
         const accessToken = await options.auth.getAccessToken();
-
+        const waiterServerUrl = <string>process.env.WAITER_SERVER_URL;
         res.json({
             accessToken,
             userName: undefined,
             clientId: options.auth.options.clientId,
-            endpoint
+            endpoint,
+            waiterServerUrl
         });
     } catch (err) {
         errorProsess(res, err);

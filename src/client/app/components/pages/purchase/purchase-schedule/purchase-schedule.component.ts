@@ -349,7 +349,7 @@ export class PurchaseScheduleComponent implements OnInit {
         }
         try {
             const selleId = findResult.id;
-            const passport = await this.purchase.getPassport(selleId);
+            const passport = await this.cinerino.getPassport(selleId);
             const performanceId = data.id;
             this.router.navigate([`/purchase/transaction/${performanceId}/${passport.token}`]);
             this.isLoading = false;

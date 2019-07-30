@@ -14,6 +14,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Removed
 
+## 1.8.0 - 2019-07-30
+### Changed
+ - @angular-devkit/build-angular更新
+
 ## 1.8.0 - 2019-07-29
 ### Changed
  - ウェイタートークンをチケットサイトで取得へ変更（互換性あり）

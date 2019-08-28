@@ -8907,7 +8907,7 @@ var PurchaseService = /** @class */ (function () {
      */
     PurchaseService.prototype.purchaseRegistrationProcess = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var transaction, authorizeSeatReservation, reservations, order, _i, _a, authorizeMovieTicketPayment, movieTickets, movieTicketIdentifiers_2, _b, movieTicketIdentifiers_1, movieTicketIdentifier, authorizeMovieTicketPaymentResult, complete;
+            var transaction, authorizeSeatReservation, reservations, order, _i, _a, authorizeMovieTicketPayment, movieTickets, movieTicketIdentifiers_2, _b, movieTicketIdentifiers_1, movieTicketIdentifier, authorizeMovieTicketPaymentResult, mailParams, complete;
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
@@ -8977,38 +8977,41 @@ var PurchaseService = /** @class */ (function () {
                     case 9:
                         _b++;
                         return [3 /*break*/, 7];
-                    case 10: return [4 /*yield*/, this.cinerino.transaction.placeOrder.confirm({
-                            id: transaction.id,
-                            options: {
-                                sendEmailMessage: true,
-                                emailTemplate: Object(_mails__WEBPACK_IMPORTED_MODULE_4__["getPurchaseCompleteEnqueteTemplate"])({
-                                    order: { date: moment__WEBPACK_IMPORTED_MODULE_1__().format('YYYY年MM月DD日(ddd) HH:mm') },
-                                    event: {
-                                        startDate: moment__WEBPACK_IMPORTED_MODULE_1__(this.data.screeningEvent.startDate).format('YYYY年MM月DD日(ddd) HH:mm'),
-                                        endDate: moment__WEBPACK_IMPORTED_MODULE_1__(this.data.screeningEvent.endDate).format('HH:mm')
-                                    },
-                                    workPerformedName: this.data.screeningEvent.workPerformed.name,
-                                    screen: {
-                                        name: this.data.screeningEvent.location.name.ja,
-                                        address: (this.data.screeningEvent.location.address !== undefined
-                                            && this.data.screeningEvent.location.address.ja !== '')
-                                            ? "(" + this.data.screeningEvent.location.address.ja + ")"
-                                            : ''
-                                    },
-                                    reservedSeats: this.data.reservations.map(function (reservation) {
-                                        return util__WEBPACK_IMPORTED_MODULE_2__["format"]('%s %s %s', reservation.seat.seatNumber, (reservation.ticket === undefined) ? '' : reservation.ticket.ticketOffer.name.ja, "\uFFE5" + reservation.getTicketPrice().single);
-                                    }).join('\n| '),
-                                    inquiryUrl: _environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].SITE_URL + "/inquiry/login",
-                                    seller: {
-                                        branchCode: (this.data.seller.location === undefined
-                                            || this.data.seller.location.branchCode === undefined)
-                                            ? '' : this.data.seller.location.branchCode,
-                                        telephone: (this.data.seller.telephone === undefined)
-                                            ? '' : new _pipes_libphonenumber_format_libphonenumber_format_pipe__WEBPACK_IMPORTED_MODULE_6__["LibphonenumberFormatPipe"]().transform(this.data.seller.telephone)
-                                    }
-                                })
+                    case 10:
+                        mailParams = {
+                            order: { date: moment__WEBPACK_IMPORTED_MODULE_1__().format('YYYY年MM月DD日(ddd) HH:mm') },
+                            event: {
+                                startDate: moment__WEBPACK_IMPORTED_MODULE_1__(this.data.screeningEvent.startDate).format('YYYY年MM月DD日(ddd) HH:mm'),
+                                endDate: moment__WEBPACK_IMPORTED_MODULE_1__(this.data.screeningEvent.endDate).format('HH:mm')
+                            },
+                            workPerformedName: this.data.screeningEvent.workPerformed.name,
+                            screen: {
+                                name: this.data.screeningEvent.location.name.ja,
+                                address: (this.data.screeningEvent.location.address !== undefined
+                                    && this.data.screeningEvent.location.address.ja !== '')
+                                    ? "(" + this.data.screeningEvent.location.address.ja + ")"
+                                    : ''
+                            },
+                            reservedSeats: this.data.reservations.map(function (reservation) {
+                                return util__WEBPACK_IMPORTED_MODULE_2__["format"]('%s %s %s', reservation.seat.seatNumber, (reservation.ticket === undefined) ? '' : reservation.ticket.ticketOffer.name.ja, "\uFFE5" + reservation.getTicketPrice().single);
+                            }).join('\n| '),
+                            inquiryUrl: _environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].SITE_URL + "/inquiry/login",
+                            seller: {
+                                branchCode: (this.data.seller.location === undefined
+                                    || this.data.seller.location.branchCode === undefined)
+                                    ? '' : this.data.seller.location.branchCode,
+                                telephone: (this.data.seller.telephone === undefined)
+                                    ? '' : new _pipes_libphonenumber_format_libphonenumber_format_pipe__WEBPACK_IMPORTED_MODULE_6__["LibphonenumberFormatPipe"]().transform(this.data.seller.telephone)
                             }
-                        })];
+                        };
+                        return [4 /*yield*/, this.cinerino.transaction.placeOrder.confirm({
+                                id: transaction.id,
+                                options: {
+                                    sendEmailMessage: true,
+                                    emailTemplate: Object(_mails__WEBPACK_IMPORTED_MODULE_4__["getPurchaseCompleteTemplate"])(mailParams)
+                                    // emailTemplate: getPurchaseCompleteEnqueteTemplate(mailParams)
+                                }
+                            })];
                     case 11:
                         // 取引確定
                         order = (_c.sent()).order;

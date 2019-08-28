@@ -4,8 +4,8 @@ import * as moment from 'moment';
 import * as util from 'util';
 import { environment } from '../../../environments/environment';
 import {
-    getPurchaseCompleteEnqueteTemplate,
-    // getPurchaseCompleteTemplate
+    // getPurchaseCompleteEnqueteTemplate,
+    getPurchaseCompleteTemplate
 } from '../../mails';
 import { IReservationTicket, Reservation } from '../../models';
 import { LibphonenumberFormatPipe } from '../../pipes/libphonenumber-format/libphonenumber-format.pipe';
@@ -748,42 +748,45 @@ export class PurchaseService {
                 this.data.authorizeMovieTicketPayments.push(authorizeMovieTicketPaymentResult);
             }
         }
+        // メールテンプレートパラメータ
+        const mailParams = {
+            order: { date: moment().format('YYYY年MM月DD日(ddd) HH:mm') },
+            event: {
+                startDate: moment(this.data.screeningEvent.startDate).format('YYYY年MM月DD日(ddd) HH:mm'),
+                endDate: moment(this.data.screeningEvent.endDate).format('HH:mm')
+            },
+            workPerformedName: this.data.screeningEvent.workPerformed.name,
+            screen: {
+                name: this.data.screeningEvent.location.name.ja,
+                address: (this.data.screeningEvent.location.address !== undefined
+                    && this.data.screeningEvent.location.address.ja !== '')
+                    ? `(${this.data.screeningEvent.location.address.ja})`
+                    : ''
+            },
+            reservedSeats: this.data.reservations.map((reservation) => {
+                return util.format(
+                    '%s %s %s',
+                    reservation.seat.seatNumber,
+                    (reservation.ticket === undefined) ? '' : reservation.ticket.ticketOffer.name.ja,
+                    `￥${reservation.getTicketPrice().single}`
+                );
+            }).join('\n| '),
+            inquiryUrl: `${environment.SITE_URL}/inquiry/login`,
+            seller: {
+                branchCode: (this.data.seller.location === undefined
+                    || this.data.seller.location.branchCode === undefined)
+                    ? '' : this.data.seller.location.branchCode,
+                telephone: (this.data.seller.telephone === undefined)
+                    ? '' : new LibphonenumberFormatPipe().transform(this.data.seller.telephone)
+            }
+        };
         // 取引確定
         order = (await this.cinerino.transaction.placeOrder.confirm({
             id: transaction.id,
             options: {
                 sendEmailMessage: true,
-                emailTemplate: getPurchaseCompleteEnqueteTemplate({
-                    order: { date: moment().format('YYYY年MM月DD日(ddd) HH:mm') },
-                    event: {
-                        startDate: moment(this.data.screeningEvent.startDate).format('YYYY年MM月DD日(ddd) HH:mm'),
-                        endDate: moment(this.data.screeningEvent.endDate).format('HH:mm')
-                    },
-                    workPerformedName: this.data.screeningEvent.workPerformed.name,
-                    screen: {
-                        name: this.data.screeningEvent.location.name.ja,
-                        address: (this.data.screeningEvent.location.address !== undefined
-                            && this.data.screeningEvent.location.address.ja !== '')
-                            ? `(${this.data.screeningEvent.location.address.ja})`
-                            : ''
-                    },
-                    reservedSeats: this.data.reservations.map((reservation) => {
-                        return util.format(
-                            '%s %s %s',
-                            reservation.seat.seatNumber,
-                            (reservation.ticket === undefined) ? '' : reservation.ticket.ticketOffer.name.ja,
-                            `￥${reservation.getTicketPrice().single}`
-                        );
-                    }).join('\n| '),
-                    inquiryUrl: `${environment.SITE_URL}/inquiry/login`,
-                    seller: {
-                        branchCode: (this.data.seller.location === undefined
-                            || this.data.seller.location.branchCode === undefined)
-                            ? '' : this.data.seller.location.branchCode,
-                        telephone: (this.data.seller.telephone === undefined)
-                            ? '' : new LibphonenumberFormatPipe().transform(this.data.seller.telephone)
-                    }
-                })
+                emailTemplate: getPurchaseCompleteTemplate(mailParams)
+                // emailTemplate: getPurchaseCompleteEnqueteTemplate(mailParams)
             }
         })).order;
         const complete = {

@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 ### Added
 
 ### Changed
+ - 購入完了メール変更（アンケート削除）
 
 ### Fixed
 
@@ -14,11 +15,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Removed
 
-## 1.8.1 - 2019-08-18
+
+## 1.8.2 - 2019-08-18
 ### Changed
 - jqueryをcdnから変更
 
-## 1.8.0 - 2019-07-30
+## 1.8.1 - 2019-07-30
 ### Changed
  - @angular-devkit/build-angular更新
 

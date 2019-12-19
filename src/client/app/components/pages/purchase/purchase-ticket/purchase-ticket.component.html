@@ -57,10 +57,10 @@
 
 <app-modal [open]="ticketsModal" [layout]="false" (close)="ticketsModal = false">
     {{ tickets.length }}
-    <div *ngIf="tickets.length === 0" inner class="not-layout box radius bg-white">
+    <div *ngIf="tickets.length === 0" inner class="not-layout box bg-white">
         <p>販売可能券種がありません</p>
     </div>
-    <ul *ngIf="tickets.length > 0" inner class="not-layout box radius bg-white">
+    <ul *ngIf="tickets.length > 0" inner class="not-layout box bg-white">
         <li *ngFor="let ticket of tickets">
             <dl class="d-table">
                 <dt class="d-td">

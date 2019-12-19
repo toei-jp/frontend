@@ -14,6 +14,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Removed
 
+## 1.8.4 - 2019-12-19
+### Fixed
+ - ios13表示崩れ修正
+
 ## 1.8.3 - 2019-08-31
 ### Changed
  - 購入完了メール変更（アンケート削除）

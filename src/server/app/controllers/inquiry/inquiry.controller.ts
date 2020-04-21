@@ -23,9 +23,12 @@ export async function login(req: Request, res: Response): Promise<void> {
     try {
         const inquiryModel = new InquiryModel((<Express.Session>req.session).inquiry);
         const options = getOptions(req);
-        const args = { location: { branchCodes: [req.query.theater] } };
-        log('searchMovieTheaters', args);
-        inquiryModel.seller = (await new cinerino.service.Seller(options).search(args)).data[0];
+        const branchCode = req.query.theater;
+        log('searchMovieTheaters', { branchCodes: [branchCode] });
+        inquiryModel.theater = (await new cinerino.service.Place(options)
+            .searchMovieTheaters({ branchCodes: [branchCode] })).data[0];
+        inquiryModel.seller = (await new cinerino.service.Seller(options)
+            .search({ location: { branchCodes: [branchCode] } })).data[0];
         inquiryModel.input.reserveNum = (req.query.reserve !== undefined) ? req.query.reserve : '';
         inquiryModel.save(req.session);
         res.locals.inquiryModel = inquiryModel;
@@ -52,8 +55,8 @@ export async function auth(req: Request, res: Response): Promise<void> {
     const inquiryModel = new InquiryModel((<Express.Session>req.session).inquiry);
     try {
         loginForm(req);
-        if (inquiryModel.seller === undefined) {
-            throw new Error('seller is undefined');
+        if (inquiryModel.theater === undefined) {
+            throw new Error('theater is undefined');
         }
         const validationResult = await req.getValidationResult();
         inquiryModel.input = {
@@ -62,13 +65,12 @@ export async function auth(req: Request, res: Response): Promise<void> {
         };
         inquiryModel.save(req.session);
         if (validationResult.isEmpty()) {
-            const theaterCode = (<any>inquiryModel.seller.location).branchCode;
+            const theaterCode = inquiryModel.theater.branchCode;
             const phoneNumber = parseNumber(req.body.telephone, 'JP');
             const telephone = formatNumber(phoneNumber, 'E.164');
             const args = {
                 customer: { telephone },
                 confirmationNumber: Number(inquiryModel.input.reserveNum),
-                // theaterCode: inquiryModel.seller.branchCode
             };
             log('findByOrderInquiryKey', args);
             const orderService = new cinerino.service.Order(options);

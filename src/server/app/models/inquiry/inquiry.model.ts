@@ -1,13 +1,14 @@
-import * as cinerino from '@cinerino/api-nodejs-client';
+import { factory } from '@cinerino/api-nodejs-client';
 
 /**
  * 照会セッション
  * @interface IInquiryModel
  */
 export interface IInquiryModel {
-    order?: cinerino.factory.order.IOrder;
+    order?: factory.order.IOrder;
     input?: IInput;
-    seller?: cinerino.factory.seller.IOrganization<cinerino.factory.seller.IAttributes<cinerino.factory.organizationType>>;
+    theater?: factory.chevre.place.movieTheater.IPlaceWithoutScreeningRoom;
+    seller?: factory.seller.IOrganization<factory.seller.IAttributes<factory.organizationType>>;
 }
 
 interface IInput {
@@ -23,7 +24,7 @@ export class InquiryModel {
     /**
      * オーダー
      */
-    public order?: cinerino.factory.order.IOrder;
+    public order?: factory.order.IOrder;
     /**
      * 入力
      */
@@ -31,7 +32,11 @@ export class InquiryModel {
     /**
      * 劇場
      */
-    public seller?: cinerino.factory.seller.IOrganization<cinerino.factory.seller.IAttributes<cinerino.factory.organizationType>>;
+    public theater: factory.chevre.place.movieTheater.IPlaceWithoutScreeningRoom;
+    /**
+     * 販売者
+     */
+    public seller: factory.seller.IOrganization<factory.seller.IAttributes<factory.organizationType>>;
 
     /**
      * @constructor
@@ -48,6 +53,7 @@ export class InquiryModel {
                 reserveNum: '',
                 telephone: ''
             };
+        this.theater = session.theater;
         this.seller = session.seller;
     }
 
@@ -62,6 +68,7 @@ export class InquiryModel {
         const inquirySession: IInquiryModel = {
             order: this.order,
             input: this.input,
+            theater: this.theater,
             seller: this.seller
         };
         session.inquiry = inquirySession;

@@ -20,6 +20,7 @@ class InquiryModel {
                 reserveNum: '',
                 telephone: ''
             };
+        this.theater = session.theater;
         this.seller = session.seller;
     }
     /**
@@ -32,6 +33,7 @@ class InquiryModel {
         const inquirySession = {
             order: this.order,
             input: this.input,
+            theater: this.theater,
             seller: this.seller
         };
         session.inquiry = inquirySession;

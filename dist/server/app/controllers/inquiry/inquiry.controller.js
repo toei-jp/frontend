@@ -32,9 +32,12 @@ function login(req, res) {
         try {
             const inquiryModel = new inquiry_model_1.InquiryModel(req.session.inquiry);
             const options = base_controller_1.getOptions(req);
-            const args = { location: { branchCodes: [req.query.theater] } };
-            log('searchMovieTheaters', args);
-            inquiryModel.seller = (yield new cinerino.service.Seller(options).search(args)).data[0];
+            const branchCode = req.query.theater;
+            log('searchMovieTheaters', { branchCodes: [branchCode] });
+            inquiryModel.theater = (yield new cinerino.service.Place(options)
+                .searchMovieTheaters({ branchCodes: [branchCode] })).data[0];
+            inquiryModel.seller = (yield new cinerino.service.Seller(options)
+                .search({ location: { branchCodes: [branchCode] } })).data[0];
             inquiryModel.input.reserveNum = (req.query.reserve !== undefined) ? req.query.reserve : '';
             inquiryModel.save(req.session);
             res.locals.inquiryModel = inquiryModel;
@@ -64,8 +67,8 @@ function auth(req, res) {
         const inquiryModel = new inquiry_model_1.InquiryModel(req.session.inquiry);
         try {
             loginForm(req);
-            if (inquiryModel.seller === undefined) {
-                throw new Error('seller is undefined');
+            if (inquiryModel.theater === undefined) {
+                throw new Error('theater is undefined');
             }
             const validationResult = yield req.getValidationResult();
             inquiryModel.input = {
@@ -74,7 +77,7 @@ function auth(req, res) {
             };
             inquiryModel.save(req.session);
             if (validationResult.isEmpty()) {
-                const theaterCode = inquiryModel.seller.location.branchCode;
+                const theaterCode = inquiryModel.theater.branchCode;
                 const phoneNumber = libphonenumber_js_1.parseNumber(req.body.telephone, 'JP');
                 const telephone = libphonenumber_js_1.formatNumber(phoneNumber, 'E.164');
                 const args = {

@@ -21,7 +21,6 @@ class InquiryModel {
                 telephone: ''
             };
         this.theater = session.theater;
-        this.seller = session.seller;
     }
     /**
      * セッションへ保存
@@ -33,8 +32,7 @@ class InquiryModel {
         const inquirySession = {
             order: this.order,
             input: this.input,
-            theater: this.theater,
-            seller: this.seller
+            theater: this.theater
         };
         session.inquiry = inquirySession;
     }

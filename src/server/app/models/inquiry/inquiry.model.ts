@@ -8,7 +8,6 @@ export interface IInquiryModel {
     order?: factory.order.IOrder;
     input?: IInput;
     theater?: factory.chevre.place.movieTheater.IPlaceWithoutScreeningRoom;
-    seller?: factory.seller.IOrganization<factory.seller.IAttributes<factory.organizationType>>;
 }
 
 interface IInput {
@@ -33,10 +32,6 @@ export class InquiryModel {
      * 劇場
      */
     public theater: factory.chevre.place.movieTheater.IPlaceWithoutScreeningRoom;
-    /**
-     * 販売者
-     */
-    public seller: factory.seller.IOrganization<factory.seller.IAttributes<factory.organizationType>>;
 
     /**
      * @constructor
@@ -54,7 +49,6 @@ export class InquiryModel {
                 telephone: ''
             };
         this.theater = session.theater;
-        this.seller = session.seller;
     }
 
 
@@ -68,8 +62,7 @@ export class InquiryModel {
         const inquirySession: IInquiryModel = {
             order: this.order,
             input: this.input,
-            theater: this.theater,
-            seller: this.seller
+            theater: this.theater
         };
         session.inquiry = inquirySession;
     }

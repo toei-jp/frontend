@@ -36,8 +36,6 @@ function login(req, res) {
             log('searchMovieTheaters', { branchCodes: [branchCode] });
             inquiryModel.theater = (yield new cinerino.service.Place(options)
                 .searchMovieTheaters({ branchCodes: [branchCode] })).data[0];
-            inquiryModel.seller = (yield new cinerino.service.Seller(options)
-                .search({ location: { branchCodes: [branchCode] } })).data[0];
             inquiryModel.input.reserveNum = (req.query.reserve !== undefined) ? req.query.reserve : '';
             inquiryModel.save(req.session);
             res.locals.inquiryModel = inquiryModel;

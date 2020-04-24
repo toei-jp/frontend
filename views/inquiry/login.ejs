@@ -25,11 +25,11 @@
             </dl>
         </div>
 
-        <input type="hidden" name="theaterCode" value="<%= inquiryModel.seller.location.branchCode %>">
+        <input type="hidden" name="theaterCode" value="<%= inquiryModel.theater.branchCode %>">
         
         <div class="button-area clearfix">
             <div class="button next-button orange-button"><button type="submit">照会</button></div>
-            <div class="prev-link"><a class="icon-prev-black" href="<%= inquiryModel.seller.url %>">劇場TOPへ戻る</a></div>
+            <div class="prev-link"><a class="icon-prev-black" href="<%= inquiryModel.theater.url %>">劇場TOPへ戻る</a></div>
         </div>
     </form>
 <%- include('../layouts/siteSeal') %>

@@ -1771,7 +1771,9 @@ var PurchaseCompleteComponent = /** @class */ (function () {
      */
     PurchaseCompleteComponent.prototype.getTheaterName = function () {
         var itemOffered = this.data.order.acceptedOffers[0].itemOffered;
-        if (itemOffered.typeOf !== _cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_1__["factory"].chevre.reservationType.EventReservation) {
+        if (itemOffered.typeOf !== _cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_1__["factory"].chevre.reservationType.EventReservation
+            || itemOffered.reservationFor.superEvent.location.name === undefined
+            || itemOffered.reservationFor.superEvent.location.name.ja === undefined) {
             return '';
         }
         return itemOffered.reservationFor.superEvent.location.name.ja;
@@ -1787,8 +1789,11 @@ var PurchaseCompleteComponent = /** @class */ (function () {
             return '';
         }
         var screen = {
-            name: itemOffered.reservationFor.location.name.ja,
-            address: (itemOffered.reservationFor.location.address === undefined)
+            name: (itemOffered.reservationFor.location.name === undefined
+                || itemOffered.reservationFor.location.name.ja === undefined)
+                ? '' : itemOffered.reservationFor.location.name.ja,
+            address: (itemOffered.reservationFor.location.address === undefined
+                || itemOffered.reservationFor.location.address.en === undefined)
                 ? ''
                 : itemOffered.reservationFor.location.address.en
         };
@@ -1814,8 +1819,8 @@ var PurchaseCompleteComponent = /** @class */ (function () {
     PurchaseCompleteComponent.prototype.getSubTitle = function () {
         var itemOffered = this.data.order.acceptedOffers[0].itemOffered;
         if (itemOffered.typeOf !== _cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_1__["factory"].chevre.reservationType.EventReservation
-            || itemOffered.reservationFor.workPerformed.headline === undefined
-            || itemOffered.reservationFor.workPerformed.headline === null) {
+            || itemOffered.reservationFor.workPerformed === undefined
+            || itemOffered.reservationFor.workPerformed.headline === undefined) {
             return '';
         }
         return itemOffered.reservationFor.workPerformed.headline;
@@ -1863,10 +1868,11 @@ var PurchaseCompleteComponent = /** @class */ (function () {
      * @returns {string}
      */
     PurchaseCompleteComponent.prototype.getInquiryUrl = function () {
-        if (this.data.seller.location === undefined) {
+        var itemOffered = this.data.order.acceptedOffers[0].itemOffered;
+        if (itemOffered.typeOf !== _cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_1__["factory"].chevre.reservationType.EventReservation) {
             return '/inquiry/login';
         }
-        var params = "theater=" + this.data.seller.location.branchCode + "&reserve=" + this.data.order.confirmationNumber;
+        var params = "theater=" + itemOffered.reservationFor.superEvent.location.branchCode + "&reserve=" + this.data.order.confirmationNumber;
         return "/inquiry/login?" + params;
     };
     return PurchaseCompleteComponent;
@@ -3010,10 +3016,14 @@ var PurchaseMvtkConfirmComponent = /** @class */ (function () {
             return (MovieTicketTypeChargeSpecification !== undefined
                 && MovieTicketTypeChargeSpecification.appliesToMovieTicketType === serviceType);
         });
-        if (findTicketResult === undefined) {
+        if (findTicketResult === undefined
+            || findTicketResult.name === undefined) {
             return '';
         }
-        return findTicketResult.name.ja;
+        return (typeof findTicketResult.name === 'string')
+            ? findTicketResult.name : (findTicketResult.name.ja === undefined)
+            ? '' : (findTicketResult.name.ja === undefined)
+            ? '' : findTicketResult.name.ja;
     };
     PurchaseMvtkConfirmComponent.prototype.onSubmit = function () {
         this.router.navigate(['/purchase/ticket']);
@@ -3313,6 +3323,10 @@ var PurchaseMvtkInputComponent = /** @class */ (function () {
                             this.router.navigate(['expired']);
                             return [2 /*return*/];
                         }
+                        if (this.purchase.data.seller === undefined) {
+                            this.router.navigate(['error']);
+                            return [2 /*return*/];
+                        }
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
@@ -3322,7 +3336,10 @@ var PurchaseMvtkInputComponent = /** @class */ (function () {
                                 pinCd: mvtkForm.controls.password.value
                             };
                         });
-                        return [4 /*yield*/, this.purchase.mvtkAuthenticationProcess(mvtkData)];
+                        return [4 /*yield*/, this.purchase.mvtkAuthenticationProcess({
+                                movieTickets: mvtkData,
+                                seller: this.purchase.data.seller
+                            })];
                     case 2:
                         checkMovieTicketActions = _a.sent();
                         this.warningActions = [];
@@ -3543,24 +3560,25 @@ var PurchaseOverlapComponent = /** @class */ (function () {
                 window.scrollTo(0, 0);
                 this.activatedRoute.paramMap
                     .subscribe(function (params) { return __awaiter(_this, void 0, void 0, function () {
-                    var performanceId, _a, err_1;
+                    var id, _a, err_1;
                     return __generator(this, function (_b) {
                         switch (_b.label) {
                             case 0:
                                 this.isLoading = true;
-                                performanceId = params.get('performanceId');
+                                id = params.get('performanceId');
                                 _b.label = 1;
                             case 1:
                                 _b.trys.push([1, 4, , 5]);
+                                if (id === null) {
+                                    throw new Error('performanceId is null');
+                                }
                                 // イベント情報取得
                                 return [4 /*yield*/, this.cinerino.getServices()];
                             case 2:
                                 // イベント情報取得
                                 _b.sent();
                                 _a = this;
-                                return [4 /*yield*/, this.cinerino.event.findScreeningEventById({
-                                        id: performanceId
-                                    })];
+                                return [4 /*yield*/, this.cinerino.event.findById({ id: id })];
                             case 3:
                                 _a.screeningEvent = _b.sent();
                                 if (this.screeningEvent === null) {
@@ -3662,7 +3680,12 @@ var PurchaseOverlapComponent = /** @class */ (function () {
      * @returns {string}
      */
     PurchaseOverlapComponent.prototype.getTheaterName = function () {
-        return this.screeningEvent.superEvent.location.name.ja;
+        var screeningEvent = this.screeningEvent;
+        if (screeningEvent.superEvent.location.name === undefined
+            || screeningEvent.superEvent.location.name.ja === undefined) {
+            return '';
+        }
+        return screeningEvent.superEvent.location.name.ja;
     };
     /**
      * スクリーン名取得
@@ -3670,11 +3693,14 @@ var PurchaseOverlapComponent = /** @class */ (function () {
      * @returns {string}
      */
     PurchaseOverlapComponent.prototype.getScreenName = function () {
+        var screeningEvent = this.screeningEvent;
         var screen = {
-            name: this.screeningEvent.location.name.ja,
-            address: (this.screeningEvent.location.address === undefined)
-                ? ''
-                : this.screeningEvent.location.address.en
+            name: (screeningEvent.location.name === undefined
+                || screeningEvent.location.name.ja === undefined)
+                ? '' : screeningEvent.location.name.ja,
+            address: (screeningEvent.location.address === undefined
+                || screeningEvent.location.address.en === undefined)
+                ? '' : screeningEvent.location.address.en
         };
         return screen.address + " " + screen.name;
     };
@@ -3692,11 +3718,12 @@ var PurchaseOverlapComponent = /** @class */ (function () {
      * @returns {string}
      */
     PurchaseOverlapComponent.prototype.getSubTitle = function () {
-        if (this.screeningEvent.workPerformed.headline === undefined
-            || this.screeningEvent.workPerformed.headline === null) {
+        var screeningEvent = this.screeningEvent;
+        if (screeningEvent.workPerformed === undefined
+            || screeningEvent.workPerformed.headline === undefined) {
             return '';
         }
-        return this.screeningEvent.workPerformed.headline;
+        return screeningEvent.workPerformed.headline;
     };
     /**
      * 鑑賞日取得
@@ -3959,7 +3986,7 @@ var PurchaseScheduleComponent = /** @class */ (function () {
                         this.isPreSaleSchedules = false;
                         this.reservationModal = false;
                         this.swiperConfig = {
-                            spaceBetween: 10,
+                            spaceBetween: 2,
                             slidesPerView: 7,
                             breakpoints: {
                                 320: { slidesPerView: 2 },
@@ -3978,23 +4005,18 @@ var PurchaseScheduleComponent = /** @class */ (function () {
                     case 2:
                         _c.sent();
                         _a = this;
-                        return [4 /*yield*/, this.cinerino.seller.search({})];
+                        return [4 /*yield*/, this.cinerino.place.searchMovieTheaters({})];
                     case 3:
                         _a.theaters = (_c.sent()).data;
                         theater = this.theaters[0];
-                        if (theater.location === undefined || theater.location.branchCode === undefined) {
-                            throw new Error('theater not found');
-                        }
-                        branchCode = theater.location.branchCode;
+                        branchCode = theater.branchCode;
                         now = moment__WEBPACK_IMPORTED_MODULE_4__().toDate();
                         today = moment__WEBPACK_IMPORTED_MODULE_4__(moment__WEBPACK_IMPORTED_MODULE_4__().format('YYYY-MM-DD')).toDate();
                         _b = this;
-                        return [4 /*yield*/, this.cinerino.event.searchScreeningEvents({
+                        return [4 /*yield*/, this.cinerino.event.search({
                                 typeOf: _cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_2__["factory"].chevre.eventType.ScreeningEvent,
                                 eventStatuses: [_cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_2__["factory"].chevre.eventStatusType.EventScheduled],
-                                superEvent: {
-                                    locationBranchCodes: [branchCode]
-                                },
+                                superEvent: { locationBranchCodes: [branchCode] },
                                 startFrom: moment__WEBPACK_IMPORTED_MODULE_4__(today).add(3, 'days').toDate(),
                                 offers: {
                                     validFrom: now,
@@ -4135,20 +4157,18 @@ var PurchaseScheduleComponent = /** @class */ (function () {
                     case 2:
                         _b.sent();
                         theater = this.theaters.find(function (t) {
-                            return (t.location !== undefined && t.location.branchCode === _this.conditions.theater);
+                            return (t.branchCode === _this.conditions.theater);
                         });
-                        if (theater === undefined
-                            || theater.location === undefined
-                            || theater.location.branchCode === undefined) {
+                        if (theater === undefined) {
                             throw new Error('theater is not found');
                         }
                         today = moment__WEBPACK_IMPORTED_MODULE_4__(moment__WEBPACK_IMPORTED_MODULE_4__().format('YYYY-MM-DD')).toDate();
                         _a = this;
-                        return [4 /*yield*/, this.cinerino.event.searchScreeningEvents({
+                        return [4 /*yield*/, this.cinerino.event.search({
                                 typeOf: _cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_2__["factory"].chevre.eventType.ScreeningEvent,
                                 eventStatuses: [_cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_2__["factory"].chevre.eventStatusType.EventScheduled],
                                 superEvent: {
-                                    locationBranchCodes: [theater.location.branchCode]
+                                    locationBranchCodes: [theater.branchCode]
                                 },
                                 startFrom: moment__WEBPACK_IMPORTED_MODULE_4__(this.conditions.date).toDate(),
                                 startThrough: moment__WEBPACK_IMPORTED_MODULE_4__(this.conditions.date).add(1, 'day').toDate(),
@@ -4199,13 +4219,19 @@ var PurchaseScheduleComponent = /** @class */ (function () {
                 film.films.push(screeningEvent);
             }
         });
-        return results.sort(function (event1, event2) {
-            if (event1.films[0].workPerformed.datePublished === undefined
-                || event2.films[0].workPerformed.datePublished === undefined) {
-                return 0;
+        return results.sort(function (a, b) {
+            var workPerformedA = a.films[0].workPerformed;
+            var workPerformedB = b.films[0].workPerformed;
+            if (workPerformedA === undefined
+                || workPerformedA.datePublished === undefined) {
+                return 1;
             }
-            var unixA = moment__WEBPACK_IMPORTED_MODULE_4__(event1.films[0].workPerformed.datePublished).unix();
-            var unixB = moment__WEBPACK_IMPORTED_MODULE_4__(event2.films[0].workPerformed.datePublished).unix();
+            if (workPerformedB === undefined
+                || workPerformedB.datePublished === undefined) {
+                return -1;
+            }
+            var unixA = moment__WEBPACK_IMPORTED_MODULE_4__(workPerformedA.datePublished).unix();
+            var unixB = moment__WEBPACK_IMPORTED_MODULE_4__(workPerformedB.datePublished).unix();
             if (unixA > unixB) {
                 return -1;
             }
@@ -4234,13 +4260,13 @@ var PurchaseScheduleComponent = /** @class */ (function () {
      */
     PurchaseScheduleComponent.prototype.selectSchedule = function (data) {
         return __awaiter(this, void 0, void 0, function () {
-            var findResult, selleId, passport, performanceId, error_1;
+            var findResult, id, screeningEvent, seller, passport, error_1;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         this.isLoading = true;
-                        findResult = this.theaters.find(function (t) { return t.location !== undefined && t.location.branchCode === _this.conditions.theater; });
+                        findResult = this.theaters.find(function (t) { return t.branchCode === _this.conditions.theater; });
                         if (findResult === undefined) {
                             this.isLoading = false;
                             return [2 /*return*/];
@@ -4253,16 +4279,26 @@ var PurchaseScheduleComponent = /** @class */ (function () {
                         }
                         _a.label = 1;
                     case 1:
-                        _a.trys.push([1, 3, , 4]);
-                        selleId = findResult.id;
-                        return [4 /*yield*/, this.cinerino.getPassport(selleId)];
+                        _a.trys.push([1, 5, , 6]);
+                        id = data.id;
+                        return [4 /*yield*/, this.cinerino.event.findById({ id: id })];
                     case 2:
-                        passport = _a.sent();
-                        performanceId = data.id;
-                        this.router.navigate(["/purchase/transaction/" + performanceId + "/" + passport.token]);
-                        this.isLoading = false;
-                        return [3 /*break*/, 4];
+                        screeningEvent = _a.sent();
+                        if (screeningEvent.offers === undefined
+                            || screeningEvent.offers.seller === undefined
+                            || screeningEvent.offers.seller.id === undefined) {
+                            throw new Error('screeningEvent.offers.seller.id undefined');
+                        }
+                        return [4 /*yield*/, this.cinerino.seller.findById({ id: screeningEvent.offers.seller.id })];
                     case 3:
+                        seller = _a.sent();
+                        return [4 /*yield*/, this.cinerino.getPassport(seller)];
+                    case 4:
+                        passport = _a.sent();
+                        this.router.navigate(["/purchase/transaction/" + id + "/" + passport.token]);
+                        this.isLoading = false;
+                        return [3 /*break*/, 6];
+                    case 5:
                         error_1 = _a.sent();
                         if (error_1.status === http_status__WEBPACK_IMPORTED_MODULE_3__["TOO_MANY_REQUESTS"]) {
                             this.router.navigate(['/congestion']);
@@ -4273,8 +4309,8 @@ var PurchaseScheduleComponent = /** @class */ (function () {
                             return [2 /*return*/];
                         }
                         this.router.navigate(['/error']);
-                        return [3 /*break*/, 4];
-                    case 4: return [2 /*return*/];
+                        return [3 /*break*/, 6];
+                    case 6: return [2 /*return*/];
                 }
             });
         });
@@ -4566,18 +4602,13 @@ var PurchaseSeatComponent = /** @class */ (function () {
                         if (transaction === undefined) {
                             throw new Error('Transaction not found');
                         }
-                        if (transaction.object.clientUser === undefined) {
-                            throw new Error('ClientUser not found');
-                        }
-                        return [4 /*yield*/, this.cinerino.event.searchScreeningEventTicketOffers({
+                        return [4 /*yield*/, this.cinerino.event.searchTicketOffers({
                                 event: { id: screeningEvent.id },
                                 seller: {
                                     typeOf: transaction.seller.typeOf,
                                     id: transaction.seller.id
                                 },
-                                store: {
-                                    id: transaction.object.clientUser.client_id
-                                }
+                                store: { id: this.cinerino.auth.options.clientId }
                             })];
                     case 2:
                         salesTickets = _a.sent();
@@ -4605,7 +4636,8 @@ var PurchaseSeatComponent = /** @class */ (function () {
                             this.notSelectSeatModal = true;
                             return [2 /*return*/];
                         }
-                        if (this.purchase.data.screeningEvent.offers.eligibleQuantity !== undefined
+                        if (this.purchase.data.screeningEvent.offers !== undefined
+                            && this.purchase.data.screeningEvent.offers.eligibleQuantity !== undefined
                             && this.purchase.data.screeningEvent.offers.eligibleQuantity.maxValue !== undefined
                             && this.purchase.data.reservations.length > this.purchase.data.screeningEvent.offers.eligibleQuantity.maxValue) {
                             this.upperLimitModal = true;
@@ -5204,7 +5236,7 @@ var PurchaseTransactionComponent = /** @class */ (function () {
      */
     PurchaseTransactionComponent.prototype.ngOnInit = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var external_1, urlParams, params, performanceId, screeningEvent, branchCode, sellerResult, seller, passport, _a, serverDate, url, error_1, status_1;
+            var external_1, urlParams, params, id, screeningEvent, seller, passport, _a, serverDate, url, error_1, status_1;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -5216,25 +5248,26 @@ var PurchaseTransactionComponent = /** @class */ (function () {
                     case 2:
                         urlParams = _b.sent();
                         params = (external_1 === undefined) ? urlParams : external_1;
-                        performanceId = params.performanceId;
-                        if (performanceId === undefined) {
+                        id = params.performanceId;
+                        if (id === undefined) {
                             throw new Error('performanceId is null');
                         }
                         return [4 /*yield*/, this.cinerino.getServices()];
                     case 3:
                         _b.sent();
-                        return [4 /*yield*/, this.cinerino.event.findScreeningEventById({
-                                id: performanceId
-                            })];
+                        return [4 /*yield*/, this.cinerino.event.findById({ id: id })];
                     case 4:
                         screeningEvent = _b.sent();
-                        branchCode = screeningEvent.superEvent.location.branchCode;
-                        return [4 /*yield*/, this.cinerino.seller.search({ location: { branchCodes: [branchCode] } })];
+                        if (screeningEvent.offers === undefined
+                            || screeningEvent.offers.seller === undefined
+                            || screeningEvent.offers.seller.id === undefined) {
+                            throw new Error('screeningEvent.offers.seller.id undefined');
+                        }
+                        return [4 /*yield*/, this.cinerino.seller.findById({ id: screeningEvent.offers.seller.id })];
                     case 5:
-                        sellerResult = _b.sent();
-                        seller = sellerResult.data[0];
+                        seller = _b.sent();
                         if (!(params.passportToken === undefined)) return [3 /*break*/, 7];
-                        return [4 /*yield*/, this.cinerino.getPassport(seller.id)];
+                        return [4 /*yield*/, this.cinerino.getPassport(seller)];
                     case 6:
                         _a = _b.sent();
                         return [3 /*break*/, 8];
@@ -5263,14 +5296,15 @@ var PurchaseTransactionComponent = /** @class */ (function () {
                         }
                         if (this.purchase.data.reservations.length > 0) {
                             url = (passport.token === '')
-                                ? "/purchase/overlap/" + performanceId
-                                : "/purchase/overlap/" + performanceId + "/" + passport.token;
+                                ? "/purchase/overlap/" + id
+                                : "/purchase/overlap/" + id + "/" + passport.token;
                             this.router.navigate([url]);
                             return [2 /*return*/];
                         }
                         return [4 /*yield*/, this.purchase.transactionStartProcess({
                                 passport: passport,
-                                screeningEvent: screeningEvent
+                                screeningEvent: screeningEvent,
+                                seller: seller
                             })];
                     case 10:
                         _b.sent();
@@ -6260,7 +6294,7 @@ var RenderType_PurchaseFilmOrderPerformanceComponent = _angular_core__WEBPACK_IM
 function View_PurchaseFilmOrderPerformanceComponent_0(_l) { return _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵvid"](0, [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵpid"](0, _pipes_time_format_time_format_pipe__WEBPACK_IMPORTED_MODULE_2__["TimeFormatPipe"], []), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](1, 0, null, null, 16, "li", [], [[8, "className", 0]], [[null, "click"]], function (_v, en, $event) { var ad = true; var _co = _v.component; if (("click" === en)) {
         var pd_0 = (_co.selectSchedule() !== false);
         ad = (pd_0 && ad);
-    } return ad; }, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](2, 0, null, null, 4, "div", [["class", "screen-name small-text mb-x-small"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](3, 0, null, null, 1, "span", [], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](4, null, ["", ""])), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](5, 0, null, null, 1, "span", [], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](6, null, ["", ""])), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](7, 0, null, null, 6, "div", [["class", "date"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](8, 0, null, null, 2, "strong", [["class", "large-text"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](9, null, ["", ""])), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵppd"](10, 1), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](11, 0, null, null, 2, "span", [], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](12, null, [" - ", ""])), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵppd"](13, 1), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](14, 0, null, null, 3, "div", [["class", "status d-flex justify-content-around align-items-center"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](15, 0, null, null, 0, "div", [["class", "image"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](16, 0, null, null, 1, "div", [], [[8, "className", 0]], null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](17, null, ["", ""]))], null, function (_ck, _v) { var _co = _v.component; var currVal_0 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵinlineInterpolate"](1, "button text-center radius ", _co.availability.className, ""); _ck(_v, 1, 0, currVal_0); var currVal_1 = ((_co.data.location.address == null) ? null : _co.data.location.address.en); _ck(_v, 4, 0, currVal_1); var currVal_2 = _co.data.location.name.ja; _ck(_v, 6, 0, currVal_2); var currVal_3 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵunv"](_v, 9, 0, _ck(_v, 10, 0, _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 0), _co.data.startDate)); _ck(_v, 9, 0, currVal_3); var currVal_4 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵunv"](_v, 12, 0, _ck(_v, 13, 0, _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 0), _co.data.endDate)); _ck(_v, 12, 0, currVal_4); var currVal_5 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵinlineInterpolate"](1, "text ", _co.availability.textClassName, ""); _ck(_v, 16, 0, currVal_5); var currVal_6 = _co.availability.text; _ck(_v, 17, 0, currVal_6); }); }
+    } return ad; }, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](2, 0, null, null, 4, "div", [["class", "screen-name small-text mb-x-small"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](3, 0, null, null, 1, "span", [], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](4, null, ["", ""])), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](5, 0, null, null, 1, "span", [], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](6, null, ["", ""])), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](7, 0, null, null, 6, "div", [["class", "date"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](8, 0, null, null, 2, "strong", [["class", "large-text"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](9, null, ["", ""])), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵppd"](10, 1), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](11, 0, null, null, 2, "span", [], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](12, null, [" - ", ""])), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵppd"](13, 1), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](14, 0, null, null, 3, "div", [["class", "status d-flex justify-content-around align-items-center"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](15, 0, null, null, 0, "div", [["class", "image"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](16, 0, null, null, 1, "div", [], [[8, "className", 0]], null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](17, null, ["", ""]))], null, function (_ck, _v) { var _co = _v.component; var currVal_0 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵinlineInterpolate"](1, "button text-center radius ", _co.availability.className, ""); _ck(_v, 1, 0, currVal_0); var currVal_1 = ((_co.data.location.address == null) ? null : _co.data.location.address.en); _ck(_v, 4, 0, currVal_1); var currVal_2 = ((_co.data.location.name == null) ? null : _co.data.location.name.ja); _ck(_v, 6, 0, currVal_2); var currVal_3 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵunv"](_v, 9, 0, _ck(_v, 10, 0, _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 0), _co.data.startDate)); _ck(_v, 9, 0, currVal_3); var currVal_4 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵunv"](_v, 12, 0, _ck(_v, 13, 0, _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 0), _co.data.endDate)); _ck(_v, 12, 0, currVal_4); var currVal_5 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵinlineInterpolate"](1, "text ", _co.availability.textClassName, ""); _ck(_v, 16, 0, currVal_5); var currVal_6 = _co.availability.text; _ck(_v, 17, 0, currVal_6); }); }
 function View_PurchaseFilmOrderPerformanceComponent_Host_0(_l) { return _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵvid"](0, [(_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](0, 0, null, null, 1, "app-purchase-film-order-performance", [], null, null, null, View_PurchaseFilmOrderPerformanceComponent_0, RenderType_PurchaseFilmOrderPerformanceComponent)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](1, 114688, null, 0, _purchase_film_order_performance_component__WEBPACK_IMPORTED_MODULE_3__["PurchaseFilmOrderPerformanceComponent"], [], null, null)], function (_ck, _v) { _ck(_v, 1, 0); }, null); }
 var PurchaseFilmOrderPerformanceComponentNgFactory = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵccf"]("app-purchase-film-order-performance", _purchase_film_order_performance_component__WEBPACK_IMPORTED_MODULE_3__["PurchaseFilmOrderPerformanceComponent"], View_PurchaseFilmOrderPerformanceComponent_Host_0, { data: "data" }, { select: "select" }, []);
 
@@ -6395,16 +6429,16 @@ __webpack_require__.r(__webpack_exports__);
 var styles_PurchaseFilmOrderComponent = [_purchase_film_order_component_scss_shim_ngstyle__WEBPACK_IMPORTED_MODULE_0__["styles"]];
 var RenderType_PurchaseFilmOrderComponent = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵcrt"]({ encapsulation: 0, styles: styles_PurchaseFilmOrderComponent, data: {} });
 
-function View_PurchaseFilmOrderComponent_1(_l) { return _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵvid"](0, [(_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](0, 0, null, null, 1, "p", [], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](1, null, ["", ""]))], null, function (_ck, _v) { var _co = _v.component; var currVal_0 = _co.info.workPerformed.headline; _ck(_v, 1, 0, currVal_0); }); }
+function View_PurchaseFilmOrderComponent_1(_l) { return _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵvid"](0, [(_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](0, 0, null, null, 1, "p", [], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](1, null, ["", ""]))], null, function (_ck, _v) { var _co = _v.component; var currVal_0 = ((_co.info.workPerformed == null) ? null : _co.info.workPerformed.headline); _ck(_v, 1, 0, currVal_0); }); }
 function View_PurchaseFilmOrderComponent_2(_l) { return _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵvid"](0, [(_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](0, 0, null, null, 1, "p", [], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](1, null, ["", ""]))], null, function (_ck, _v) { var _co = _v.component; var currVal_0 = ((_co.info.superEvent.description == null) ? null : _co.info.superEvent.description.ja); _ck(_v, 1, 0, currVal_0); }); }
-function View_PurchaseFilmOrderComponent_3(_l) { return _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵvid"](0, [(_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](0, 0, null, null, 1, "div", [["class", "bage small-x-text text-center"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](1, null, ["", ""]))], null, function (_ck, _v) { var _co = _v.component; var currVal_0 = _co.info.workPerformed.contentRating; _ck(_v, 1, 0, currVal_0); }); }
+function View_PurchaseFilmOrderComponent_3(_l) { return _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵvid"](0, [(_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](0, 0, null, null, 1, "div", [["class", "bage small-x-text text-center"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](1, null, ["", ""]))], null, function (_ck, _v) { var _co = _v.component; var currVal_0 = ((_co.info.workPerformed == null) ? null : _co.info.workPerformed.contentRating); _ck(_v, 1, 0, currVal_0); }); }
 function View_PurchaseFilmOrderComponent_4(_l) { return _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵvid"](0, [(_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](0, 0, null, null, 1, "div", [["class", "bage small-x-text text-center"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](-1, null, ["\u5439\u66FF\u7248"]))], null, null); }
 function View_PurchaseFilmOrderComponent_5(_l) { return _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵvid"](0, [(_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](0, 0, null, null, 1, "div", [["class", "bage small-x-text text-center"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](-1, null, ["\u5B57\u5E55\u7248"]))], null, null); }
 function View_PurchaseFilmOrderComponent_6(_l) { return _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵvid"](0, [(_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](0, 0, null, null, 1, "app-purchase-film-order-performance", [], null, [[null, "select"]], function (_v, en, $event) { var ad = true; var _co = _v.component; if (("select" === en)) {
         var pd_0 = (_co.select.emit($event) !== false);
         ad = (pd_0 && ad);
     } return ad; }, _purchase_film_order_performance_purchase_film_order_performance_component_ngfactory__WEBPACK_IMPORTED_MODULE_2__["View_PurchaseFilmOrderPerformanceComponent_0"], _purchase_film_order_performance_purchase_film_order_performance_component_ngfactory__WEBPACK_IMPORTED_MODULE_2__["RenderType_PurchaseFilmOrderPerformanceComponent"])), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](1, 114688, null, 0, _purchase_film_order_performance_purchase_film_order_performance_component__WEBPACK_IMPORTED_MODULE_3__["PurchaseFilmOrderPerformanceComponent"], [], { data: [0, "data"] }, { select: "select" })], function (_ck, _v) { var currVal_0 = _v.context.$implicit; _ck(_v, 1, 0, currVal_0); }, null); }
-function View_PurchaseFilmOrderComponent_0(_l) { return _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵvid"](0, [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵpid"](0, _pipes_duration_duration_pipe__WEBPACK_IMPORTED_MODULE_4__["DurationPipe"], []), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](1, 0, null, null, 24, "li", [["class", "performance mb-x-small"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](2, 0, null, null, 23, "dl", [], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](3, 0, null, null, 18, "dt", [], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](4, 0, null, null, 7, "div", [["class", "mb-x-small"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](5, 0, null, null, 2, "p", [], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](6, 0, null, null, 1, "strong", [], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](7, null, ["", ""])), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵand"](16777216, null, null, 1, null, View_PurchaseFilmOrderComponent_1)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](9, 16384, null, 0, _angular_common__WEBPACK_IMPORTED_MODULE_5__["NgIf"], [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewContainerRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["TemplateRef"]], { ngIf: [0, "ngIf"] }, null), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵand"](16777216, null, null, 1, null, View_PurchaseFilmOrderComponent_2)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](11, 16384, null, 0, _angular_common__WEBPACK_IMPORTED_MODULE_5__["NgIf"], [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewContainerRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["TemplateRef"]], { ngIf: [0, "ngIf"] }, null), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](12, 0, null, null, 9, "div", [["class", "d-flex align-items-center justify-content-end"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵand"](16777216, null, null, 1, null, View_PurchaseFilmOrderComponent_3)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](14, 16384, null, 0, _angular_common__WEBPACK_IMPORTED_MODULE_5__["NgIf"], [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewContainerRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["TemplateRef"]], { ngIf: [0, "ngIf"] }, null), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵand"](16777216, null, null, 1, null, View_PurchaseFilmOrderComponent_4)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](16, 16384, null, 0, _angular_common__WEBPACK_IMPORTED_MODULE_5__["NgIf"], [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewContainerRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["TemplateRef"]], { ngIf: [0, "ngIf"] }, null), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵand"](16777216, null, null, 1, null, View_PurchaseFilmOrderComponent_5)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](18, 16384, null, 0, _angular_common__WEBPACK_IMPORTED_MODULE_5__["NgIf"], [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewContainerRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["TemplateRef"]], { ngIf: [0, "ngIf"] }, null), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](19, 0, null, null, 2, "div", [["class", "small-x-text screening-time text-center"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](20, null, ["\u4E0A\u6620\u6642\u9593\uFF1A", "\u5206"])), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵppd"](21, 2), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](22, 0, null, null, 3, "dd", [], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](23, 0, null, null, 2, "ul", [], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵand"](16777216, null, null, 1, null, View_PurchaseFilmOrderComponent_6)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](25, 278528, null, 0, _angular_common__WEBPACK_IMPORTED_MODULE_5__["NgForOf"], [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewContainerRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["TemplateRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["IterableDiffers"]], { ngForOf: [0, "ngForOf"] }, null)], function (_ck, _v) { var _co = _v.component; var currVal_1 = _co.info.workPerformed.headline; _ck(_v, 9, 0, currVal_1); var currVal_2 = ((_co.info.superEvent.description == null) ? null : _co.info.superEvent.description.ja); _ck(_v, 11, 0, currVal_2); var currVal_3 = _co.info.workPerformed.contentRating; _ck(_v, 14, 0, currVal_3); var currVal_4 = _co.info.superEvent.dubLanguage; _ck(_v, 16, 0, currVal_4); var currVal_5 = _co.info.superEvent.subtitleLanguage; _ck(_v, 18, 0, currVal_5); var currVal_7 = _co.data.films; _ck(_v, 25, 0, currVal_7); }, function (_ck, _v) { var _co = _v.component; var currVal_0 = _co.info.name.ja; _ck(_v, 7, 0, currVal_0); var currVal_6 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵunv"](_v, 20, 0, _ck(_v, 21, 0, _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 0), _co.info.workPerformed.duration, "minutes")); _ck(_v, 20, 0, currVal_6); }); }
+function View_PurchaseFilmOrderComponent_0(_l) { return _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵvid"](0, [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵpid"](0, _pipes_duration_duration_pipe__WEBPACK_IMPORTED_MODULE_4__["DurationPipe"], []), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](1, 0, null, null, 24, "li", [["class", "performance mb-x-small"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](2, 0, null, null, 23, "dl", [], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](3, 0, null, null, 18, "dt", [], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](4, 0, null, null, 7, "div", [["class", "mb-x-small"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](5, 0, null, null, 2, "p", [], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](6, 0, null, null, 1, "strong", [], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](7, null, ["", ""])), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵand"](16777216, null, null, 1, null, View_PurchaseFilmOrderComponent_1)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](9, 16384, null, 0, _angular_common__WEBPACK_IMPORTED_MODULE_5__["NgIf"], [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewContainerRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["TemplateRef"]], { ngIf: [0, "ngIf"] }, null), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵand"](16777216, null, null, 1, null, View_PurchaseFilmOrderComponent_2)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](11, 16384, null, 0, _angular_common__WEBPACK_IMPORTED_MODULE_5__["NgIf"], [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewContainerRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["TemplateRef"]], { ngIf: [0, "ngIf"] }, null), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](12, 0, null, null, 9, "div", [["class", "d-flex align-items-center justify-content-end"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵand"](16777216, null, null, 1, null, View_PurchaseFilmOrderComponent_3)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](14, 16384, null, 0, _angular_common__WEBPACK_IMPORTED_MODULE_5__["NgIf"], [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewContainerRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["TemplateRef"]], { ngIf: [0, "ngIf"] }, null), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵand"](16777216, null, null, 1, null, View_PurchaseFilmOrderComponent_4)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](16, 16384, null, 0, _angular_common__WEBPACK_IMPORTED_MODULE_5__["NgIf"], [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewContainerRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["TemplateRef"]], { ngIf: [0, "ngIf"] }, null), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵand"](16777216, null, null, 1, null, View_PurchaseFilmOrderComponent_5)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](18, 16384, null, 0, _angular_common__WEBPACK_IMPORTED_MODULE_5__["NgIf"], [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewContainerRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["TemplateRef"]], { ngIf: [0, "ngIf"] }, null), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](19, 0, null, null, 2, "div", [["class", "small-x-text screening-time text-center"]], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](20, null, ["\u4E0A\u6620\u6642\u9593\uFF1A", "\u5206"])), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵppd"](21, 2), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](22, 0, null, null, 3, "dd", [], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](23, 0, null, null, 2, "ul", [], null, null, null, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵand"](16777216, null, null, 1, null, View_PurchaseFilmOrderComponent_6)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](25, 278528, null, 0, _angular_common__WEBPACK_IMPORTED_MODULE_5__["NgForOf"], [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewContainerRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["TemplateRef"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["IterableDiffers"]], { ngForOf: [0, "ngForOf"] }, null)], function (_ck, _v) { var _co = _v.component; var currVal_1 = ((_co.info.workPerformed == null) ? null : _co.info.workPerformed.headline); _ck(_v, 9, 0, currVal_1); var currVal_2 = ((_co.info.superEvent.description == null) ? null : _co.info.superEvent.description.ja); _ck(_v, 11, 0, currVal_2); var currVal_3 = ((_co.info.workPerformed == null) ? null : _co.info.workPerformed.contentRating); _ck(_v, 14, 0, currVal_3); var currVal_4 = _co.info.superEvent.dubLanguage; _ck(_v, 16, 0, currVal_4); var currVal_5 = _co.info.superEvent.subtitleLanguage; _ck(_v, 18, 0, currVal_5); var currVal_7 = _co.data.films; _ck(_v, 25, 0, currVal_7); }, function (_ck, _v) { var _co = _v.component; var currVal_0 = _co.info.name.ja; _ck(_v, 7, 0, currVal_0); var currVal_6 = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵunv"](_v, 20, 0, _ck(_v, 21, 0, _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵnov"](_v, 0), ((_co.info.workPerformed == null) ? null : _co.info.workPerformed.duration), "minutes")); _ck(_v, 20, 0, currVal_6); }); }
 function View_PurchaseFilmOrderComponent_Host_0(_l) { return _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵvid"](0, [(_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](0, 0, null, null, 1, "app-purchase-film-order", [], null, null, null, View_PurchaseFilmOrderComponent_0, RenderType_PurchaseFilmOrderComponent)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](1, 114688, null, 0, _purchase_film_order_component__WEBPACK_IMPORTED_MODULE_6__["PurchaseFilmOrderComponent"], [], null, null)], function (_ck, _v) { _ck(_v, 1, 0); }, null); }
 var PurchaseFilmOrderComponentNgFactory = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵccf"]("app-purchase-film-order", _purchase_film_order_component__WEBPACK_IMPORTED_MODULE_6__["PurchaseFilmOrderComponent"], View_PurchaseFilmOrderComponent_Host_0, { data: "data" }, { select: "select" }, []);
 
@@ -6851,9 +6885,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var rxjs_add_operator_toPromise__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs/add/operator/toPromise */ "../../node_modules/rxjs-compat/_esm5/add/operator/toPromise.js");
 /* harmony import */ var rxjs_add_operator_toPromise__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(rxjs_add_operator_toPromise__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _services_cinerino_cinerino_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../services/cinerino/cinerino.service */ "./app/services/cinerino/cinerino.service.ts");
-/* harmony import */ var _services_error_error_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../services/error/error.service */ "./app/services/error/error.service.ts");
-/* harmony import */ var _services_purchase_purchase_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../services/purchase/purchase.service */ "./app/services/purchase/purchase.service.ts");
+/* harmony import */ var _functions_util_function__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../functions/util.function */ "./app/functions/util.function.ts");
+/* harmony import */ var _services_cinerino_cinerino_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../services/cinerino/cinerino.service */ "./app/services/cinerino/cinerino.service.ts");
+/* harmony import */ var _services_error_error_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../services/error/error.service */ "./app/services/error/error.service.ts");
+/* harmony import */ var _services_purchase_purchase_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../services/purchase/purchase.service */ "./app/services/purchase/purchase.service.ts");
 var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -6889,6 +6924,7 @@ var __generator = (undefined && undefined.__generator) || function (thisArg, bod
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+
 
 
 
@@ -7088,7 +7124,7 @@ var ScreenComponent = /** @class */ (function () {
      */
     ScreenComponent.prototype.getData = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var DIGITS, theaterCode, screenCode, screen, setting, seatStatus;
+            var DIGITS, theaterCode, screenCode, screen, setting, screeningEventSeats, screeningEvent, limit, page, roop, searchResult;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -7107,24 +7143,37 @@ var ScreenComponent = /** @class */ (function () {
                         return [4 /*yield*/, this.cinerino.getServices()];
                     case 3:
                         _a.sent();
-                        if (!this.test) return [3 /*break*/, 4];
-                        seatStatus = [];
-                        return [3 /*break*/, 6];
-                    case 4:
-                        if (this.purchase.data.screeningEvent === undefined) {
+                        screeningEventSeats = [];
+                        screeningEvent = this.purchase.data.screeningEvent;
+                        if (!!this.test) return [3 /*break*/, 7];
+                        if (screeningEvent === undefined) {
                             throw new Error('screeningEvent is undefined');
                         }
-                        return [4 /*yield*/, this.cinerino.event.searchScreeningEventOffers({
-                                eventId: this.purchase.data.screeningEvent.id
+                        limit = 100;
+                        page = 1;
+                        roop = true;
+                        _a.label = 4;
+                    case 4:
+                        if (!roop) return [3 /*break*/, 7];
+                        return [4 /*yield*/, this.cinerino.event.searchSeats({
+                                event: { id: screeningEvent.id },
+                                page: page,
+                                limit: limit
                             })];
                     case 5:
-                        seatStatus = _a.sent();
-                        _a.label = 6;
-                    case 6: 
+                        searchResult = _a.sent();
+                        screeningEventSeats = screeningEventSeats.concat(searchResult.data);
+                        page++;
+                        roop = searchResult.data.length > 0;
+                        return [4 /*yield*/, Object(_functions_util_function__WEBPACK_IMPORTED_MODULE_4__["sleep"])(500)];
+                    case 6:
+                        _a.sent();
+                        return [3 /*break*/, 4];
+                    case 7: 
                     // スクリーンデータをマージ
                     return [2 /*return*/, {
                             screen: Object.assign(setting, screen),
-                            status: seatStatus
+                            status: screeningEventSeats
                         }];
                 }
             });
@@ -7219,29 +7268,26 @@ var ScreenComponent = /** @class */ (function () {
                     var label = (data.screen.seatNumberAlign === 'left')
                         ? "" + labels[labelCount] + String(x + 1)
                         : "" + labels[labelCount] + String(screenData.map[y].length - x);
-                    var section = '';
+                    var section_1 = '';
                     var status_1 = SeatStatus.Disabled;
                     var inStock_1 = _cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_2__["factory"].chevre.itemAvailability.InStock;
-                    for (var _i = 0, seatStatus_1 = seatStatus; _i < seatStatus_1.length; _i++) {
-                        var listSeatSection = seatStatus_1[_i];
-                        var targetSeat = listSeatSection.containsPlace.find(function (s) {
-                            return (s.branchCode === code_1
-                                && s.offers !== undefined
-                                && s.offers.find(function (o) { return o.availability === inStock_1; }) !== undefined);
-                        });
-                        if (targetSeat !== undefined) {
-                            section = listSeatSection.branchCode;
+                    seatStatus.forEach(function (s) {
+                        if (s.branchCode === code_1
+                            && s.offers !== undefined
+                            && s.offers[0].availability === inStock_1) {
+                            section_1 = (s.containedInPlace === undefined
+                                || s.containedInPlace.branchCode === undefined)
+                                ? '' : s.containedInPlace.branchCode;
                             status_1 = SeatStatus.Default;
-                            break;
                         }
-                    }
+                    });
                     // 選択中
                     if (this_1.purchase.data.reservations.length > 0) {
                         var findReservationResult = this_1.purchase.data.reservations.find(function (reservation) {
                             return (reservation.seat.seatNumber === code_1);
                         });
                         if (findReservationResult !== undefined) {
-                            section = findReservationResult.seat.seatSection;
+                            section_1 = findReservationResult.seat.seatSection;
                             status_1 = SeatStatus.Active;
                         }
                     }
@@ -7259,7 +7305,7 @@ var ScreenComponent = /** @class */ (function () {
                         x: pos.x,
                         label: label,
                         code: code_1,
-                        section: section,
+                        section: section_1,
                         status: status_1
                     };
                     if (screenData.hc.indexOf(code_1) !== -1) {
@@ -7486,6 +7532,192 @@ var SiteSealComponent = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./app/functions/util.function.ts":
+/*!****************************************!*\
+  !*** ./app/functions/util.function.ts ***!
+  \****************************************/
+/*! exports provided: formatTelephone, toFull, toHalf, retry, sleep, isFile */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "formatTelephone", function() { return formatTelephone; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toFull", function() { return toFull; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toHalf", function() { return toHalf; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "retry", function() { return retry; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "sleep", function() { return sleep; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isFile", function() { return isFile; });
+/* harmony import */ var libphonenumber_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! libphonenumber-js */ "../../node_modules/libphonenumber-js/index.es6.js");
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (undefined && undefined.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
+
+/**
+ * 電話番号変換
+ */
+function formatTelephone(telephone, format) {
+    if (telephone === undefined) {
+        return '';
+    }
+    var parsedNumber = (new RegExp(/^\+/).test(telephone))
+        ? libphonenumber_js__WEBPACK_IMPORTED_MODULE_0__["parse"](telephone)
+        : libphonenumber_js__WEBPACK_IMPORTED_MODULE_0__["parse"](telephone, 'JP');
+    format = (format === undefined) ? 'International' : format;
+    return libphonenumber_js__WEBPACK_IMPORTED_MODULE_0__["format"](parsedNumber, format).replace(/\s/g, '');
+}
+/**
+ * 全角変換
+ */
+function toFull(value) {
+    return value.replace(/[A-Za-z0-9]/g, function (s) {
+        return String.fromCharCode(s.charCodeAt(0) + 65248);
+    });
+}
+/**
+ * 半角変換
+ */
+function toHalf(value) {
+    return value.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function (s) {
+        return String.fromCharCode(s.charCodeAt(0) - 65248);
+    });
+}
+/**
+ * リトライ
+ * @param args
+ */
+function retry(args) {
+    return __awaiter(this, void 0, void 0, function () {
+        var count;
+        var _this = this;
+        return __generator(this, function (_a) {
+            count = 0;
+            return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
+                    var timerProcess, result, error_1;
+                    var _this = this;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                timerProcess = function () {
+                                    setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
+                                        var result, error_2;
+                                        return __generator(this, function (_a) {
+                                            switch (_a.label) {
+                                                case 0:
+                                                    count++;
+                                                    _a.label = 1;
+                                                case 1:
+                                                    _a.trys.push([1, 3, , 4]);
+                                                    return [4 /*yield*/, args.process()];
+                                                case 2:
+                                                    result = _a.sent();
+                                                    resolve(result);
+                                                    return [3 /*break*/, 4];
+                                                case 3:
+                                                    error_2 = _a.sent();
+                                                    if (count >= args.limit) {
+                                                        reject(error_2);
+                                                        return [2 /*return*/];
+                                                    }
+                                                    timerProcess();
+                                                    return [3 /*break*/, 4];
+                                                case 4: return [2 /*return*/];
+                                            }
+                                        });
+                                    }); }, args.interval);
+                                };
+                                _a.label = 1;
+                            case 1:
+                                _a.trys.push([1, 3, , 4]);
+                                return [4 /*yield*/, args.process()];
+                            case 2:
+                                result = _a.sent();
+                                resolve(result);
+                                return [3 /*break*/, 4];
+                            case 3:
+                                error_1 = _a.sent();
+                                timerProcess();
+                                return [3 /*break*/, 4];
+                            case 4: return [2 /*return*/];
+                        }
+                    });
+                }); })];
+        });
+    });
+}
+/**
+ * ミリ秒待つ
+ * デフォルト値3000ms
+ */
+function sleep(time) {
+    if (time === void 0) { time = 3000; }
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            return [2 /*return*/, new Promise(function (resolve) {
+                    setTimeout(function () {
+                        resolve();
+                    }, time);
+                })];
+        });
+    });
+}
+/**
+ * ファイル存在判定
+ */
+function isFile(url) {
+    return __awaiter(this, void 0, void 0, function () {
+        var fetchResult;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, fetch(url, {
+                        method: 'GET',
+                        cache: 'no-cache',
+                        headers: {
+                            'Content-Type': 'charset=utf-8'
+                        },
+                    })];
+                case 1:
+                    fetchResult = _a.sent();
+                    return [2 /*return*/, (fetchResult.ok)];
+            }
+        });
+    });
+}
+
+
+/***/ }),
+
 /***/ "./app/mails/index.ts":
 /*!****************************!*\
   !*** ./app/mails/index.ts ***!
@@ -7519,7 +7751,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPurchaseCompleteEnqueteTemplate", function() { return getPurchaseCompleteEnqueteTemplate; });
 // tslint:disable:max-line-length
 function getPurchaseCompleteEnqueteTemplate(args) {
-    return "\n| #{order.customer.familyName} #{order.customer.givenName} \u69D8\n| \u3053\u306E\u5EA6\u306F\u3001#{order.seller.name}\u306E\u30AA\u30F3\u30E9\u30A4\u30F3\u30C1\u30B1\u30C3\u30C8\u30B5\u30FC\u30D3\u30B9\u306B\u3066\u3054\u8CFC\u5165\u9802\u304D\u3001\u8AA0\u306B\u3042\u308A\u304C\u3068\u3046\u3054\u3056\u3044\u307E\u3059\u3002\u304A\u5BA2\u69D8\u304C\u3054\u8CFC\u5165\u3055\u308C\u307E\u3057\u305F\u30C1\u30B1\u30C3\u30C8\u306E\u60C5\u5831\u306F\u4E0B\u8A18\u306E\u901A\u308A\u3067\u3059\u3002\n|\n| [\u4E88\u7D04\u756A\u53F7]\n| #{order.confirmationNumber}\n|\n| [\u6CE8\u6587\u65E5\u6642]\n| " + args.order.date + "\n|\n| [\u4E0A\u6620\u65E5\u6642]\n| " + args.event.startDate + " - " + args.event.endDate + "\n|\n| [\u4F5C\u54C1\u540D]\n| " + args.workPerformedName + "\n|\n| [\u30B9\u30AF\u30EA\u30FC\u30F3\u540D]\n| " + args.screen.name + " " + args.screen.address + "\n|\n| [\u5EA7\u5E2D]\n| " + args.reservedSeats + "\n|\n| [\u5408\u8A08]\n| \uFFE5#{order.price}\n|\n| \u3010\u30C1\u30B1\u30C3\u30C8\u306E\u767A\u5238\u3068\u3054\u5165\u5834\u306B\u3064\u3044\u3066\u3011\n|  (\u30B9\u30DE\u30FC\u30C8\u5165\u5834\u306E\u304A\u5BA2\u69D8)\n| \u4EE5\u4E0B\u306EURL\u3088\u308A\u30C1\u30B1\u30C3\u30C8\u60C5\u5831\u78BA\u8A8D\u7167\u4F1A\u753B\u9762\u3078\u30A2\u30AF\u30BB\u30B9\u3057\u3066\u9802\u304D\u3001\u300C\u4E88\u7D04\u756A\u53F7\u300D\u300C\u304A\u96FB\u8A71\u756A\u53F7\u300D\u3092\u5165\u529B\u306E\u3046\u3048\u7167\u4F1A\u30DC\u30BF\u30F3\u3092\u62BC\u3057\u3066\u304F\u3060\u3055\u3044\u3002\n| " + args.inquiryUrl + "?theater=" + args.seller.branchCode + "&reserve=#{order.confirmationNumber}\n| \u3054\u9451\u8CDE\u6642\u9593\u306E24\u6642\u9593\u524D\u304B\u3089\u5165\u5834\u7528QR\u30B3\u30FC\u30C9\u304C\u8868\u793A\u3055\u308C\u307E\u3059\u306E\u3067\u3001\u76F4\u63A5\u5287\u5834\u53D7\u4ED8\u3078\u3054\u63D0\u793A\u306E\u3046\u3048\u3054\u5165\u5834\u304F\u3060\u3055\u3044\u3002\n| (\uFF30\uFF23\u3067\u3054\u8CFC\u5165\u306E\u304A\u5BA2\u69D8)\n| \uFF30\uFF23\u3067\u4E0A\u8A18\u30B9\u30DE\u30FC\u30C8\u5165\u5834\u3068\u540C\u69D8\u306E\u64CD\u4F5C\u3057\u3066\u3044\u305F\u3060\u304D\u307E\u3059\u3068\u5165\u5834\u7528\uFF31\uFF32\u30B3\u30FC\u30C9\u304C\u8868\u793A\u3055\u308C\u307E\u3059\u306E\u3067\u3001\u30D7\u30EA\u30F3\u30C8\u30A2\u30A6\u30C8\u3057\u305F\u3082\u306E\u3092\u76F4\u63A5\u5287\u5834\u53D7\u4ED8\u3078\u3054\u63D0\u793A\u306E\u3046\u3048\u3054\u5165\u5834\u304F\u3060\u3055\u3044\u3002\n| \u306A\u304A\u3001\u30D7\u30EA\u30F3\u30C8\u30A2\u30A6\u30C8\u304C\u3067\u304D\u306A\u3044\u5834\u5408\u306F\u3001\u5404\u5287\u5834\u53D7\u4ED8\u306B\u3066\u4E0A\u8A18\u306E\u300C\u4E88\u7D04\u756A\u53F7\u300D\u300C\u304A\u96FB\u8A71\u756A\u53F7\u300D\u3092\u304A\u4F1D\u3048\u3044\u305F\u3060\u304D\u307E\u3059\u3068\u5165\u5834\u7528QR\u30B3\u30FC\u30C9\u4ED8\u304D\u306E\u7D19\u30C1\u30B1\u30C3\u30C8\u3092\u767A\u5238\u3044\u305F\u3057\u307E\u3059\u3002\n|\n| [\u6CE8\u610F\u4E8B\u9805]\n| \uFF11\u3000\u3054\u8CFC\u5165\u3044\u305F\u3060\u3044\u305F\u30C1\u30B1\u30C3\u30C8\u306F\u3001\u4E0A\u6620\u4E2D\u6B62\u30FB\u3082\u3057\u304F\u306F\u4E0A\u6620\u5EF6\u671F\u3068\u306A\u3089\u306A\u3044\u9650\u308A\u3001\u4EA4\u901A\u6E0B\u6EDE\u30FB\u96FB\u8ECA\u9045\u5EF6\u306A\u3069\u3044\u304B\u306A\u308B\u7406\u7531\u304C\u3042\u3063\u3066\u3082\u3001\u30C1\u30B1\u30C3\u30C8\u306E\u30AD\u30E3\u30F3\u30BB\u30EB\u30FB\u5909\u66F4\u30FB\u6255\u3044\u623B\u3057\u306F\u4E00\u5207\u81F4\u3057\u307E\u305B\u3093\u3002\u307E\u305F\u6255\u3044\u623B\u3057\u5B9F\u65BD\u306E\u969B\u306F\u30C1\u30B1\u30C3\u30C8\u5238\u9762\u91D1\u984D\u306E\u307F\u304C\u6255\u623B\u3057\u5BFE\u8C61\u3067\u3042\u308A\u3001\u305D\u306E\u4ED6\u306E\u8CBB\u7528(\u4EA4\u901A\u8CBB\u7B49\u4ED8\u968F\u3057\u3066\u767A\u751F\u3057\u305F\u8CBB\u7528)\u306B\u95A2\u3057\u3066\u306F\u304A\u652F\u6255\u3044\u3044\u305F\u3057\u304B\u306D\u307E\u3059\u3002\n| \uFF12\u3000\u5B66\u751F\u5272\u5F15\u30FB\u30B7\u30CB\u30A2\u5272\u5F15\u7B49\u306E\u5272\u5F15\u30C1\u30B1\u30C3\u30C8\u3092\u8CFC\u5165\u3055\u308C\u305F\u65B9\u306F\u3001\u3054\u5165\u5834\u6642\u306B\u30C1\u30B1\u30C3\u30C8\u3068\u4E00\u7DD2\u306B\u3001\u4EE5\u4E0B\u306E\u8A3C\u660E\u66F8\u3092\u3054\u63D0\u793A\u3044\u305F\u3060\u304D\u307E\u3059\u3002\n| \u30FB\u5B66\u751F\u306E\u65B9\u306F\u3001\u5B66\u6821\u9577\u767A\u884C\u306E\u5B66\u751F\u8A3C\u307E\u305F\u306F\u5B66\u751F\u624B\u5E33\n| \u30FB\u30B7\u30CB\u30A2\u30FB\u592B\u5A66\uFF15\uFF10\u5272\u5F15\u306E\u65B9\u306F\u3001\u751F\u5E74\u6708\u65E5\u304C\u78BA\u8A8D\u3067\u304D\u308B\u516C\u7684\u6A5F\u95A2\u767A\u884C\u306E\u8A3C\u660E\u66F8\n| \u30FB\u30CF\u30F3\u30C7\u30AD\u30E3\u30C3\u30D7\u306E\u65B9\u306F\u3001\u969C\u304C\u3044\u8005\u624B\u5E33\n| \u3054\u63D0\u793A\u3044\u305F\u3060\u3051\u306A\u3044\u5834\u5408\u306F\u3001\u4E00\u822C\u6599\u91D1\u3068\u306E\u5DEE\u984D\u3092\u3044\u305F\u3060\u304F\u5834\u5408\u304C\u3042\u308A\u307E\u3059\u3002\n| \uFF13\u3000\u6771\u4EAC\u90FD\u9752\u5C11\u5E74\u306E\u5065\u5168\u306A\u80B2\u6210\u306B\u95A2\u3059\u308B\u6761\u4F8B\u306E\u5B9A\u3081\u306B\u3088\u308A\u3001\u7D42\u6620\u304C23\uFF1A00\u3092\u904E\u304E\u308B\u4E0A\u6620\u56DE\u306F18\u6B73\u672A\u6E80\u53CA\u3073\u9AD8\u6821\u751F\u306E\u65B9\u306E\u3054\u5165\u5834\u3092\u304A\u65AD\u308A\u3044\u305F\u3057\u307E\u3059\u3002\u4FDD\u8B77\u8005\u540C\u4F34\u3067\u3082\u3054\u5165\u5834\u3044\u305F\u3060\u3051\u307E\u305B\u3093\u3002\n|\n|\n| \u2606\u2606\u2606\u30A2\u30F3\u30B1\u30FC\u30C8\u3054\u5354\u529B\u306E\u304A\u9858\u3044\u2606\u2606\u2606\n|\n| \u6620\u753B\u88FD\u4F5C\u3001\u5BA3\u4F1D\u306E\u53C2\u8003\u306B\u3055\u305B\u3066\u3044\u305F\u3060\u304D\u305F\u304F\u3001\u3054\u591A\u5FD9\u4E2D\u6050\u308C\u5165\u308A\u307E\u3059\u304C\u3001\u4EE5\u4E0B\u306EURL\u304B\u3089\u30A2\u30F3\u30B1\u30FC\u30C8\u306B\u304A\u7B54\u3048\u3044\u305F\u3060\u304D\u3001\u7387\u76F4\u306A\u3054\u610F\u898B\u30FB\u3054\u8981\u671B\u3092\u304A\u805E\u304B\u305B\u304F\u3060\u3055\u3044\u3002\n| \u672C\u30A2\u30F3\u30B1\u30FC\u30C8\u306B\u3054\u56DE\u7B54\u3044\u305F\u3060\u304D\u307E\u3057\u305F\u65B9\u306B\u306F\u3055\u3055\u3084\u304B\u306A\u304C\u3089\u3001\u516C\u5F0F\u52D5\u753B\u914D\u4FE1\u30B5\u30FC\u30D3\u30B9\uFF3B\u30DF\u30EC\u30FC\u30EB\uFF3D\u306B\u3066\u3054\u4F7F\u7528\u3067\u304D\u308B100\u5186\u5272\u5F15\u30AF\u30FC\u30DD\u30F3\u3092\u30D7\u30EC\u30BC\u30F3\u30C8\u3044\u305F\u3057\u307E\u3059\u3002\n| \u203B\u5272\u5F15\u30AF\u30FC\u30DD\u30F3\u306F\u6771\u6620\u304C\u63D0\u4F9B\u3059\u308B\u914D\u4FE1\u4F5C\u54C1\u306B\u3066\u3054\u5229\u7528\u3044\u305F\u3060\u3051\u307E\u3059\u3002\n|\n| \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n| https://questant.jp/q/53ZT9FSR\n| \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n|\n| \u306A\u304A\u3001\u30A2\u30F3\u30B1\u30FC\u30C8\u306E\u56DE\u7B54\u306F\u7D71\u8A08\u7684\u306B\u51E6\u7406\u3055\u308C\u3001\u7279\u5B9A\u306E\u500B\u4EBA\u304C\u8B58\u5225\u3067\u304D\u308B\u60C5\u5831\u3068\u3057\u3066\u3001\u516C\u8868\u3055\u308C\u308B\u3053\u3068\u306F\u3042\u308A\u307E\u305B\u3093\u3002\n| \u4F55\u5352\u3001\u3054\u5354\u529B\u3088\u308D\u3057\u304F\u304A\u9858\u3044\u7533\u3057\u4E0A\u3052\u307E\u3059\u3002\n|\n|\n| \u306A\u304A\u3001\u3053\u306E\u30E1\u30FC\u30EB\u306F\u3001#{order.seller.name}\u306E\u4E88\u7D04\u30B7\u30B9\u30C6\u30E0\u3067\u30C1\u30B1\u30C3\u30C8\u3092\u3054\u8CFC\u5165\u9802\u3044\u305F\u65B9\u306B\u304A\u9001\u308A\u3057\u3066\u304A\u308A\u307E\u3059\u304C\u3001\n| \u30C1\u30B1\u30C3\u30C8\u8CFC\u5165\u306B\u899A\u3048\u306E\u306A\u3044\u65B9\u306B\u5C4A\u3044\u3066\u3044\u308B\u5834\u5408\u306F\u3001\u304A\u624B\u6570\u3067\u3059\u304C\u4E0B\u8A18\u306E\u304A\u554F\u3044\u5408\u308F\u305B\u5148\u307E\u3067\u3054\u9023\u7D61\u304F\u3060\u3055\u3044\u3002\n| \u203B\u3053\u306E\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9\u306F\u9001\u4FE1\u5C02\u7528\u3068\u306A\u3063\u3066\u304A\u308A\u307E\u3059\u306E\u3067\u3001\u3054\u8FD4\u4FE1\u9802\u3051\u307E\u305B\u3093\u3002\n| \u3054\u4E0D\u660E\u306A\u70B9\u304C\u3054\u3056\u3044\u307E\u3057\u305F\u3089\u3001\u4E0B\u8A18\u756A\u53F7\u307E\u3067\u304A\u554F\u5408\u308F\u305B\u304F\u3060\u3055\u3044\u3002\n| \u304A\u554F\u3044\u5408\u308F\u305B\u306F\u3053\u3061\u3089\n| #{order.seller.name}\n| TEL\uFF1A" + args.seller.telephone + "\n";
+    return "\n| #{order.customer.familyName} #{order.customer.givenName} \u69D8\n| \u3053\u306E\u5EA6\u306F\u3001#{order.seller.name}\u306E\u30AA\u30F3\u30E9\u30A4\u30F3\u30C1\u30B1\u30C3\u30C8\u30B5\u30FC\u30D3\u30B9\u306B\u3066\u3054\u8CFC\u5165\u9802\u304D\u3001\u8AA0\u306B\u3042\u308A\u304C\u3068\u3046\u3054\u3056\u3044\u307E\u3059\u3002\u304A\u5BA2\u69D8\u304C\u3054\u8CFC\u5165\u3055\u308C\u307E\u3057\u305F\u30C1\u30B1\u30C3\u30C8\u306E\u60C5\u5831\u306F\u4E0B\u8A18\u306E\u901A\u308A\u3067\u3059\u3002\n|\n| [\u4E88\u7D04\u756A\u53F7]\n| #{order.confirmationNumber}\n|\n| [\u6CE8\u6587\u65E5\u6642]\n| " + args.order.date + "\n|\n| [\u4E0A\u6620\u65E5\u6642]\n| " + args.event.startDate + " - " + args.event.endDate + "\n|\n| [\u4F5C\u54C1\u540D]\n| " + args.workPerformedName + "\n|\n| [\u30B9\u30AF\u30EA\u30FC\u30F3\u540D]\n| " + args.screen.name + " " + args.screen.address + "\n|\n| [\u5EA7\u5E2D]\n| " + args.reservedSeats + "\n|\n| [\u5408\u8A08]\n| \uFFE5#{order.price}\n|\n| \u3010\u30C1\u30B1\u30C3\u30C8\u306E\u767A\u5238\u3068\u3054\u5165\u5834\u306B\u3064\u3044\u3066\u3011\n|  (\u30B9\u30DE\u30FC\u30C8\u5165\u5834\u306E\u304A\u5BA2\u69D8)\n| \u4EE5\u4E0B\u306EURL\u3088\u308A\u30C1\u30B1\u30C3\u30C8\u60C5\u5831\u78BA\u8A8D\u7167\u4F1A\u753B\u9762\u3078\u30A2\u30AF\u30BB\u30B9\u3057\u3066\u9802\u304D\u3001\u300C\u4E88\u7D04\u756A\u53F7\u300D\u300C\u304A\u96FB\u8A71\u756A\u53F7\u300D\u3092\u5165\u529B\u306E\u3046\u3048\u7167\u4F1A\u30DC\u30BF\u30F3\u3092\u62BC\u3057\u3066\u304F\u3060\u3055\u3044\u3002\n| " + args.inquiryUrl + "?theater=" + args.theater.branchCode + "&reserve=#{order.confirmationNumber}\n| \u3054\u9451\u8CDE\u6642\u9593\u306E24\u6642\u9593\u524D\u304B\u3089\u5165\u5834\u7528QR\u30B3\u30FC\u30C9\u304C\u8868\u793A\u3055\u308C\u307E\u3059\u306E\u3067\u3001\u76F4\u63A5\u5287\u5834\u53D7\u4ED8\u3078\u3054\u63D0\u793A\u306E\u3046\u3048\u3054\u5165\u5834\u304F\u3060\u3055\u3044\u3002\n| (\uFF30\uFF23\u3067\u3054\u8CFC\u5165\u306E\u304A\u5BA2\u69D8)\n| \uFF30\uFF23\u3067\u4E0A\u8A18\u30B9\u30DE\u30FC\u30C8\u5165\u5834\u3068\u540C\u69D8\u306E\u64CD\u4F5C\u3057\u3066\u3044\u305F\u3060\u304D\u307E\u3059\u3068\u5165\u5834\u7528\uFF31\uFF32\u30B3\u30FC\u30C9\u304C\u8868\u793A\u3055\u308C\u307E\u3059\u306E\u3067\u3001\u30D7\u30EA\u30F3\u30C8\u30A2\u30A6\u30C8\u3057\u305F\u3082\u306E\u3092\u76F4\u63A5\u5287\u5834\u53D7\u4ED8\u3078\u3054\u63D0\u793A\u306E\u3046\u3048\u3054\u5165\u5834\u304F\u3060\u3055\u3044\u3002\n| \u306A\u304A\u3001\u30D7\u30EA\u30F3\u30C8\u30A2\u30A6\u30C8\u304C\u3067\u304D\u306A\u3044\u5834\u5408\u306F\u3001\u5404\u5287\u5834\u53D7\u4ED8\u306B\u3066\u4E0A\u8A18\u306E\u300C\u4E88\u7D04\u756A\u53F7\u300D\u300C\u304A\u96FB\u8A71\u756A\u53F7\u300D\u3092\u304A\u4F1D\u3048\u3044\u305F\u3060\u304D\u307E\u3059\u3068\u5165\u5834\u7528QR\u30B3\u30FC\u30C9\u4ED8\u304D\u306E\u7D19\u30C1\u30B1\u30C3\u30C8\u3092\u767A\u5238\u3044\u305F\u3057\u307E\u3059\u3002\n|\n| [\u6CE8\u610F\u4E8B\u9805]\n| \uFF11\u3000\u3054\u8CFC\u5165\u3044\u305F\u3060\u3044\u305F\u30C1\u30B1\u30C3\u30C8\u306F\u3001\u4E0A\u6620\u4E2D\u6B62\u30FB\u3082\u3057\u304F\u306F\u4E0A\u6620\u5EF6\u671F\u3068\u306A\u3089\u306A\u3044\u9650\u308A\u3001\u4EA4\u901A\u6E0B\u6EDE\u30FB\u96FB\u8ECA\u9045\u5EF6\u306A\u3069\u3044\u304B\u306A\u308B\u7406\u7531\u304C\u3042\u3063\u3066\u3082\u3001\u30C1\u30B1\u30C3\u30C8\u306E\u30AD\u30E3\u30F3\u30BB\u30EB\u30FB\u5909\u66F4\u30FB\u6255\u3044\u623B\u3057\u306F\u4E00\u5207\u81F4\u3057\u307E\u305B\u3093\u3002\u307E\u305F\u6255\u3044\u623B\u3057\u5B9F\u65BD\u306E\u969B\u306F\u30C1\u30B1\u30C3\u30C8\u5238\u9762\u91D1\u984D\u306E\u307F\u304C\u6255\u623B\u3057\u5BFE\u8C61\u3067\u3042\u308A\u3001\u305D\u306E\u4ED6\u306E\u8CBB\u7528(\u4EA4\u901A\u8CBB\u7B49\u4ED8\u968F\u3057\u3066\u767A\u751F\u3057\u305F\u8CBB\u7528)\u306B\u95A2\u3057\u3066\u306F\u304A\u652F\u6255\u3044\u3044\u305F\u3057\u304B\u306D\u307E\u3059\u3002\n| \uFF12\u3000\u5B66\u751F\u5272\u5F15\u30FB\u30B7\u30CB\u30A2\u5272\u5F15\u7B49\u306E\u5272\u5F15\u30C1\u30B1\u30C3\u30C8\u3092\u8CFC\u5165\u3055\u308C\u305F\u65B9\u306F\u3001\u3054\u5165\u5834\u6642\u306B\u30C1\u30B1\u30C3\u30C8\u3068\u4E00\u7DD2\u306B\u3001\u4EE5\u4E0B\u306E\u8A3C\u660E\u66F8\u3092\u3054\u63D0\u793A\u3044\u305F\u3060\u304D\u307E\u3059\u3002\n| \u30FB\u5B66\u751F\u306E\u65B9\u306F\u3001\u5B66\u6821\u9577\u767A\u884C\u306E\u5B66\u751F\u8A3C\u307E\u305F\u306F\u5B66\u751F\u624B\u5E33\n| \u30FB\u30B7\u30CB\u30A2\u30FB\u592B\u5A66\uFF15\uFF10\u5272\u5F15\u306E\u65B9\u306F\u3001\u751F\u5E74\u6708\u65E5\u304C\u78BA\u8A8D\u3067\u304D\u308B\u516C\u7684\u6A5F\u95A2\u767A\u884C\u306E\u8A3C\u660E\u66F8\n| \u30FB\u30CF\u30F3\u30C7\u30AD\u30E3\u30C3\u30D7\u306E\u65B9\u306F\u3001\u969C\u304C\u3044\u8005\u624B\u5E33\n| \u3054\u63D0\u793A\u3044\u305F\u3060\u3051\u306A\u3044\u5834\u5408\u306F\u3001\u4E00\u822C\u6599\u91D1\u3068\u306E\u5DEE\u984D\u3092\u3044\u305F\u3060\u304F\u5834\u5408\u304C\u3042\u308A\u307E\u3059\u3002\n| \uFF13\u3000\u6771\u4EAC\u90FD\u9752\u5C11\u5E74\u306E\u5065\u5168\u306A\u80B2\u6210\u306B\u95A2\u3059\u308B\u6761\u4F8B\u306E\u5B9A\u3081\u306B\u3088\u308A\u3001\u7D42\u6620\u304C23\uFF1A00\u3092\u904E\u304E\u308B\u4E0A\u6620\u56DE\u306F18\u6B73\u672A\u6E80\u53CA\u3073\u9AD8\u6821\u751F\u306E\u65B9\u306E\u3054\u5165\u5834\u3092\u304A\u65AD\u308A\u3044\u305F\u3057\u307E\u3059\u3002\u4FDD\u8B77\u8005\u540C\u4F34\u3067\u3082\u3054\u5165\u5834\u3044\u305F\u3060\u3051\u307E\u305B\u3093\u3002\n|\n|\n| \u2606\u2606\u2606\u30A2\u30F3\u30B1\u30FC\u30C8\u3054\u5354\u529B\u306E\u304A\u9858\u3044\u2606\u2606\u2606\n|\n| \u6620\u753B\u88FD\u4F5C\u3001\u5BA3\u4F1D\u306E\u53C2\u8003\u306B\u3055\u305B\u3066\u3044\u305F\u3060\u304D\u305F\u304F\u3001\u3054\u591A\u5FD9\u4E2D\u6050\u308C\u5165\u308A\u307E\u3059\u304C\u3001\u4EE5\u4E0B\u306EURL\u304B\u3089\u30A2\u30F3\u30B1\u30FC\u30C8\u306B\u304A\u7B54\u3048\u3044\u305F\u3060\u304D\u3001\u7387\u76F4\u306A\u3054\u610F\u898B\u30FB\u3054\u8981\u671B\u3092\u304A\u805E\u304B\u305B\u304F\u3060\u3055\u3044\u3002\n| \u672C\u30A2\u30F3\u30B1\u30FC\u30C8\u306B\u3054\u56DE\u7B54\u3044\u305F\u3060\u304D\u307E\u3057\u305F\u65B9\u306B\u306F\u3055\u3055\u3084\u304B\u306A\u304C\u3089\u3001\u516C\u5F0F\u52D5\u753B\u914D\u4FE1\u30B5\u30FC\u30D3\u30B9\uFF3B\u30DF\u30EC\u30FC\u30EB\uFF3D\u306B\u3066\u3054\u4F7F\u7528\u3067\u304D\u308B100\u5186\u5272\u5F15\u30AF\u30FC\u30DD\u30F3\u3092\u30D7\u30EC\u30BC\u30F3\u30C8\u3044\u305F\u3057\u307E\u3059\u3002\n| \u203B\u5272\u5F15\u30AF\u30FC\u30DD\u30F3\u306F\u6771\u6620\u304C\u63D0\u4F9B\u3059\u308B\u914D\u4FE1\u4F5C\u54C1\u306B\u3066\u3054\u5229\u7528\u3044\u305F\u3060\u3051\u307E\u3059\u3002\n|\n| \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n| https://questant.jp/q/53ZT9FSR\n| \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n|\n| \u306A\u304A\u3001\u30A2\u30F3\u30B1\u30FC\u30C8\u306E\u56DE\u7B54\u306F\u7D71\u8A08\u7684\u306B\u51E6\u7406\u3055\u308C\u3001\u7279\u5B9A\u306E\u500B\u4EBA\u304C\u8B58\u5225\u3067\u304D\u308B\u60C5\u5831\u3068\u3057\u3066\u3001\u516C\u8868\u3055\u308C\u308B\u3053\u3068\u306F\u3042\u308A\u307E\u305B\u3093\u3002\n| \u4F55\u5352\u3001\u3054\u5354\u529B\u3088\u308D\u3057\u304F\u304A\u9858\u3044\u7533\u3057\u4E0A\u3052\u307E\u3059\u3002\n|\n|\n| \u306A\u304A\u3001\u3053\u306E\u30E1\u30FC\u30EB\u306F\u3001#{order.seller.name}\u306E\u4E88\u7D04\u30B7\u30B9\u30C6\u30E0\u3067\u30C1\u30B1\u30C3\u30C8\u3092\u3054\u8CFC\u5165\u9802\u3044\u305F\u65B9\u306B\u304A\u9001\u308A\u3057\u3066\u304A\u308A\u307E\u3059\u304C\u3001\n| \u30C1\u30B1\u30C3\u30C8\u8CFC\u5165\u306B\u899A\u3048\u306E\u306A\u3044\u65B9\u306B\u5C4A\u3044\u3066\u3044\u308B\u5834\u5408\u306F\u3001\u304A\u624B\u6570\u3067\u3059\u304C\u4E0B\u8A18\u306E\u304A\u554F\u3044\u5408\u308F\u305B\u5148\u307E\u3067\u3054\u9023\u7D61\u304F\u3060\u3055\u3044\u3002\n| \u203B\u3053\u306E\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9\u306F\u9001\u4FE1\u5C02\u7528\u3068\u306A\u3063\u3066\u304A\u308A\u307E\u3059\u306E\u3067\u3001\u3054\u8FD4\u4FE1\u9802\u3051\u307E\u305B\u3093\u3002\n| \u3054\u4E0D\u660E\u306A\u70B9\u304C\u3054\u3056\u3044\u307E\u3057\u305F\u3089\u3001\u4E0B\u8A18\u756A\u53F7\u307E\u3067\u304A\u554F\u5408\u308F\u305B\u304F\u3060\u3055\u3044\u3002\n| \u304A\u554F\u3044\u5408\u308F\u305B\u306F\u3053\u3061\u3089\n| #{order.seller.name}\n| TEL\uFF1A" + args.seller.telephone + "\n";
 }
 
 
@@ -7537,7 +7769,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPurchaseCompleteTemplate", function() { return getPurchaseCompleteTemplate; });
 // tslint:disable:max-line-length
 function getPurchaseCompleteTemplate(args) {
-    return "\n| #{order.customer.familyName} #{order.customer.givenName} \u69D8\n| \u3053\u306E\u5EA6\u306F\u3001#{order.seller.name}\u306E\u30AA\u30F3\u30E9\u30A4\u30F3\u30C1\u30B1\u30C3\u30C8\u30B5\u30FC\u30D3\u30B9\u306B\u3066\u3054\u8CFC\u5165\u9802\u304D\u3001\u8AA0\u306B\u3042\u308A\u304C\u3068\u3046\u3054\u3056\u3044\u307E\u3059\u3002\u304A\u5BA2\u69D8\u304C\u3054\u8CFC\u5165\u3055\u308C\u307E\u3057\u305F\u30C1\u30B1\u30C3\u30C8\u306E\u60C5\u5831\u306F\u4E0B\u8A18\u306E\u901A\u308A\u3067\u3059\u3002\n|\n| [\u4E88\u7D04\u756A\u53F7]\n| #{order.confirmationNumber}\n|\n| [\u6CE8\u6587\u65E5\u6642]\n| " + args.order.date + "\n|\n| [\u4E0A\u6620\u65E5\u6642]\n| " + args.event.startDate + " - " + args.event.endDate + "\n|\n| [\u4F5C\u54C1\u540D]\n| " + args.workPerformedName + "\n|\n| [\u30B9\u30AF\u30EA\u30FC\u30F3\u540D]\n| " + args.screen.name + " " + args.screen.address + "\n|\n| [\u5EA7\u5E2D]\n| " + args.reservedSeats + "\n|\n| [\u5408\u8A08]\n| \uFFE5#{order.price}\n|\n| \u3010\u30C1\u30B1\u30C3\u30C8\u306E\u767A\u5238\u3068\u3054\u5165\u5834\u306B\u3064\u3044\u3066\u3011\n|  (\u30B9\u30DE\u30FC\u30C8\u5165\u5834\u306E\u304A\u5BA2\u69D8)\n| \u4EE5\u4E0B\u306EURL\u3088\u308A\u30C1\u30B1\u30C3\u30C8\u60C5\u5831\u78BA\u8A8D\u7167\u4F1A\u753B\u9762\u3078\u30A2\u30AF\u30BB\u30B9\u3057\u3066\u9802\u304D\u3001\u300C\u4E88\u7D04\u756A\u53F7\u300D\u300C\u304A\u96FB\u8A71\u756A\u53F7\u300D\u3092\u5165\u529B\u306E\u3046\u3048\u7167\u4F1A\u30DC\u30BF\u30F3\u3092\u62BC\u3057\u3066\u304F\u3060\u3055\u3044\u3002\n| " + args.inquiryUrl + "?theater=" + args.seller.branchCode + "&reserve=#{order.confirmationNumber}\n| \u3054\u9451\u8CDE\u6642\u9593\u306E24\u6642\u9593\u524D\u304B\u3089\u5165\u5834\u7528QR\u30B3\u30FC\u30C9\u304C\u8868\u793A\u3055\u308C\u307E\u3059\u306E\u3067\u3001\u76F4\u63A5\u5287\u5834\u53D7\u4ED8\u3078\u3054\u63D0\u793A\u306E\u3046\u3048\u3054\u5165\u5834\u304F\u3060\u3055\u3044\u3002\n| (\uFF30\uFF23\u3067\u3054\u8CFC\u5165\u306E\u304A\u5BA2\u69D8)\n| \uFF30\uFF23\u3067\u4E0A\u8A18\u30B9\u30DE\u30FC\u30C8\u5165\u5834\u3068\u540C\u69D8\u306E\u64CD\u4F5C\u3057\u3066\u3044\u305F\u3060\u304D\u307E\u3059\u3068\u5165\u5834\u7528\uFF31\uFF32\u30B3\u30FC\u30C9\u304C\u8868\u793A\u3055\u308C\u307E\u3059\u306E\u3067\u3001\u30D7\u30EA\u30F3\u30C8\u30A2\u30A6\u30C8\u3057\u305F\u3082\u306E\u3092\u76F4\u63A5\u5287\u5834\u53D7\u4ED8\u3078\u3054\u63D0\u793A\u306E\u3046\u3048\u3054\u5165\u5834\u304F\u3060\u3055\u3044\u3002\n| \u306A\u304A\u3001\u30D7\u30EA\u30F3\u30C8\u30A2\u30A6\u30C8\u304C\u3067\u304D\u306A\u3044\u5834\u5408\u306F\u3001\u5404\u5287\u5834\u53D7\u4ED8\u306B\u3066\u4E0A\u8A18\u306E\u300C\u4E88\u7D04\u756A\u53F7\u300D\u300C\u304A\u96FB\u8A71\u756A\u53F7\u300D\u3092\u304A\u4F1D\u3048\u3044\u305F\u3060\u304D\u307E\u3059\u3068\u5165\u5834\u7528QR\u30B3\u30FC\u30C9\u4ED8\u304D\u306E\u7D19\u30C1\u30B1\u30C3\u30C8\u3092\u767A\u5238\u3044\u305F\u3057\u307E\u3059\u3002\n|\n| [\u6CE8\u610F\u4E8B\u9805]\n| \uFF11\u3000\u3054\u8CFC\u5165\u3044\u305F\u3060\u3044\u305F\u30C1\u30B1\u30C3\u30C8\u306F\u3001\u4E0A\u6620\u4E2D\u6B62\u30FB\u3082\u3057\u304F\u306F\u4E0A\u6620\u5EF6\u671F\u3068\u306A\u3089\u306A\u3044\u9650\u308A\u3001\u4EA4\u901A\u6E0B\u6EDE\u30FB\u96FB\u8ECA\u9045\u5EF6\u306A\u3069\u3044\u304B\u306A\u308B\u7406\u7531\u304C\u3042\u3063\u3066\u3082\u3001\u30C1\u30B1\u30C3\u30C8\u306E\u30AD\u30E3\u30F3\u30BB\u30EB\u30FB\u5909\u66F4\u30FB\u6255\u3044\u623B\u3057\u306F\u4E00\u5207\u81F4\u3057\u307E\u305B\u3093\u3002\u307E\u305F\u6255\u3044\u623B\u3057\u5B9F\u65BD\u306E\u969B\u306F\u30C1\u30B1\u30C3\u30C8\u5238\u9762\u91D1\u984D\u306E\u307F\u304C\u6255\u623B\u3057\u5BFE\u8C61\u3067\u3042\u308A\u3001\u305D\u306E\u4ED6\u306E\u8CBB\u7528(\u4EA4\u901A\u8CBB\u7B49\u4ED8\u968F\u3057\u3066\u767A\u751F\u3057\u305F\u8CBB\u7528)\u306B\u95A2\u3057\u3066\u306F\u304A\u652F\u6255\u3044\u3044\u305F\u3057\u304B\u306D\u307E\u3059\u3002\n| \uFF12\u3000\u5B66\u751F\u5272\u5F15\u30FB\u30B7\u30CB\u30A2\u5272\u5F15\u7B49\u306E\u5272\u5F15\u30C1\u30B1\u30C3\u30C8\u3092\u8CFC\u5165\u3055\u308C\u305F\u65B9\u306F\u3001\u3054\u5165\u5834\u6642\u306B\u30C1\u30B1\u30C3\u30C8\u3068\u4E00\u7DD2\u306B\u3001\u4EE5\u4E0B\u306E\u8A3C\u660E\u66F8\u3092\u3054\u63D0\u793A\u3044\u305F\u3060\u304D\u307E\u3059\u3002\n| \u30FB\u5B66\u751F\u306E\u65B9\u306F\u3001\u5B66\u6821\u9577\u767A\u884C\u306E\u5B66\u751F\u8A3C\u307E\u305F\u306F\u5B66\u751F\u624B\u5E33\n| \u30FB\u30B7\u30CB\u30A2\u30FB\u592B\u5A66\uFF15\uFF10\u5272\u5F15\u306E\u65B9\u306F\u3001\u751F\u5E74\u6708\u65E5\u304C\u78BA\u8A8D\u3067\u304D\u308B\u516C\u7684\u6A5F\u95A2\u767A\u884C\u306E\u8A3C\u660E\u66F8\n| \u30FB\u30CF\u30F3\u30C7\u30AD\u30E3\u30C3\u30D7\u306E\u65B9\u306F\u3001\u969C\u304C\u3044\u8005\u624B\u5E33\n| \u3054\u63D0\u793A\u3044\u305F\u3060\u3051\u306A\u3044\u5834\u5408\u306F\u3001\u4E00\u822C\u6599\u91D1\u3068\u306E\u5DEE\u984D\u3092\u3044\u305F\u3060\u304F\u5834\u5408\u304C\u3042\u308A\u307E\u3059\u3002\n| \uFF13\u3000\u6771\u4EAC\u90FD\u9752\u5C11\u5E74\u306E\u5065\u5168\u306A\u80B2\u6210\u306B\u95A2\u3059\u308B\u6761\u4F8B\u306E\u5B9A\u3081\u306B\u3088\u308A\u3001\u7D42\u6620\u304C23\uFF1A00\u3092\u904E\u304E\u308B\u4E0A\u6620\u56DE\u306F18\u6B73\u672A\u6E80\u53CA\u3073\u9AD8\u6821\u751F\u306E\u65B9\u306E\u3054\u5165\u5834\u3092\u304A\u65AD\u308A\u3044\u305F\u3057\u307E\u3059\u3002\u4FDD\u8B77\u8005\u540C\u4F34\u3067\u3082\u3054\u5165\u5834\u3044\u305F\u3060\u3051\u307E\u305B\u3093\u3002\n|\n|\n| \u306A\u304A\u3001\u3053\u306E\u30E1\u30FC\u30EB\u306F\u3001#{order.seller.name}\u306E\u4E88\u7D04\u30B7\u30B9\u30C6\u30E0\u3067\u30C1\u30B1\u30C3\u30C8\u3092\u3054\u8CFC\u5165\u9802\u3044\u305F\u65B9\u306B\u304A\u9001\u308A\u3057\u3066\u304A\u308A\u307E\u3059\u304C\u3001\n| \u30C1\u30B1\u30C3\u30C8\u8CFC\u5165\u306B\u899A\u3048\u306E\u306A\u3044\u65B9\u306B\u5C4A\u3044\u3066\u3044\u308B\u5834\u5408\u306F\u3001\u304A\u624B\u6570\u3067\u3059\u304C\u4E0B\u8A18\u306E\u304A\u554F\u3044\u5408\u308F\u305B\u5148\u307E\u3067\u3054\u9023\u7D61\u304F\u3060\u3055\u3044\u3002\n| \u203B\u3053\u306E\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9\u306F\u9001\u4FE1\u5C02\u7528\u3068\u306A\u3063\u3066\u304A\u308A\u307E\u3059\u306E\u3067\u3001\u3054\u8FD4\u4FE1\u9802\u3051\u307E\u305B\u3093\u3002\n| \u3054\u4E0D\u660E\u306A\u70B9\u304C\u3054\u3056\u3044\u307E\u3057\u305F\u3089\u3001\u4E0B\u8A18\u756A\u53F7\u307E\u3067\u304A\u554F\u5408\u308F\u305B\u304F\u3060\u3055\u3044\u3002\n| \u304A\u554F\u3044\u5408\u308F\u305B\u306F\u3053\u3061\u3089\n| #{order.seller.name}\n| TEL\uFF1A" + args.seller.telephone + "\n";
+    return "\n| #{order.customer.familyName} #{order.customer.givenName} \u69D8\n| \u3053\u306E\u5EA6\u306F\u3001#{order.seller.name}\u306E\u30AA\u30F3\u30E9\u30A4\u30F3\u30C1\u30B1\u30C3\u30C8\u30B5\u30FC\u30D3\u30B9\u306B\u3066\u3054\u8CFC\u5165\u9802\u304D\u3001\u8AA0\u306B\u3042\u308A\u304C\u3068\u3046\u3054\u3056\u3044\u307E\u3059\u3002\u304A\u5BA2\u69D8\u304C\u3054\u8CFC\u5165\u3055\u308C\u307E\u3057\u305F\u30C1\u30B1\u30C3\u30C8\u306E\u60C5\u5831\u306F\u4E0B\u8A18\u306E\u901A\u308A\u3067\u3059\u3002\n|\n| [\u4E88\u7D04\u756A\u53F7]\n| #{order.confirmationNumber}\n|\n| [\u6CE8\u6587\u65E5\u6642]\n| " + args.order.date + "\n|\n| [\u4E0A\u6620\u65E5\u6642]\n| " + args.event.startDate + " - " + args.event.endDate + "\n|\n| [\u4F5C\u54C1\u540D]\n| " + args.workPerformedName + "\n|\n| [\u30B9\u30AF\u30EA\u30FC\u30F3\u540D]\n| " + args.screen.name + " " + args.screen.address + "\n|\n| [\u5EA7\u5E2D]\n| " + args.reservedSeats + "\n|\n| [\u5408\u8A08]\n| \uFFE5#{order.price}\n|\n| \u3010\u30C1\u30B1\u30C3\u30C8\u306E\u767A\u5238\u3068\u3054\u5165\u5834\u306B\u3064\u3044\u3066\u3011\n|  (\u30B9\u30DE\u30FC\u30C8\u5165\u5834\u306E\u304A\u5BA2\u69D8)\n| \u4EE5\u4E0B\u306EURL\u3088\u308A\u30C1\u30B1\u30C3\u30C8\u60C5\u5831\u78BA\u8A8D\u7167\u4F1A\u753B\u9762\u3078\u30A2\u30AF\u30BB\u30B9\u3057\u3066\u9802\u304D\u3001\u300C\u4E88\u7D04\u756A\u53F7\u300D\u300C\u304A\u96FB\u8A71\u756A\u53F7\u300D\u3092\u5165\u529B\u306E\u3046\u3048\u7167\u4F1A\u30DC\u30BF\u30F3\u3092\u62BC\u3057\u3066\u304F\u3060\u3055\u3044\u3002\n| " + args.inquiryUrl + "?theater=" + args.theater.branchCode + "&reserve=#{order.confirmationNumber}\n| \u3054\u9451\u8CDE\u6642\u9593\u306E24\u6642\u9593\u524D\u304B\u3089\u5165\u5834\u7528QR\u30B3\u30FC\u30C9\u304C\u8868\u793A\u3055\u308C\u307E\u3059\u306E\u3067\u3001\u76F4\u63A5\u5287\u5834\u53D7\u4ED8\u3078\u3054\u63D0\u793A\u306E\u3046\u3048\u3054\u5165\u5834\u304F\u3060\u3055\u3044\u3002\n| (\uFF30\uFF23\u3067\u3054\u8CFC\u5165\u306E\u304A\u5BA2\u69D8)\n| \uFF30\uFF23\u3067\u4E0A\u8A18\u30B9\u30DE\u30FC\u30C8\u5165\u5834\u3068\u540C\u69D8\u306E\u64CD\u4F5C\u3057\u3066\u3044\u305F\u3060\u304D\u307E\u3059\u3068\u5165\u5834\u7528\uFF31\uFF32\u30B3\u30FC\u30C9\u304C\u8868\u793A\u3055\u308C\u307E\u3059\u306E\u3067\u3001\u30D7\u30EA\u30F3\u30C8\u30A2\u30A6\u30C8\u3057\u305F\u3082\u306E\u3092\u76F4\u63A5\u5287\u5834\u53D7\u4ED8\u3078\u3054\u63D0\u793A\u306E\u3046\u3048\u3054\u5165\u5834\u304F\u3060\u3055\u3044\u3002\n| \u306A\u304A\u3001\u30D7\u30EA\u30F3\u30C8\u30A2\u30A6\u30C8\u304C\u3067\u304D\u306A\u3044\u5834\u5408\u306F\u3001\u5404\u5287\u5834\u53D7\u4ED8\u306B\u3066\u4E0A\u8A18\u306E\u300C\u4E88\u7D04\u756A\u53F7\u300D\u300C\u304A\u96FB\u8A71\u756A\u53F7\u300D\u3092\u304A\u4F1D\u3048\u3044\u305F\u3060\u304D\u307E\u3059\u3068\u5165\u5834\u7528QR\u30B3\u30FC\u30C9\u4ED8\u304D\u306E\u7D19\u30C1\u30B1\u30C3\u30C8\u3092\u767A\u5238\u3044\u305F\u3057\u307E\u3059\u3002\n|\n| [\u6CE8\u610F\u4E8B\u9805]\n| \uFF11\u3000\u3054\u8CFC\u5165\u3044\u305F\u3060\u3044\u305F\u30C1\u30B1\u30C3\u30C8\u306F\u3001\u4E0A\u6620\u4E2D\u6B62\u30FB\u3082\u3057\u304F\u306F\u4E0A\u6620\u5EF6\u671F\u3068\u306A\u3089\u306A\u3044\u9650\u308A\u3001\u4EA4\u901A\u6E0B\u6EDE\u30FB\u96FB\u8ECA\u9045\u5EF6\u306A\u3069\u3044\u304B\u306A\u308B\u7406\u7531\u304C\u3042\u3063\u3066\u3082\u3001\u30C1\u30B1\u30C3\u30C8\u306E\u30AD\u30E3\u30F3\u30BB\u30EB\u30FB\u5909\u66F4\u30FB\u6255\u3044\u623B\u3057\u306F\u4E00\u5207\u81F4\u3057\u307E\u305B\u3093\u3002\u307E\u305F\u6255\u3044\u623B\u3057\u5B9F\u65BD\u306E\u969B\u306F\u30C1\u30B1\u30C3\u30C8\u5238\u9762\u91D1\u984D\u306E\u307F\u304C\u6255\u623B\u3057\u5BFE\u8C61\u3067\u3042\u308A\u3001\u305D\u306E\u4ED6\u306E\u8CBB\u7528(\u4EA4\u901A\u8CBB\u7B49\u4ED8\u968F\u3057\u3066\u767A\u751F\u3057\u305F\u8CBB\u7528)\u306B\u95A2\u3057\u3066\u306F\u304A\u652F\u6255\u3044\u3044\u305F\u3057\u304B\u306D\u307E\u3059\u3002\n| \uFF12\u3000\u5B66\u751F\u5272\u5F15\u30FB\u30B7\u30CB\u30A2\u5272\u5F15\u7B49\u306E\u5272\u5F15\u30C1\u30B1\u30C3\u30C8\u3092\u8CFC\u5165\u3055\u308C\u305F\u65B9\u306F\u3001\u3054\u5165\u5834\u6642\u306B\u30C1\u30B1\u30C3\u30C8\u3068\u4E00\u7DD2\u306B\u3001\u4EE5\u4E0B\u306E\u8A3C\u660E\u66F8\u3092\u3054\u63D0\u793A\u3044\u305F\u3060\u304D\u307E\u3059\u3002\n| \u30FB\u5B66\u751F\u306E\u65B9\u306F\u3001\u5B66\u6821\u9577\u767A\u884C\u306E\u5B66\u751F\u8A3C\u307E\u305F\u306F\u5B66\u751F\u624B\u5E33\n| \u30FB\u30B7\u30CB\u30A2\u30FB\u592B\u5A66\uFF15\uFF10\u5272\u5F15\u306E\u65B9\u306F\u3001\u751F\u5E74\u6708\u65E5\u304C\u78BA\u8A8D\u3067\u304D\u308B\u516C\u7684\u6A5F\u95A2\u767A\u884C\u306E\u8A3C\u660E\u66F8\n| \u30FB\u30CF\u30F3\u30C7\u30AD\u30E3\u30C3\u30D7\u306E\u65B9\u306F\u3001\u969C\u304C\u3044\u8005\u624B\u5E33\n| \u3054\u63D0\u793A\u3044\u305F\u3060\u3051\u306A\u3044\u5834\u5408\u306F\u3001\u4E00\u822C\u6599\u91D1\u3068\u306E\u5DEE\u984D\u3092\u3044\u305F\u3060\u304F\u5834\u5408\u304C\u3042\u308A\u307E\u3059\u3002\n| \uFF13\u3000\u6771\u4EAC\u90FD\u9752\u5C11\u5E74\u306E\u5065\u5168\u306A\u80B2\u6210\u306B\u95A2\u3059\u308B\u6761\u4F8B\u306E\u5B9A\u3081\u306B\u3088\u308A\u3001\u7D42\u6620\u304C23\uFF1A00\u3092\u904E\u304E\u308B\u4E0A\u6620\u56DE\u306F18\u6B73\u672A\u6E80\u53CA\u3073\u9AD8\u6821\u751F\u306E\u65B9\u306E\u3054\u5165\u5834\u3092\u304A\u65AD\u308A\u3044\u305F\u3057\u307E\u3059\u3002\u4FDD\u8B77\u8005\u540C\u4F34\u3067\u3082\u3054\u5165\u5834\u3044\u305F\u3060\u3051\u307E\u305B\u3093\u3002\n|\n|\n| \u306A\u304A\u3001\u3053\u306E\u30E1\u30FC\u30EB\u306F\u3001#{order.seller.name}\u306E\u4E88\u7D04\u30B7\u30B9\u30C6\u30E0\u3067\u30C1\u30B1\u30C3\u30C8\u3092\u3054\u8CFC\u5165\u9802\u3044\u305F\u65B9\u306B\u304A\u9001\u308A\u3057\u3066\u304A\u308A\u307E\u3059\u304C\u3001\n| \u30C1\u30B1\u30C3\u30C8\u8CFC\u5165\u306B\u899A\u3048\u306E\u306A\u3044\u65B9\u306B\u5C4A\u3044\u3066\u3044\u308B\u5834\u5408\u306F\u3001\u304A\u624B\u6570\u3067\u3059\u304C\u4E0B\u8A18\u306E\u304A\u554F\u3044\u5408\u308F\u305B\u5148\u307E\u3067\u3054\u9023\u7D61\u304F\u3060\u3055\u3044\u3002\n| \u203B\u3053\u306E\u30E1\u30FC\u30EB\u30A2\u30C9\u30EC\u30B9\u306F\u9001\u4FE1\u5C02\u7528\u3068\u306A\u3063\u3066\u304A\u308A\u307E\u3059\u306E\u3067\u3001\u3054\u8FD4\u4FE1\u9802\u3051\u307E\u305B\u3093\u3002\n| \u3054\u4E0D\u660E\u306A\u70B9\u304C\u3054\u3056\u3044\u307E\u3057\u305F\u3089\u3001\u4E0B\u8A18\u756A\u53F7\u307E\u3067\u304A\u554F\u5408\u308F\u305B\u304F\u3060\u3055\u3044\u3002\n| \u304A\u554F\u3044\u5408\u308F\u305B\u306F\u3053\u3061\u3089\n| #{order.seller.name}\n| TEL\uFF1A" + args.seller.telephone + "\n";
 }
 
 
@@ -7596,8 +7828,6 @@ var Reservation = /** @class */ (function () {
     Reservation.prototype.getTicketPrice = function () {
         var result = {
             unitPriceSpecification: 0,
-            videoFormatCharge: 0,
-            soundFormatCharge: 0,
             movieTicketTypeCharge: 0,
             total: 0,
             single: 0
@@ -7608,20 +7838,12 @@ var Reservation = /** @class */ (function () {
         var priceComponent = this.ticket.ticketOffer.priceSpecification.priceComponent;
         var priceSpecificationType = _cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_0__["factory"].chevre.priceSpecificationType;
         var unitPriceSpecifications = priceComponent.filter(function (s) { return s.typeOf === priceSpecificationType.UnitPriceSpecification; });
-        var videoFormatCharges = priceComponent.filter(function (s) { return s.typeOf === priceSpecificationType.VideoFormatChargeSpecification; });
-        var soundFormatCharges = priceComponent.filter(function (s) { return s.typeOf === priceSpecificationType.SoundFormatChargeSpecification; });
         var movieTicketTypeCharges = priceComponent.filter(function (s) { return s.typeOf === priceSpecificationType.MovieTicketTypeChargeSpecification; });
         result.unitPriceSpecification += unitPriceSpecifications[0].price;
-        videoFormatCharges.forEach(function (videoFormatCharge) {
-            result.videoFormatCharge += videoFormatCharge.price;
-        });
-        soundFormatCharges.forEach(function (soundFormatCharge) {
-            result.soundFormatCharge += soundFormatCharge.price;
-        });
         movieTicketTypeCharges.forEach(function (movieTicketTypeCharge) {
             result.movieTicketTypeCharge += movieTicketTypeCharge.price;
         });
-        result.total = result.unitPriceSpecification + result.videoFormatCharge + result.soundFormatCharge + result.movieTicketTypeCharge;
+        result.total = result.unitPriceSpecification + result.movieTicketTypeCharge;
         var unitPriceSpecification = unitPriceSpecifications[0];
         if (unitPriceSpecification.typeOf === priceSpecificationType.UnitPriceSpecification) {
             var referenceQuantityValue = (unitPriceSpecification.referenceQuantity.value === undefined)
@@ -7967,6 +8189,7 @@ var CinerinoService = /** @class */ (function () {
                         this.order = new _cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_1__["service"].Order(option);
                         this.seller = new _cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_1__["service"].Seller(option);
                         this.person = new _cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_1__["service"].Person(option);
+                        this.place = new _cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_1__["service"].Place(option);
                         this.payment = new _cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_1__["service"].Payment(option);
                         this.transaction = {
                             placeOrder: new _cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_1__["service"].txn.PlaceOrder(option)
@@ -8056,7 +8279,7 @@ var CinerinoService = /** @class */ (function () {
     /**
      * パスポート取得
      */
-    CinerinoService.prototype.getPassport = function (selleId) {
+    CinerinoService.prototype.getPassport = function (seller) {
         return __awaiter(this, void 0, void 0, function () {
             var url, body, result;
             return __generator(this, function (_a) {
@@ -8067,7 +8290,7 @@ var CinerinoService = /** @class */ (function () {
                             return [2 /*return*/, { token: '' }];
                         }
                         url = this.waiterServerUrl;
-                        body = { scope: "Transaction:PlaceOrder:" + selleId };
+                        body = { scope: "Transaction:PlaceOrder:" + seller.id };
                         return [4 /*yield*/, this.http.post(url, body).toPromise()];
                     case 1:
                         result = _a.sent();
@@ -8402,10 +8625,12 @@ var PurchaseService = /** @class */ (function () {
      * @returns {string}
      */
     PurchaseService.prototype.getTheaterName = function () {
-        if (this.data.screeningEvent === undefined) {
+        var screeningEvent = this.data.screeningEvent;
+        if (screeningEvent === undefined
+            || screeningEvent.superEvent.location.name === undefined
+            || screeningEvent.superEvent.location.name.ja === undefined) {
             return '';
         }
-        var screeningEvent = this.data.screeningEvent;
         return screeningEvent.superEvent.location.name.ja;
     };
     /**
@@ -8414,14 +8639,17 @@ var PurchaseService = /** @class */ (function () {
      * @returns {string}
      */
     PurchaseService.prototype.getScreenName = function () {
-        if (this.data.screeningEvent === undefined) {
+        var screeningEvent = this.data.screeningEvent;
+        if (screeningEvent === undefined) {
             return '';
         }
         var screen = {
-            name: this.data.screeningEvent.location.name.ja,
-            address: (this.data.screeningEvent.location.address === undefined)
-                ? ''
-                : this.data.screeningEvent.location.address.en
+            name: (screeningEvent.location.name === undefined
+                || screeningEvent.location.name.ja === undefined)
+                ? '' : screeningEvent.location.name.ja,
+            address: (screeningEvent.location.address === undefined
+                || screeningEvent.location.address.en === undefined)
+                ? '' : screeningEvent.location.address.en
         };
         return screen.address + " " + screen.name;
     };
@@ -8431,10 +8659,12 @@ var PurchaseService = /** @class */ (function () {
      * @returns {string}
      */
     PurchaseService.prototype.getTitle = function () {
-        if (this.data.screeningEvent === undefined) {
+        var screeningEvent = this.data.screeningEvent;
+        if (screeningEvent === undefined
+            || screeningEvent.name === undefined
+            || screeningEvent.name.ja === undefined) {
             return '';
         }
-        var screeningEvent = this.data.screeningEvent;
         return screeningEvent.name.ja;
     };
     /**
@@ -8443,12 +8673,13 @@ var PurchaseService = /** @class */ (function () {
      * @returns {string}
      */
     PurchaseService.prototype.getSubTitle = function () {
-        if (this.data.screeningEvent === undefined
-            || this.data.screeningEvent.workPerformed.headline === undefined
-            || this.data.screeningEvent.workPerformed.headline === null) {
+        var screeningEvent = this.data.screeningEvent;
+        if (screeningEvent === undefined
+            || screeningEvent.workPerformed === undefined
+            || screeningEvent.workPerformed.headline === undefined) {
             return '';
         }
-        return this.data.screeningEvent.workPerformed.headline;
+        return screeningEvent.workPerformed.headline;
     };
     /**
      * 鑑賞日取得
@@ -8491,8 +8722,6 @@ var PurchaseService = /** @class */ (function () {
     PurchaseService.prototype.getTicketPrice = function (ticket) {
         var result = {
             unitPriceSpecification: 0,
-            videoFormatCharge: 0,
-            soundFormatCharge: 0,
             movieTicketTypeCharge: 0,
             total: 0,
             single: 0
@@ -8503,20 +8732,12 @@ var PurchaseService = /** @class */ (function () {
         var priceComponent = ticket.priceSpecification.priceComponent;
         var priceSpecificationType = _cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_0__["factory"].chevre.priceSpecificationType;
         var unitPriceSpecifications = priceComponent.filter(function (s) { return s.typeOf === priceSpecificationType.UnitPriceSpecification; });
-        var videoFormatCharges = priceComponent.filter(function (s) { return s.typeOf === priceSpecificationType.VideoFormatChargeSpecification; });
-        var soundFormatCharges = priceComponent.filter(function (s) { return s.typeOf === priceSpecificationType.SoundFormatChargeSpecification; });
         var movieTicketTypeCharges = priceComponent.filter(function (s) { return s.typeOf === priceSpecificationType.MovieTicketTypeChargeSpecification; });
         result.unitPriceSpecification += unitPriceSpecifications[0].price;
-        videoFormatCharges.forEach(function (videoFormatCharge) {
-            result.videoFormatCharge += videoFormatCharge.price;
-        });
-        soundFormatCharges.forEach(function (soundFormatCharge) {
-            result.soundFormatCharge += soundFormatCharge.price;
-        });
         movieTicketTypeCharges.forEach(function (movieTicketTypeCharge) {
             result.movieTicketTypeCharge += movieTicketTypeCharge.price;
         });
-        result.total = result.unitPriceSpecification + result.videoFormatCharge + result.soundFormatCharge + result.movieTicketTypeCharge;
+        result.total = result.unitPriceSpecification + result.movieTicketTypeCharge;
         var unitPriceSpecification = unitPriceSpecifications[0];
         if (unitPriceSpecification.typeOf === priceSpecificationType.UnitPriceSpecification) {
             var referenceQuantityValue = (unitPriceSpecification.referenceQuantity.value === undefined)
@@ -8592,43 +8813,33 @@ var PurchaseService = /** @class */ (function () {
      */
     PurchaseService.prototype.transactionStartProcess = function (args) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, now, VALID_TIME, expires, passport, _b;
-            return __generator(this, function (_c) {
-                switch (_c.label) {
+            var now, VALID_TIME, expires, passport, _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
                         // 購入データ削除
                         this.reset();
                         this.data.screeningEvent = args.screeningEvent;
+                        this.data.seller = args.seller;
                         return [4 /*yield*/, this.cinerino.getServices()];
                     case 1:
-                        _c.sent();
-                        // 劇場のショップを検索
-                        _a = this.data;
-                        return [4 /*yield*/, this.cinerino.seller.search({
-                                location: { branchCodes: [this.data.screeningEvent.superEvent.location.branchCode] }
-                            })];
-                    case 2:
-                        // 劇場のショップを検索
-                        _a.seller = (_c.sent()).data[0];
+                        _b.sent();
                         return [4 /*yield*/, this.utilService.getServerDate()];
-                    case 3:
-                        now = (_c.sent()).date;
+                    case 2:
+                        now = (_b.sent()).date;
                         VALID_TIME = _environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].TRANSACTION_TIME;
                         expires = moment__WEBPACK_IMPORTED_MODULE_1__(now).add(VALID_TIME, 'minutes').toDate();
                         passport = args.passport;
                         // 取引開始
-                        _b = this.data;
+                        _a = this.data;
                         return [4 /*yield*/, this.cinerino.transaction.placeOrder.start({
                                 expires: expires,
-                                seller: {
-                                    id: this.data.seller.id,
-                                    typeOf: this.data.seller.typeOf
-                                },
+                                seller: this.data.seller,
                                 object: { passport: passport }
                             })];
-                    case 4:
+                    case 3:
                         // 取引開始
-                        _b.transaction = _c.sent();
+                        _a.transaction = _b.sent();
                         this.save();
                         return [2 /*return*/];
                 }
@@ -8720,24 +8931,38 @@ var PurchaseService = /** @class */ (function () {
                         return [4 /*yield*/, this.cinerino.transaction.placeOrder.authorizeSeatReservation({
                                 object: {
                                     event: { id: this.data.screeningEvent.id },
-                                    clientUser: this.data.transaction.object.clientUser,
-                                    acceptedOffer: this.data.reservations.map(function (reservation) { return ({
-                                        ticketedSeat: {
-                                            seatSection: reservation.seat.seatSection,
-                                            seatNumber: reservation.seat.seatNumber,
-                                            seatRow: '',
-                                            seatingType: '',
-                                            typeOf: _cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_0__["factory"].chevre.placeType.Seat
-                                        },
-                                        id: (reservation.ticket === undefined) ? _this.data.salesTickets[0].id : reservation.ticket.ticketOffer.id,
-                                        additionalProperty: []
-                                    }); })
+                                    acceptedOffer: this.data.reservations.map(function (r) {
+                                        var id = (r.ticket === undefined) ? _this.data.salesTickets[0].id : r.ticket.ticketOffer.id;
+                                        if (id === undefined) {
+                                            throw new Error('ticket or ticket.ticketOffer.id or salesTickets.id is undefined').message;
+                                        }
+                                        return {
+                                            id: id,
+                                            additionalProperty: [],
+                                            itemOffered: {
+                                                serviceOutput: {
+                                                    typeOf: _cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_0__["factory"].chevre.reservationType.EventReservation,
+                                                    additionalProperty: [],
+                                                    reservedTicket: {
+                                                        typeOf: 'Ticket',
+                                                        ticketedSeat: {
+                                                            seatSection: r.seat.seatSection,
+                                                            seatNumber: r.seat.seatNumber,
+                                                            seatRow: '',
+                                                            seatingType: '',
+                                                            typeOf: _cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_0__["factory"].chevre.placeType.Seat
+                                                        },
+                                                    }
+                                                }
+                                            }
+                                        };
+                                    })
                                 },
                                 purpose: this.data.transaction
                             })];
                     case 4:
                         _a.seatReservationAuthorization =
-                            _b.sent();
+                            (_b.sent());
                         this.data.reservations.forEach(function (reservation) {
                             reservation.ticket = undefined;
                         });
@@ -8776,27 +9001,39 @@ var PurchaseService = /** @class */ (function () {
                         _a = this.data;
                         return [4 /*yield*/, this.cinerino.transaction.placeOrder.authorizeSeatReservation({
                                 object: {
-                                    event: {
-                                        id: this.data.screeningEvent.id
-                                    },
-                                    clientUser: this.data.transaction.object.clientUser,
-                                    acceptedOffer: this.data.reservations.map(function (reservation) { return ({
-                                        ticketedSeat: {
-                                            seatSection: reservation.seat.seatSection,
-                                            seatNumber: reservation.seat.seatNumber,
-                                            seatRow: '',
-                                            seatingType: '',
-                                            typeOf: _cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_0__["factory"].chevre.placeType.Seat
-                                        },
-                                        id: reservation.ticket.ticketOffer.id,
-                                        additionalProperty: []
-                                    }); })
+                                    event: { id: this.data.screeningEvent.id },
+                                    acceptedOffer: this.data.reservations.map(function (r) {
+                                        var id = (r.ticket === undefined) ? undefined : r.ticket.ticketOffer.id;
+                                        if (id === undefined) {
+                                            throw new Error('ticket.ticketOffer.id is undefined').message;
+                                        }
+                                        return {
+                                            id: id,
+                                            additionalProperty: [],
+                                            itemOffered: {
+                                                serviceOutput: {
+                                                    typeOf: _cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_0__["factory"].chevre.reservationType.EventReservation,
+                                                    additionalProperty: [],
+                                                    reservedTicket: {
+                                                        typeOf: 'Ticket',
+                                                        ticketedSeat: {
+                                                            seatSection: r.seat.seatSection,
+                                                            seatNumber: r.seat.seatNumber,
+                                                            seatRow: '',
+                                                            seatingType: '',
+                                                            typeOf: _cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_0__["factory"].chevre.placeType.Seat
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        };
+                                    })
                                 },
                                 purpose: this.data.transaction
                             })];
                     case 4:
                         _a.seatReservationAuthorization =
-                            _b.sent();
+                            (_b.sent());
                         if (this.data.seatReservationAuthorization === undefined) {
                             throw new Error('status is different');
                         }
@@ -8810,27 +9047,25 @@ var PurchaseService = /** @class */ (function () {
      * 購入者情報登録処理
      * @method customerContactRegistrationProcess
      */
-    PurchaseService.prototype.customerContactRegistrationProcess = function (args) {
+    PurchaseService.prototype.customerContactRegistrationProcess = function (profile) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0:
                         if (this.data.transaction === undefined) {
                             throw new Error('transaction is undefined');
                         }
                         return [4 /*yield*/, this.cinerino.getServices()];
                     case 1:
-                        _b.sent();
+                        _a.sent();
                         // 入力情報を登録
-                        _a = this.data;
-                        return [4 /*yield*/, this.cinerino.transaction.placeOrder.setCustomerContact({
+                        this.data.customerContact = profile;
+                        return [4 /*yield*/, this.cinerino.transaction.placeOrder.setProfile({
                                 id: this.data.transaction.id,
-                                object: { customerContact: args }
+                                agent: profile
                             })];
                     case 2:
-                        // 入力情報を登録
-                        _a.customerContact = _b.sent();
+                        _a.sent();
                         this.save();
                         return [2 /*return*/];
                 }
@@ -8855,7 +9090,7 @@ var PurchaseService = /** @class */ (function () {
                         _b.sent();
                         if (!(this.data.creditCardAuthorization !== undefined)) return [3 /*break*/, 3];
                         // クレジットカード登録済みなら削除
-                        return [4 /*yield*/, this.cinerino.transaction.placeOrder.voidPayment(this.data.creditCardAuthorization)];
+                        return [4 /*yield*/, this.cinerino.payment.voidTransaction(this.data.creditCardAuthorization)];
                     case 2:
                         // クレジットカード登録済みなら削除
                         _b.sent();
@@ -8865,7 +9100,7 @@ var PurchaseService = /** @class */ (function () {
                     case 3:
                         METHOD_LUMP = '1';
                         _a = this.data;
-                        return [4 /*yield*/, this.cinerino.transaction.placeOrder.authorizeCreditCardPayment({
+                        return [4 /*yield*/, this.cinerino.payment.authorizeCreditCard({
                                 object: {
                                     typeOf: _cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_0__["factory"].paymentMethodType.CreditCard,
                                     orderId: this.createOrderId(),
@@ -8907,7 +9142,7 @@ var PurchaseService = /** @class */ (function () {
      */
     PurchaseService.prototype.purchaseRegistrationProcess = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var transaction, authorizeSeatReservation, reservations, order, _i, _a, authorizeMovieTicketPayment, movieTickets, movieTicketIdentifiers_2, _b, movieTicketIdentifiers_1, movieTicketIdentifier, authorizeMovieTicketPaymentResult, mailParams, complete;
+            var transaction, authorizeSeatReservation, reservations, seller, order, _i, _a, authorizeMovieTicketPayment, movieTickets, movieTicketIdentifiers_2, _b, movieTicketIdentifiers_1, movieTicketIdentifier, authorizeMovieTicketPaymentResult, mailParams, complete;
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
@@ -8920,6 +9155,7 @@ var PurchaseService = /** @class */ (function () {
                         transaction = this.data.transaction;
                         authorizeSeatReservation = this.data.seatReservationAuthorization;
                         reservations = this.data.reservations;
+                        seller = this.data.seller;
                         return [4 /*yield*/, this.cinerino.getServices()];
                     case 1:
                         _c.sent();
@@ -8930,7 +9166,7 @@ var PurchaseService = /** @class */ (function () {
                     case 2:
                         if (!(_i < _a.length)) return [3 /*break*/, 5];
                         authorizeMovieTicketPayment = _a[_i];
-                        return [4 /*yield*/, this.cinerino.transaction.placeOrder.voidPayment(authorizeMovieTicketPayment)];
+                        return [4 /*yield*/, this.cinerino.payment.voidTransaction(authorizeMovieTicketPayment)];
                     case 3:
                         _c.sent();
                         _c.label = 4;
@@ -8942,7 +9178,7 @@ var PurchaseService = /** @class */ (function () {
                         _c.label = 6;
                     case 6:
                         movieTickets = this.createMovieTicketsFromAuthorizeSeatReservation({
-                            authorizeSeatReservation: authorizeSeatReservation, reservations: reservations
+                            authorizeSeatReservation: authorizeSeatReservation, reservations: reservations, seller: seller
                         });
                         movieTicketIdentifiers_2 = [];
                         movieTickets.forEach(function (movieTicket) {
@@ -8962,7 +9198,7 @@ var PurchaseService = /** @class */ (function () {
                     case 7:
                         if (!(_b < movieTicketIdentifiers_1.length)) return [3 /*break*/, 10];
                         movieTicketIdentifier = movieTicketIdentifiers_1[_b];
-                        return [4 /*yield*/, this.cinerino.transaction.placeOrder.authorizeMovieTicketPayment({
+                        return [4 /*yield*/, this.cinerino.payment.authorizeMovieTicket({
                                 object: {
                                     typeOf: _cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_0__["factory"].paymentMethodType.MovieTicket,
                                     amount: 0,
@@ -8984,32 +9220,37 @@ var PurchaseService = /** @class */ (function () {
                                 startDate: moment__WEBPACK_IMPORTED_MODULE_1__(this.data.screeningEvent.startDate).format('YYYY年MM月DD日(ddd) HH:mm'),
                                 endDate: moment__WEBPACK_IMPORTED_MODULE_1__(this.data.screeningEvent.endDate).format('HH:mm')
                             },
-                            workPerformedName: this.data.screeningEvent.workPerformed.name,
+                            workPerformedName: (this.data.screeningEvent.workPerformed === undefined)
+                                ? '' : this.data.screeningEvent.workPerformed.name,
                             screen: {
-                                name: this.data.screeningEvent.location.name.ja,
+                                name: (this.data.screeningEvent.location.name === undefined
+                                    || this.data.screeningEvent.location.name.ja === undefined)
+                                    ? '' : this.data.screeningEvent.location.name.ja,
                                 address: (this.data.screeningEvent.location.address !== undefined
                                     && this.data.screeningEvent.location.address.ja !== '')
                                     ? "(" + this.data.screeningEvent.location.address.ja + ")"
                                     : ''
                             },
                             reservedSeats: this.data.reservations.map(function (reservation) {
-                                return util__WEBPACK_IMPORTED_MODULE_2__["format"]('%s %s %s', reservation.seat.seatNumber, (reservation.ticket === undefined) ? '' : reservation.ticket.ticketOffer.name.ja, "\uFFE5" + reservation.getTicketPrice().single);
+                                return util__WEBPACK_IMPORTED_MODULE_2__["format"]('%s %s %s', reservation.seat.seatNumber, (reservation.ticket === undefined
+                                    || reservation.ticket.ticketOffer.name === undefined)
+                                    ? '' : (typeof reservation.ticket.ticketOffer.name === 'string')
+                                    ? reservation.ticket.ticketOffer.name : reservation.ticket.ticketOffer.name.ja, "\uFFE5" + reservation.getTicketPrice().single);
                             }).join('\n| '),
                             inquiryUrl: _environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].SITE_URL + "/inquiry/login",
                             seller: {
-                                branchCode: (this.data.seller.location === undefined
-                                    || this.data.seller.location.branchCode === undefined)
-                                    ? '' : this.data.seller.location.branchCode,
                                 telephone: (this.data.seller.telephone === undefined)
                                     ? '' : new _pipes_libphonenumber_format_libphonenumber_format_pipe__WEBPACK_IMPORTED_MODULE_6__["LibphonenumberFormatPipe"]().transform(this.data.seller.telephone)
+                            },
+                            theater: {
+                                branchCode: this.data.screeningEvent.superEvent.location.branchCode
                             }
                         };
                         return [4 /*yield*/, this.cinerino.transaction.placeOrder.confirm({
                                 id: transaction.id,
-                                options: {
-                                    sendEmailMessage: true,
-                                    emailTemplate: Object(_mails__WEBPACK_IMPORTED_MODULE_4__["getPurchaseCompleteTemplate"])(mailParams)
-                                    // emailTemplate: getPurchaseCompleteEnqueteTemplate(mailParams)
+                                sendEmailMessage: true,
+                                email: {
+                                    template: Object(_mails__WEBPACK_IMPORTED_MODULE_4__["getPurchaseCompleteTemplate"])(mailParams)
                                 }
                             })];
                     case 11:
@@ -9035,7 +9276,9 @@ var PurchaseService = /** @class */ (function () {
         var results = [];
         var authorizeSeatReservation = args.authorizeSeatReservation;
         var reservations = args.reservations;
-        if (authorizeSeatReservation.result === undefined) {
+        var seller = args.seller;
+        if (authorizeSeatReservation.result === undefined
+            || authorizeSeatReservation.result.responseBody.object.reservations === undefined) {
             return results;
         }
         var pendingReservations = authorizeSeatReservation.result.responseBody.object.reservations;
@@ -9053,6 +9296,7 @@ var PurchaseService = /** @class */ (function () {
                 throw new Error('ticketedSeat is undefined');
             }
             results.push({
+                project: seller.project,
                 typeOf: _cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_0__["factory"].paymentMethodType.MovieTicket,
                 identifier: findReservationResult.ticket.movieTicket.identifier,
                 accessCode: findReservationResult.ticket.movieTicket.accessCode,
@@ -9071,12 +9315,14 @@ var PurchaseService = /** @class */ (function () {
     /**
      * ムビチケ認証処理
      */
-    PurchaseService.prototype.mvtkAuthenticationProcess = function (movieTickets) {
+    PurchaseService.prototype.mvtkAuthenticationProcess = function (params) {
         return __awaiter(this, void 0, void 0, function () {
-            var transaction, screeningEvent, checkMovieTicketAction;
+            var movieTickets, seller, transaction, screeningEvent, checkMovieTicketAction;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        movieTickets = params.movieTickets;
+                        seller = params.seller;
                         if (this.data.screeningEvent === undefined
                             || this.data.transaction === undefined) {
                             throw new Error('status is different');
@@ -9090,6 +9336,7 @@ var PurchaseService = /** @class */ (function () {
                                 typeOf: _cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_0__["factory"].paymentMethodType.MovieTicket,
                                 movieTickets: movieTickets.map(function (movieTicket) {
                                     var result = {
+                                        project: seller.project,
                                         typeOf: _cinerino_api_javascript_client__WEBPACK_IMPORTED_MODULE_0__["factory"].paymentMethodType.MovieTicket,
                                         identifier: movieTicket.knyknrNo,
                                         accessCode: movieTicket.pinCd,

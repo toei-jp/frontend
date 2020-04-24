@@ -1,6 +1,6 @@
 {
   "name": "toei-frontend",
-  "version": "1.8.4",
+  "version": "1.8.5",
   "license": "MIT",
   "author": {
     "name": "Motionpicture co.,ltd."
@@ -42,8 +42,8 @@
     "@angular/platform-browser": "^6.1.10",
     "@angular/platform-browser-dynamic": "^6.1.10",
     "@angular/router": "^6.1.10",
-    "@cinerino/api-javascript-client": "^2.0.0-alpha.0",
-    "@cinerino/api-nodejs-client": "^2.0.0-alpha.0",
+    "@cinerino/api-javascript-client": "^2.0.0-alpha.75",
+    "@cinerino/api-nodejs-client": "^2.0.0-alpha.77",
     "basic-auth": "^2.0.1",
     "body-parser": "^1.18.3",
     "connect-redis": "^3.4.0",

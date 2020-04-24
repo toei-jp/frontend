@@ -29,8 +29,6 @@ export class Reservation {
     public getTicketPrice() {
         const result = {
             unitPriceSpecification: 0,
-            videoFormatCharge: 0,
-            soundFormatCharge: 0,
             movieTicketTypeCharge: 0,
             total: 0,
             single: 0
@@ -41,21 +39,13 @@ export class Reservation {
         const priceComponent = this.ticket.ticketOffer.priceSpecification.priceComponent;
         const priceSpecificationType = factory.chevre.priceSpecificationType;
         const unitPriceSpecifications = priceComponent.filter((s) => s.typeOf === priceSpecificationType.UnitPriceSpecification);
-        const videoFormatCharges = priceComponent.filter((s) => s.typeOf === priceSpecificationType.VideoFormatChargeSpecification);
-        const soundFormatCharges = priceComponent.filter((s) => s.typeOf === priceSpecificationType.SoundFormatChargeSpecification);
         const movieTicketTypeCharges = priceComponent.filter((s) => s.typeOf === priceSpecificationType.MovieTicketTypeChargeSpecification);
 
         result.unitPriceSpecification += unitPriceSpecifications[0].price;
-        videoFormatCharges.forEach((videoFormatCharge) => {
-            result.videoFormatCharge += videoFormatCharge.price;
-        });
-        soundFormatCharges.forEach((soundFormatCharge) => {
-            result.soundFormatCharge += soundFormatCharge.price;
-        });
         movieTicketTypeCharges.forEach((movieTicketTypeCharge) => {
             result.movieTicketTypeCharge += movieTicketTypeCharge.price;
         });
-        result.total = result.unitPriceSpecification + result.videoFormatCharge + result.soundFormatCharge + result.movieTicketTypeCharge;
+        result.total = result.unitPriceSpecification + result.movieTicketTypeCharge;
 
         const unitPriceSpecification = unitPriceSpecifications[0];
         if (unitPriceSpecification.typeOf === priceSpecificationType.UnitPriceSpecification) {

@@ -103,6 +103,11 @@ export class PurchaseMvtkInputComponent implements OnInit {
 
             return;
         }
+        if (this.purchase.data.seller === undefined) {
+            this.router.navigate(['error']);
+
+            return;
+        }
         try {
             const mvtkData = mvtkForms.map((mvtkForm) => {
                 return {
@@ -110,7 +115,10 @@ export class PurchaseMvtkInputComponent implements OnInit {
                     pinCd: mvtkForm.controls.password.value
                 };
             });
-            const checkMovieTicketActions = await this.purchase.mvtkAuthenticationProcess(mvtkData);
+            const checkMovieTicketActions = await this.purchase.mvtkAuthenticationProcess({
+                movieTickets: mvtkData,
+                seller: this.purchase.data.seller
+            });
             this.warningActions = [];
             const checkMovieTicketAction = checkMovieTicketActions[0];
             if (checkMovieTicketAction === undefined

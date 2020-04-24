@@ -62,10 +62,14 @@ export class PurchaseMvtkConfirmComponent implements OnInit {
                 && MovieTicketTypeChargeSpecification.appliesToMovieTicketType === serviceType);
         });
 
-        if (findTicketResult === undefined) {
+        if (findTicketResult === undefined
+            || findTicketResult.name === undefined) {
             return '';
         }
-        return findTicketResult.name.ja;
+        return (typeof findTicketResult.name === 'string')
+            ? findTicketResult.name : (findTicketResult.name.ja === undefined)
+                ? '' : (findTicketResult.name.ja === undefined)
+                    ? '' : findTicketResult.name.ja;
     }
 
     public onSubmit() {

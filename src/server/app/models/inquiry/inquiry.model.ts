@@ -1,13 +1,13 @@
-import * as cinerino from '@cinerino/api-nodejs-client';
+import { factory } from '@cinerino/api-nodejs-client';
 
 /**
  * 照会セッション
  * @interface IInquiryModel
  */
 export interface IInquiryModel {
-    order?: cinerino.factory.order.IOrder;
+    order?: factory.order.IOrder;
     input?: IInput;
-    seller?: cinerino.factory.seller.IOrganization<cinerino.factory.seller.IAttributes<cinerino.factory.organizationType>>;
+    theater?: factory.chevre.place.movieTheater.IPlaceWithoutScreeningRoom;
 }
 
 interface IInput {
@@ -23,7 +23,7 @@ export class InquiryModel {
     /**
      * オーダー
      */
-    public order?: cinerino.factory.order.IOrder;
+    public order?: factory.order.IOrder;
     /**
      * 入力
      */
@@ -31,7 +31,7 @@ export class InquiryModel {
     /**
      * 劇場
      */
-    public seller?: cinerino.factory.seller.IOrganization<cinerino.factory.seller.IAttributes<cinerino.factory.organizationType>>;
+    public theater: factory.chevre.place.movieTheater.IPlaceWithoutScreeningRoom;
 
     /**
      * @constructor
@@ -48,7 +48,7 @@ export class InquiryModel {
                 reserveNum: '',
                 telephone: ''
             };
-        this.seller = session.seller;
+        this.theater = session.theater;
     }
 
 
@@ -62,7 +62,7 @@ export class InquiryModel {
         const inquirySession: IInquiryModel = {
             order: this.order,
             input: this.input,
-            seller: this.seller
+            theater: this.theater
         };
         session.inquiry = inquirySession;
     }

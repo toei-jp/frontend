@@ -14,6 +14,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Removed
 
+## 1.8.5 - 2020-04-24
+### Changed
+ - seller.location廃止
+
 ## 1.8.4 - 2019-12-19
 ### Fixed
  - ios13表示崩れ修正

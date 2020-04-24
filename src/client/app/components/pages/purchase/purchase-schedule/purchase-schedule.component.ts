@@ -7,11 +7,9 @@ import { SwiperComponent, SwiperConfigInterface, SwiperDirective } from 'ngx-swi
 import { environment } from '../../../../../environments/environment';
 import { CinerinoService, ErrorService, PurchaseService } from '../../../../services';
 
-type ISeller = factory.seller.IOrganization<factory.seller.IAttributes<factory.organizationType>>;
-type IScreeningEvent = factory.chevre.event.screeningEvent.IEvent;
 interface IFilmOrder {
     id: string;
-    films: IScreeningEvent[];
+    films: factory.chevre.event.screeningEvent.IEvent[];
 }
 
 interface IDate {
@@ -44,18 +42,18 @@ enum ScheduleType {
 })
 export class PurchaseScheduleComponent implements OnInit {
     public moment: typeof moment = moment;
-    public theaters: ISeller[];
+    public theaters: factory.chevre.place.movieTheater.IPlaceWithoutScreeningRoom[];
     public isLoading: boolean;
     public showTheaterList: boolean;
     public dateList: IDate[];
     public filmOrder: IFilmOrder[];
-    public schedules: IScreeningEvent[];
+    public schedules: factory.chevre.event.screeningEvent.IEvent[];
     public conditions: { theater: string; date: string };
     public environment = environment;
     public preSaleDateList: IDate[];
     public preSaleFilmOrder: IFilmOrder[];
     public isPreSaleSchedules: boolean;
-    private preSaleSchedules: IScreeningEvent[];
+    private preSaleSchedules: factory.chevre.event.screeningEvent.IEvent[];
     public reservationModal: boolean;
     public swiperConfig: SwiperConfigInterface;
     public ScheduleType: typeof ScheduleType = ScheduleType;
@@ -97,7 +95,7 @@ export class PurchaseScheduleComponent implements OnInit {
         this.isPreSaleSchedules = false;
         this.reservationModal = false;
         this.swiperConfig = {
-            spaceBetween: 10,
+            spaceBetween: 2,
             slidesPerView: 7,
             breakpoints: {
                 320: { slidesPerView: 2 },
@@ -111,20 +109,15 @@ export class PurchaseScheduleComponent implements OnInit {
         };
         try {
             await this.cinerino.getServices();
-            this.theaters = (await this.cinerino.seller.search({})).data;
+            this.theaters = (await this.cinerino.place.searchMovieTheaters({})).data;
             const theater = this.theaters[0];
-            if (theater.location === undefined || theater.location.branchCode === undefined) {
-                throw new Error('theater not found');
-            }
-            const branchCode = theater.location.branchCode;
+            const branchCode = theater.branchCode;
             const now = moment().toDate();
             const today = moment(moment().format('YYYY-MM-DD')).toDate();
-            this.preSaleSchedules = (await this.cinerino.event.searchScreeningEvents({
+            this.preSaleSchedules = <factory.chevre.event.screeningEvent.IEvent[]>(await this.cinerino.event.search({
                 typeOf: factory.chevre.eventType.ScreeningEvent,
                 eventStatuses: [factory.chevre.eventStatusType.EventScheduled],
-                superEvent: {
-                    locationBranchCodes: [branchCode]
-                },
+                superEvent: { locationBranchCodes: [branchCode] },
                 startFrom: moment(today).add(3, 'days').toDate(),
                 offers: {
                     validFrom: now,
@@ -243,19 +236,17 @@ export class PurchaseScheduleComponent implements OnInit {
         try {
             await this.cinerino.getServices();
             const theater = this.theaters.find((t) => {
-                return (t.location !== undefined && t.location.branchCode === this.conditions.theater);
+                return (t.branchCode === this.conditions.theater);
             });
-            if (theater === undefined
-                || theater.location === undefined
-                || theater.location.branchCode === undefined) {
+            if (theater === undefined) {
                 throw new Error('theater is not found');
             }
             const today = moment(moment().format('YYYY-MM-DD')).toDate();
-            this.schedules = (await this.cinerino.event.searchScreeningEvents({
+            this.schedules = <factory.chevre.event.screeningEvent.IEvent[]>(await this.cinerino.event.search({
                 typeOf: factory.chevre.eventType.ScreeningEvent,
                 eventStatuses: [factory.chevre.eventStatusType.EventScheduled],
                 superEvent: {
-                    locationBranchCodes: [theater.location.branchCode]
+                    locationBranchCodes: [theater.branchCode]
                 },
                 startFrom: moment(this.conditions.date).toDate(),
                 startThrough: moment(this.conditions.date).add(1, 'day').toDate(),
@@ -276,7 +267,7 @@ export class PurchaseScheduleComponent implements OnInit {
      * @function getScreeningEvents
      * @returns {IFilmOrder[]}
      */
-    public getEventFilmOrder(schedules: IScreeningEvent[]): IFilmOrder[] {
+    public getEventFilmOrder(schedules: factory.chevre.event.screeningEvent.IEvent[]): IFilmOrder[] {
         const results: IFilmOrder[] = [];
         schedules.forEach((screeningEvent) => {
             // 販売可能時間判定
@@ -299,13 +290,19 @@ export class PurchaseScheduleComponent implements OnInit {
             }
         });
 
-        return results.sort((event1, event2) => {
-            if (event1.films[0].workPerformed.datePublished === undefined
-                || event2.films[0].workPerformed.datePublished === undefined) {
-                return 0;
+        return results.sort((a, b) => {
+            const workPerformedA = a.films[0].workPerformed;
+            const workPerformedB = b.films[0].workPerformed;
+            if (workPerformedA === undefined
+                || workPerformedA.datePublished === undefined) {
+                return 1;
             }
-            const unixA = moment(event1.films[0].workPerformed.datePublished).unix();
-            const unixB = moment(event2.films[0].workPerformed.datePublished).unix();
+            if (workPerformedB === undefined
+                || workPerformedB.datePublished === undefined) {
+                return -1;
+            }
+            const unixA = moment(workPerformedA.datePublished).unix();
+            const unixB = moment(workPerformedB.datePublished).unix();
             if (unixA > unixB) {
                 return -1;
             }
@@ -336,7 +333,7 @@ export class PurchaseScheduleComponent implements OnInit {
     public async selectSchedule(data: factory.chevre.event.screeningEvent.IEvent) {
         this.isLoading = true;
         const findResult =
-            this.theaters.find(t => t.location !== undefined && t.location.branchCode === this.conditions.theater);
+            this.theaters.find(t => t.branchCode === this.conditions.theater);
         if (findResult === undefined) {
             this.isLoading = false;
             return;
@@ -348,10 +345,16 @@ export class PurchaseScheduleComponent implements OnInit {
             return;
         }
         try {
-            const selleId = findResult.id;
-            const passport = await this.cinerino.getPassport(selleId);
-            const performanceId = data.id;
-            this.router.navigate([`/purchase/transaction/${performanceId}/${passport.token}`]);
+            const id = data.id;
+            const screeningEvent = await this.cinerino.event.findById({ id });
+            if (screeningEvent.offers === undefined
+                || screeningEvent.offers.seller === undefined
+                || screeningEvent.offers.seller.id === undefined) {
+                throw new Error('screeningEvent.offers.seller.id undefined');
+            }
+            const seller = await this.cinerino.seller.findById({ id: screeningEvent.offers.seller.id });
+            const passport = await this.cinerino.getPassport(seller);
+            this.router.navigate([`/purchase/transaction/${id}/${passport.token}`]);
             this.isLoading = false;
         } catch (error) {
             if (error.status === TOO_MANY_REQUESTS) {

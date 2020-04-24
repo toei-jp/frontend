@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BAD_REQUEST, TOO_MANY_REQUESTS } from 'http-status';
 import * as moment from 'moment';
+import { factory } from '../../../../../../../node_modules/@cinerino/api-javascript-client';
 import {
     CinerinoService,
     ErrorService,
@@ -36,21 +37,22 @@ export class PurchaseTransactionComponent implements OnInit {
             const external = await this.purchase.data.external;
             const urlParams = await this.getUrlParams();
             const params = (external === undefined) ? urlParams : external;
-            const performanceId = params.performanceId;
-            if (performanceId === undefined) {
+            const id = params.performanceId;
+            if (id === undefined) {
                 throw new Error('performanceId is null');
             }
 
             await this.cinerino.getServices();
             // イベント情報取得
-            const screeningEvent = await this.cinerino.event.findScreeningEventById({
-                id: performanceId
-            });
-            const branchCode = screeningEvent.superEvent.location.branchCode;
-            const sellerResult = await this.cinerino.seller.search({ location: { branchCodes: [branchCode] } });
-            const seller = sellerResult.data[0];
+            const screeningEvent = await this.cinerino.event.findById<factory.chevre.eventType.ScreeningEvent>({ id });
+            if (screeningEvent.offers === undefined
+                || screeningEvent.offers.seller === undefined
+                || screeningEvent.offers.seller.id === undefined) {
+                throw new Error('screeningEvent.offers.seller.id undefined');
+            }
+            const seller = await this.cinerino.seller.findById({ id: screeningEvent.offers.seller.id });
             const passport = (params.passportToken === undefined)
-                ? await this.cinerino.getPassport(seller.id)
+                ? await this.cinerino.getPassport(seller)
                 : { token: params.passportToken };
 
             const serverDate = await this.util.getServerDate();
@@ -76,8 +78,8 @@ export class PurchaseTransactionComponent implements OnInit {
             if (this.purchase.data.reservations.length > 0) {
                 // 重複確認へ
                 const url = (passport.token === '')
-                    ? `/purchase/overlap/${performanceId}`
-                    : `/purchase/overlap/${performanceId}/${passport.token}`;
+                    ? `/purchase/overlap/${id}`
+                    : `/purchase/overlap/${id}/${passport.token}`;
                 this.router.navigate([url]);
 
                 return;
@@ -85,7 +87,8 @@ export class PurchaseTransactionComponent implements OnInit {
 
             await this.purchase.transactionStartProcess({
                 passport,
-                screeningEvent: screeningEvent
+                screeningEvent,
+                seller
             });
             this.storage.remove('parameters', SaveType.Session);
             this.router.navigate(['/purchase/seat'], { replaceUrl: true });

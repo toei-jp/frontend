@@ -60,7 +60,9 @@ export class PurchaseCompleteComponent implements OnInit {
      */
     public getTheaterName() {
         const itemOffered = this.data.order.acceptedOffers[0].itemOffered;
-        if (itemOffered.typeOf !== factory.chevre.reservationType.EventReservation) {
+        if (itemOffered.typeOf !== factory.chevre.reservationType.EventReservation
+            || itemOffered.reservationFor.superEvent.location.name === undefined
+            || itemOffered.reservationFor.superEvent.location.name.ja === undefined) {
             return '';
         }
 
@@ -79,8 +81,11 @@ export class PurchaseCompleteComponent implements OnInit {
         }
 
         const screen = {
-            name: itemOffered.reservationFor.location.name.ja,
-            address: (itemOffered.reservationFor.location.address === undefined)
+            name: (itemOffered.reservationFor.location.name === undefined
+                || itemOffered.reservationFor.location.name.ja === undefined)
+                ? '' : itemOffered.reservationFor.location.name.ja,
+            address: (itemOffered.reservationFor.location.address === undefined
+                || itemOffered.reservationFor.location.address.en === undefined)
                 ? ''
                 : itemOffered.reservationFor.location.address.en
         };
@@ -110,8 +115,8 @@ export class PurchaseCompleteComponent implements OnInit {
     public getSubTitle() {
         const itemOffered = this.data.order.acceptedOffers[0].itemOffered;
         if (itemOffered.typeOf !== factory.chevre.reservationType.EventReservation
-            || itemOffered.reservationFor.workPerformed.headline === undefined
-            || itemOffered.reservationFor.workPerformed.headline === null) {
+            || itemOffered.reservationFor.workPerformed === undefined
+            || itemOffered.reservationFor.workPerformed.headline === undefined) {
             return '';
         }
 
@@ -165,10 +170,11 @@ export class PurchaseCompleteComponent implements OnInit {
      * @returns {string}
      */
     public getInquiryUrl() {
-        if (this.data.seller.location === undefined) {
+        const itemOffered = this.data.order.acceptedOffers[0].itemOffered;
+        if (itemOffered.typeOf !== factory.chevre.reservationType.EventReservation) {
             return '/inquiry/login';
         }
-        const params = `theater=${this.data.seller.location.branchCode}&reserve=${this.data.order.confirmationNumber}`;
+        const params = `theater=${itemOffered.reservationFor.superEvent.location.branchCode}&reserve=${this.data.order.confirmationNumber}`;
         return `/inquiry/login?${params}`;
     }
 

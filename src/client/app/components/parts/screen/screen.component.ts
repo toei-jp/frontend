@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { factory } from '@cinerino/api-javascript-client';
 import 'rxjs/add/operator/toPromise';
+import { sleep } from '../../../functions/util.function';
 import { IReservationSeat } from '../../../models';
 import { CinerinoService } from '../../../services/cinerino/cinerino.service';
 import { ErrorService } from '../../../services/error/error.service';
@@ -211,7 +212,7 @@ export class ScreenComponent implements OnInit, AfterViewInit {
      */
     public async getData(): Promise<{
         screen: IScreen,
-        status: factory.chevre.event.screeningEvent.IScreeningRoomSectionOffer[]
+        status: factory.chevre.place.seat.IPlaceWithOffer[]
     }> {
         const DIGITS = {
             '02': -2,
@@ -223,21 +224,31 @@ export class ScreenComponent implements OnInit, AfterViewInit {
         const setting = await this.http.get<IScreen>('/json/theater/setting.json').toPromise();
 
         await this.cinerino.getServices();
-        let seatStatus: factory.chevre.event.screeningEvent.IScreeningRoomSectionOffer[];
-        if (this.test) {
-            seatStatus = [];
-        } else {
-            if (this.purchase.data.screeningEvent === undefined) {
+        let screeningEventSeats: factory.chevre.place.seat.IPlaceWithOffer[] = [];
+        const screeningEvent = this.purchase.data.screeningEvent;
+        if (!this.test) {
+            if (screeningEvent === undefined) {
                 throw new Error('screeningEvent is undefined');
             }
-            seatStatus = await this.cinerino.event.searchScreeningEventOffers({
-                eventId: this.purchase.data.screeningEvent.id
-            });
+            const limit = 100;
+            let page = 1;
+            let roop = true;
+            while (roop) {
+                const searchResult = await this.cinerino.event.searchSeats({
+                    event: { id: screeningEvent.id },
+                    page,
+                    limit
+                });
+                screeningEventSeats = screeningEventSeats.concat(searchResult.data);
+                page++;
+                roop = searchResult.data.length > 0;
+                await sleep(500);
+            }
         }
         // スクリーンデータをマージ
         return {
             screen: Object.assign(setting, screen),
-            status: seatStatus
+            status: screeningEventSeats
         };
     }
 
@@ -246,7 +257,7 @@ export class ScreenComponent implements OnInit, AfterViewInit {
      */
     public createScreen(data: {
         screen: IScreen,
-        status: factory.chevre.event.screeningEvent.IScreeningRoomSectionOffer[]
+        status: factory.chevre.place.seat.IPlaceWithOffer[]
     }): IData {
         const screenData = data.screen;
         const seatStatus = data.status;
@@ -338,20 +349,16 @@ export class ScreenComponent implements OnInit, AfterViewInit {
                     let section = '';
                     let status = SeatStatus.Disabled;
                     const inStock = factory.chevre.itemAvailability.InStock;
-                    for (const listSeatSection of seatStatus) {
-                        const targetSeat = listSeatSection.containsPlace.find((s) => {
-                            return (
-                                s.branchCode === code
-                                && s.offers !== undefined
-                                && s.offers.find((o) => o.availability === inStock) !== undefined
-                            );
-                        });
-                        if (targetSeat !== undefined) {
-                            section = listSeatSection.branchCode;
+                    seatStatus.forEach((s) => {
+                        if (s.branchCode === code
+                            && s.offers !== undefined
+                            && s.offers[0].availability === inStock) {
+                            section = (s.containedInPlace === undefined
+                                || s.containedInPlace.branchCode === undefined)
+                                ? '' : s.containedInPlace.branchCode;
                             status = SeatStatus.Default;
-                            break;
                         }
-                    }
+                    });
                     // 選択中
                     if (this.purchase.data.reservations.length > 0) {
                         const findReservationResult = this.purchase.data.reservations.find((reservation) => {

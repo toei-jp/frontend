@@ -25,13 +25,14 @@ export class PurchaseOverlapComponent implements OnInit {
         this.activatedRoute.paramMap
             .subscribe(async (params) => {
                 this.isLoading = true;
-                const performanceId = params.get('performanceId');
+                const id = params.get('performanceId');
                 try {
+                    if (id === null) {
+                        throw new Error('performanceId is null');
+                    }
                     // イベント情報取得
                     await this.cinerino.getServices();
-                    this.screeningEvent = await this.cinerino.event.findScreeningEventById({
-                        id: <string>performanceId
-                    });
+                    this.screeningEvent = await this.cinerino.event.findById<factory.chevre.eventType.ScreeningEvent>({ id });
                     if (this.screeningEvent === null) {
                         throw new Error('screeningEvent is null');
                     }
@@ -102,7 +103,12 @@ export class PurchaseOverlapComponent implements OnInit {
      * @returns {string}
      */
     public getTheaterName() {
-        return this.screeningEvent.superEvent.location.name.ja;
+        const screeningEvent = this.screeningEvent;
+        if (screeningEvent.superEvent.location.name === undefined
+            || screeningEvent.superEvent.location.name.ja === undefined) {
+            return '';
+        }
+        return screeningEvent.superEvent.location.name.ja;
     }
 
     /**
@@ -111,11 +117,14 @@ export class PurchaseOverlapComponent implements OnInit {
      * @returns {string}
      */
     public getScreenName() {
+        const screeningEvent = this.screeningEvent;
         const screen = {
-            name: this.screeningEvent.location.name.ja,
-            address: (this.screeningEvent.location.address === undefined)
-                ? ''
-                : this.screeningEvent.location.address.en
+            name: (screeningEvent.location.name === undefined
+                || screeningEvent.location.name.ja === undefined)
+                ? '' : screeningEvent.location.name.ja,
+            address: (screeningEvent.location.address === undefined
+                || screeningEvent.location.address.en === undefined)
+                ? '' : screeningEvent.location.address.en
         };
 
         return `${screen.address} ${screen.name}`;
@@ -136,12 +145,13 @@ export class PurchaseOverlapComponent implements OnInit {
      * @returns {string}
      */
     public getSubTitle() {
-        if (this.screeningEvent.workPerformed.headline === undefined
-            || this.screeningEvent.workPerformed.headline === null) {
+        const screeningEvent = this.screeningEvent;
+        if (screeningEvent.workPerformed === undefined
+            || screeningEvent.workPerformed.headline === undefined) {
             return '';
         }
 
-        return this.screeningEvent.workPerformed.headline;
+        return screeningEvent.workPerformed.headline;
     }
 
     /**

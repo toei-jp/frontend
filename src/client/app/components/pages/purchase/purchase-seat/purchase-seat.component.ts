@@ -82,18 +82,13 @@ export class PurchaseSeatComponent implements OnInit {
         if (transaction === undefined) {
             throw new Error('Transaction not found');
         }
-        if (transaction.object.clientUser === undefined) {
-            throw new Error('ClientUser not found');
-        }
-        const salesTickets = await this.cinerino.event.searchScreeningEventTicketOffers({
+        const salesTickets = await this.cinerino.event.searchTicketOffers({
             event: { id: screeningEvent.id },
             seller: {
                 typeOf: transaction.seller.typeOf,
                 id: transaction.seller.id
             },
-            store: {
-                id: transaction.object.clientUser.client_id
-            }
+            store: { id: this.cinerino.auth.options.clientId }
         });
         // console.log('salesTickets', salesTicketArgs, salesTickets);
 
@@ -114,7 +109,8 @@ export class PurchaseSeatComponent implements OnInit {
             this.notSelectSeatModal = true;
             return;
         }
-        if (this.purchase.data.screeningEvent.offers.eligibleQuantity !== undefined
+        if (this.purchase.data.screeningEvent.offers !== undefined
+            && this.purchase.data.screeningEvent.offers.eligibleQuantity !== undefined
             && this.purchase.data.screeningEvent.offers.eligibleQuantity.maxValue !== undefined
             && this.purchase.data.reservations.length > this.purchase.data.screeningEvent.offers.eligibleQuantity.maxValue) {
             this.upperLimitModal = true;

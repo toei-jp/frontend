@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import * as cinerino from '@cinerino/api-javascript-client';
+import { factory } from '@cinerino/api-javascript-client';
 import 'rxjs/add/operator/toPromise';
 
 @Injectable()
@@ -10,6 +11,7 @@ export class CinerinoService {
     public order: cinerino.service.Order;
     public seller: cinerino.service.Seller;
     public person: cinerino.service.Person;
+    public place: cinerino.service.Place;
     public personOwnershipInfo: cinerino.service.person.OwnershipInfo;
     public payment: cinerino.service.Payment;
     public transaction: {
@@ -32,6 +34,7 @@ export class CinerinoService {
             this.order = new cinerino.service.Order(option);
             this.seller = new cinerino.service.Seller(option);
             this.person = new cinerino.service.Person(option);
+            this.place = new cinerino.service.Place(option);
             this.payment = new cinerino.service.Payment(option);
             this.transaction = {
                 placeOrder: new cinerino.service.txn.PlaceOrder(option)
@@ -96,13 +99,13 @@ export class CinerinoService {
     /**
      * パスポート取得
      */
-    public async getPassport(selleId: string) {
+    public async getPassport(seller: factory.seller.IOrganization<factory.seller.IAttributes<factory.organizationType>>) {
         if (this.waiterServerUrl === undefined
             || this.waiterServerUrl === '') {
             return { token: '' };
         }
         const url = this.waiterServerUrl;
-        const body = { scope: `Transaction:PlaceOrder:${selleId}` };
+        const body = { scope: `Transaction:PlaceOrder:${seller.id}` };
         const result = await this.http.post<{ token: string; }>(url, body).toPromise();
 
         return result;

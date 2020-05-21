@@ -14,6 +14,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Removed
 
+## 1.8.6 - 2020-05-21
+### Added
+ - スマートシアター互換性追加
+
 ## 1.8.5 - 2020-04-24
 ### Changed
  - seller.location廃止

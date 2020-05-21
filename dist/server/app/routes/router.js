@@ -65,6 +65,16 @@ exports.default = (app) => {
     app.post('/api/external', external);
     app.use('/inquiry', inquiry_1.default);
     app.get('/signIn', authorize_controller_1.signInRedirect);
+    app.get('/projects/:projectId/inquiry', (req, res) => {
+        const theaterBrunchCode = req.query.theaterBrunchCode;
+        const projectId = req.params.projectId;
+        res.redirect(`/inquiry/login?theater=${theaterBrunchCode}&projectId=${projectId}`);
+    });
+    app.get('/projects/:projectId/purchase/transaction/:eventId', (req, res) => {
+        const projectId = req.params.projectId;
+        const eventId = req.params.eventId;
+        res.redirect(`/?performanceId=${eventId}&projectId=${projectId}`);
+    });
     app.get('/', root);
     app.use(notfound);
     app.use(error);

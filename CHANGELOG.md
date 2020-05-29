@@ -14,6 +14,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Removed
 
+## 1.8.7 - 2020-05-29
+### Added
+ - コロナ対策用スクリーン追加
+
 ## 1.8.6 - 2020-05-21
 ### Added
  - スマートシアター互換性追加

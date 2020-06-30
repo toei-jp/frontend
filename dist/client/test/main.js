@@ -8216,7 +8216,8 @@ var CinerinoService = /** @class */ (function () {
                         _a.sent();
                         return [2 /*return*/, {
                                 endpoint: this.endpoint,
-                                auth: this.auth
+                                auth: this.auth,
+                                project: { id: this.projectId }
                             }];
                 }
             });
@@ -8251,6 +8252,7 @@ var CinerinoService = /** @class */ (function () {
                         this.auth.setCredentials({ accessToken: result.accessToken });
                         this.endpoint = result.endpoint;
                         this.waiterServerUrl = result.waiterServerUrl;
+                        this.projectId = result.projectId;
                         return [2 /*return*/];
                 }
             });

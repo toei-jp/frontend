@@ -19,6 +19,7 @@ export class CinerinoService {
     };
     private endpoint: string;
     private waiterServerUrl: string;
+    private projectId: string;
 
     constructor(
         private http: HttpClient
@@ -52,7 +53,8 @@ export class CinerinoService {
         await this.authorize();
         return {
             endpoint: this.endpoint,
-            auth: this.auth
+            auth: this.auth,
+            project: { id: this.projectId }
         };
     }
 
@@ -68,6 +70,7 @@ export class CinerinoService {
             clientId: string;
             endpoint: string;
             waiterServerUrl: string;
+            projectId: string;
         }>(url, body).toPromise();
         const option = {
             domain: '',
@@ -84,6 +87,7 @@ export class CinerinoService {
         this.auth.setCredentials({ accessToken: result.accessToken });
         this.endpoint = result.endpoint;
         this.waiterServerUrl = result.waiterServerUrl;
+        this.projectId = result.projectId;
     }
 
     /**

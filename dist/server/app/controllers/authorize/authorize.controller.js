@@ -28,12 +28,14 @@ function getCredentials(_, res) {
             };
             const accessToken = yield options.auth.getAccessToken();
             const waiterServerUrl = process.env.WAITER_SERVER_URL;
+            const projectId = process.env.PROJECT_ID;
             res.json({
                 accessToken,
                 userName: undefined,
                 clientId: options.auth.options.clientId,
                 endpoint,
-                waiterServerUrl
+                waiterServerUrl,
+                projectId
             });
         }
         catch (err) {

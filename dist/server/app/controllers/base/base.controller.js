@@ -25,7 +25,10 @@ function getOptions(req, apiEndpoint) {
     }
     const options = {
         endpoint,
-        auth: authModel.create()
+        auth: authModel.create(),
+        project: {
+            id: process.env.PROJECT_ID
+        }
     };
     authModel.save(req.session, apiEndpoint);
     return options;

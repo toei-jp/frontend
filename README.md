@@ -21,7 +21,7 @@
 | `BASIC_AUTH_NAME`                   | false    |                  | ベーシック認証ID                         |
 | `BASIC_AUTH_PASS`                   | false    |                  | ベーシック認証PASS                       |
 | `DEBUG`                             | false    |  toei-frontend:* | デバッグ                                |
-
+| `PROJECT_ID`                        | true     |                  | プロジェクトID                          |
 
 # Build
 

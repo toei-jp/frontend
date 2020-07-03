@@ -19,12 +19,14 @@ export async function getCredentials(_: Request, res: Response) {
         };
         const accessToken = await options.auth.getAccessToken();
         const waiterServerUrl = <string>process.env.WAITER_SERVER_URL;
+        const projectId = <string>process.env.PROJECT_ID;
         res.json({
             accessToken,
             userName: undefined,
             clientId: options.auth.options.clientId,
             endpoint,
-            waiterServerUrl
+            waiterServerUrl,
+            projectId
         });
     } catch (err) {
         errorProsess(res, err);

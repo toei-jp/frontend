@@ -813,6 +813,9 @@ export class PurchaseService {
             id: transaction.id,
             sendEmailMessage: true,
             email: {
+                sender: {
+                    email: 'ticket@ml.smart-theater.com'
+                },
                 template: getPurchaseCompleteTemplate(mailParams)
             }
         })).order;

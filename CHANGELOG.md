@@ -14,7 +14,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Removed
 
-## 1.8.7 - 2020-07-03
+## 1.8.9 - 2020-09-16
+### Changed
+ - sender変更
+
+## 1.8.8 - 2020-07-03
 ### Changed
  - Cinerino SDKでサービスインスタンス生成時にプロジェクト指定へ変更
 
